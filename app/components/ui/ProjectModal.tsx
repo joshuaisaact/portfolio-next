@@ -83,14 +83,21 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
           </ul>
 
           <div className="flex justify-center gap-8 my-6">
-            <a
-              href={project.githubLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn bg-blue-600 text-white hover:bg-blue-700 transition duration-300 rounded-lg px-4 py-2 shadow"
-            >
-              Github
-            </a>
+          <a
+  href={project.githubLink}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="flex items-center bg-gray-800 text-white hover:bg-gray-900 transition duration-300 rounded-lg px-5 py-2 shadow"
+>
+  <Image
+    src="/media/skills/github.svg"
+    alt="GitHub"
+    width={24}
+    height={24}
+    className="mr-2"
+  />
+  GitHub
+</a>
             <a
               href={project.projectLink}
               target="_blank"
