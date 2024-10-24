@@ -36,7 +36,7 @@ export function Blog() {
         Blog
       </h2>
 
-      <div className="blog-grid grid grid-cols-2 gap-20 mx-auto w-4/5 mt-6">
+      <div className="blog-grid grid grid-cols-1 lg:grid-cols-2 gap-20 mx-auto w-4/5 mt-6">
         {posts.map((post, index) => (
           <div key={index} className="blog-card flex flex-col">
             <Image
