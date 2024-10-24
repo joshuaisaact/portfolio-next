@@ -1,0 +1,222 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Theme colors */
+  --theme-1: #e07a14;
+  --theme-2: #723e5a;
+  --theme-3: #9c852a;
+  --theme-4: #c589a3;
+  --theme-5: #42d499;
+  --theme-6: #5459de;
+  --theme-7: #481682;
+  --theme-8: #3e7256;
+
+  /* System colors */
+  --color-primary: #3e7256;
+  --color-secondary: #3e4072;
+  --color-tertiary: #723e5a;
+  --color-background: white;
+
+  /* Spacing */
+  --padding-small: 0.5rem;
+  --padding-medium: 1rem;
+  --padding-large: 2rem;
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #333;
+  }
+}
+
+.dark {
+  --color-background: #333;
+  color-scheme: dark;
+}
+
+/* Base styles */
+@layer base {
+  body {
+    @apply max-w-[1200px] mx-auto px-4 bg-white dark:bg-[#333] text-black dark:text-gray-200;
+  }
+
+  h2 {
+    @apply p-4 text-center underline decoration-[var(--theme-1)] decoration-2 underline-offset-2 dark:text-gray-200;
+  }
+}
+
+/* Component styles */
+@layer components {
+  .btn {
+    @apply px-6 py-3 rounded border-2 border-[var(--theme-1)]
+           text-[var(--theme-1)] dark:text-gray-200
+           hover:bg-[var(--theme-1)] hover:text-white
+           dark:hover:text-white
+           transition-colors duration-300;
+  }
+
+  .custom-nav-link {
+    @apply underline decoration-[var(--theme-1)] decoration-2 underline-offset-[2px]
+           dark:text-gray-200;
+  }
+}
+
+/* Skills section */
+.skill-link {
+  position: relative;
+  cursor: pointer;
+}
+
+.skills-icon {
+  transition:
+    transform 0.5s ease,
+    opacity 0.5s ease;
+}
+
+.skills-icon.slide-in {
+  opacity: 1 !important;
+  transform: translateX(0) !important;
+}
+
+.skill-link:hover .transform-wrapper {
+  transform: translateY(-5px) scale(1.1);
+}
+
+.transform-wrapper {
+  transition: transform 0.2s ease-out;
+}
+
+.skill-tooltip {
+  transition: all 0.2s ease-out;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.skill-link:hover .skill-tooltip {
+  transform: translate(-50%, 0);
+  opacity: 1;
+}
+
+/* Dark mode image handling */
+.dark img[src*=".svg"]:not(.no-dark-invert) {
+  filter: invert(0.85);
+}
+
+.dark img[src*="github.svg"] {
+  filter: invert(1);
+}
+
+/* Theme toggle styles */
+.theme-toggle-icon {
+  @apply transition-transform duration-300;
+}
+
+.theme-toggle-icon:hover {
+  @apply transform;
+}
+
+.theme-toggle-icon.sun:hover {
+  @apply rotate-45;
+}
+
+.theme-toggle-icon.moon:hover {
+  @apply rotate-12;
+}
+
+/* Project card and modal animations */
+@layer utilities {
+  .project-card {
+    @apply transition-all duration-500 ease-out opacity-0 translate-y-8
+           dark:bg-[#333] dark:text-gray-200;
+  }
+
+  .project-card.slide-in {
+    @apply opacity-100 translate-y-0;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -40%) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  @keyframes slideOut {
+    from {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: translate(-50%, -60%) scale(0.95);
+    }
+  }
+
+  .modal-backdrop {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+
+  .modal-backdrop.closing {
+    animation: fadeOut 0.3s ease-out forwards;
+  }
+
+  .modal-content {
+    @apply dark:bg-[#333] dark:text-gray-200;
+    animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .modal-content.closing {
+    animation: slideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .btn-scale {
+    @apply transition-transform duration-200 ease-out;
+  }
+
+  .btn-scale:hover {
+    @apply scale-105;
+  }
+
+  .btn-scale:active {
+    @apply scale-95;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .skill-link,
+  .skills-icon,
+  .skill-tooltip,
+  .project-card,
+  .modal-content,
+  .modal-backdrop,
+  .btn-scale {
+    transition: none;
+    animation: none;
+  }
+}
