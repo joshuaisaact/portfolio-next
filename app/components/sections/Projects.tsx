@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Project } from "@/types";
 import { PROJECTS } from "@/lib/constants";
+import { ProjectModal } from "../ui/ProjectModal";
 
 export function Projects() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -135,88 +136,8 @@ export function Projects() {
         ))}
       </div>
 
-      {selectedProject && (
-        <>
-          <div
-            className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-40 modal-backdrop ${isClosing ? "closing" : ""}`}
-            onClick={handleClose}
-          />
-          <div
-            className={`fixed top-1/2 left-1/2 w-[60%] max-h-[90vh] overflow-y-auto
-              bg-white dark:bg-[#333] rounded-lg shadow-xl z-50 modal-content
-              ${isClosing ? "closing" : ""}`}
-          >
-            <button
-              className="absolute top-5 right-5 w-12 h-12 rounded-full bg-white
-                dark:bg-[#333] border-2 border-[var(--color-primary)] btn-scale
-                hover:bg-[var(--color-primary)] hover:text-white transition-colors group"
-              onClick={handleClose}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 100 100"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="5"
-                className="group-hover:stroke-white transition-colors"
-              >
-                <line x1="30" y1="30" x2="70" y2="70" />
-                <line x1="70" y1="30" x2="30" y2="70" />
-              </svg>
-            </button>
-
-            <div className="p-8">
-              <Image
-                src={selectedProject.imageSrc}
-                alt={selectedProject.imageAlt}
-                width={800}
-                height={400}
-                className="rounded-lg w-full h-[300px] object-cover"
-                priority
-              />
-
-              <ul className="flex justify-center gap-4 my-6">
-                {selectedProject.skills.map((skill) => (
-                  <li
-                    key={skill}
-                    className="px-3 py-1 bg-[var(--color-primary)]/10 rounded-full text-sm"
-                  >
-                    {skill}
-                  </li>
-                ))}
-              </ul>
-
-              <div className="flex justify-center gap-8 my-8">
-                <a
-                  href={selectedProject.githubLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-scale"
-                >
-                  Github
-                </a>
-                <a
-                  href={selectedProject.projectLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-scale"
-                >
-                  Visit Site
-                </a>
-              </div>
-
-              <div className="space-y-6">
-                {selectedProject.fullDescription.map((para, index) => (
-                  <div
-                    key={index}
-                    className="text-lg leading-relaxed"
-                    dangerouslySetInnerHTML={{ __html: para }}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </>
+    {selectedProject && (
+        <ProjectModal project={selectedProject} onClose={handleClose} />
       )}
     </section>
   );

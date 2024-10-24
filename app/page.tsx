@@ -4,6 +4,7 @@ import { Skills } from "./components/sections/Skills";
 import { Projects } from "./components/sections/Projects";
 import { Blog } from "./components/sections/Blog";
 import { Roboto, Source_Serif_4 } from "next/font/google";
+import { ContactForm } from "./components/ui/ContactForm";
 
 const roboto = Roboto({
   weight: ["100", "300", "400", "500", "700", "900"],
@@ -94,7 +95,7 @@ export default function Home() {
           Contact
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8 max-w-6xl mx-auto">
-          {/* <ContactForm /> */}
+          <ContactForm />
 
           {/* Contact Info */}
           <div className="space-y-8">

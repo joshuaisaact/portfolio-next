@@ -17,6 +17,7 @@ export const SKILL_FILES = [
   "supabase.svg",
   "postgresql.svg",
   "drizzle.png",
+  "sequelize.svg",
   "html5.svg",
   "css3.svg",
   "javascript.svg",
@@ -97,6 +98,11 @@ export const SKILL_INFO: Record<
     color: "#4169E1",
     url: "https://www.postgresql.org/",
   },
+  "sequelize.svg": {
+    name: "Sequelize",
+    color: "#52B0E6",
+    url: "https://sequelize.org/",
+  },
   "supabase.svg": {
     name: "Supabase",
     color: "#3FCF8E", // Supabase's brand green
@@ -142,32 +148,24 @@ export const PROJECTS = [
     title: "Wooster",
     projectLink: "URL_TO_WOOSTER_PROJECT", // Replace with actual URL
     githubLink: "https://github.com/joshuaisaact/Wooster", // Replace with actual URL
-    skills: ["React", "Tailwind", "TypeScript", "Node.js"],
+    skills: ["TypeScript", "React", "TailwindCSS", "Nodejs"],
     description:
       "A full-stack web app generating personalised trips and activities using the Gemini LLM API.",
-    fullDescription: [
-      "<p>Sole developer of a full-stack web app generating personalised trips and activities using the Gemini LLM API.</p>",
-      "<p>Built a responsive UI with React, Tailwind, and TypeScript, optimised for both mobile and desktop.</p>",
-      "<p>Developed a Node.js/Express backend with PostgreSQL (Supabase-hosted) and Drizzle ORM.</p>",
-      "<p>Implemented Supertest and Jest for integration testing, with Dockerized test database setup for CI.</p>",
-      "<p>Integrated the Gemini API for personalised activity suggestions and Leaflet-powered interactive maps.</p>",
-    ],
-  },
-  {
-    imageSrc: "/media/projects/atomizepro.png",
-    imageAlt: "Atomize Pro logo",
-    title: "Atomize Pro",
-    projectLink: "URL_TO_ATOMIZE_PRO_PROJECT", // Replace with actual URL
-    githubLink: "https://github.com/joshuaisaact/Atomize-refactor/",
-    skills: ["TypeScript", "React", "State Management"],
-    description:
-      "A productivity app with a complete state management overhaul.",
-    fullDescription: [
-      "<p>Architected and implemented complete state management overhaul, consolidating 30 state variables into 9 using useReducer pattern.</p>",
-      "<p>Eliminated 12 useEffect hooks through optimistic updates and presumptive rendering, significantly reducing complexity.</p>",
-      "<p>Led TypeScript migration for enhanced type safety across the codebase.</p>",
-      "<p>Established comprehensive test suite using Vitest, improving code reliability.</p>",
-    ],
+      fullDescription: [
+        `<p><strong>Description:</strong><br />
+        Wooster is a full-stack web application designed to generate personalized travel itineraries and activity recommendations using the Gemini LLM API.
+        As the sole developer, I built the app from scratch, focusing on a seamless, responsive experience for both mobile and desktop users.</p>`,
+
+        `<p><strong>Project Highlights:</strong></p>`,
+
+        `<ul>
+          <li>Built an intuitive, responsive UI using React, TypeScript, and Tailwind for optimal performance and accessibility.</li>
+          <li>Developed a robust backend with Node.js/Express and PostgreSQL (Supabase-hosted), using Drizzle ORM for database management.</li>
+          <li>Integrated the Gemini API to generate personalized trip suggestions and utilized Leaflet for interactive maps.</li>
+          <li>Implemented comprehensive testing with Supertest and Jest, including Dockerized test databases for CI.</li>
+        </ul>`
+      ],
+    videoSrc: "/media/projects/videos/wooster.webm",
   },
   {
     imageSrc: "/media/projects/goss.png", // Adjust the image source as needed
@@ -175,18 +173,48 @@ export const PROJECTS = [
     title: "Goss",
     projectLink: "URL_TO_GOSS_PROJECT", // Replace with actual URL
     githubLink: "https://github.com/joshuaisaact/Goss", // Replace with actual URL
-    skills: ["WebSockets", "React", "Supabase"],
+    skills: ["TypeScript", "React", "Supabase"],
     description:
       "A voice-based social media platform with real-time notifications.",
     fullDescription: [
-      "<p>Led development of core social features including follow system and real-time notifications using WebSockets.</p>",
-      "<p>Implemented state management using Tanstack Query for efficient data caching and optimistic updates.</p>",
-      "<p>Owned full-stack development of the follow and notification features, leveraging WebSockets for live updates.</p>",
-      "<p>Integrated OpenAI and PlayHT APIs for voice generation and transcription.</p>",
-      "<p>Designed and implemented authentication and file upload systems using Supabase.</p>",
-      "<p>Developed responsive, accessible UI components optimised across all device formats.</p>",
+      `<p><strong>Description:</strong><br />
+    Goss is a voice-based social media platform that facilitates real-time interactions and notifications.
+    I led the development of key social features, focusing on user engagement and live updates.</p>`,
+
+    `<p><strong>Project Highlights:</strong></p>`,
+
+    `<ul>
+      <li>Developed real-time notifications and follow system using WebSockets for instant communication.</li>
+      <li>Implemented state management with Tanstack Query for efficient data caching and optimistic updates.</li>
+      <li>Integrated OpenAI and PlayHT APIs for voice generation and transcription, improving platform accessibility.</li>
+      <li>Designed responsive, accessible UI components optimized for different device formats.</li>
+    </ul>`
     ],
-    videoSrc: "/media/projects/goss.mp4",
+    videoSrc: "/media/projects/videos/goss3.webm",
+  },
+  {
+    imageSrc: "/media/projects/atomizepro.png",
+    imageAlt: "Atomize Pro logo",
+    title: "Atomize Pro",
+    projectLink: "URL_TO_ATOMIZE_PRO_PROJECT", // Replace with actual URL
+    githubLink: "https://github.com/joshuaisaact/Atomize-refactor/",
+    skills: ["TypeScript", "React", "Sequelize"],
+    description:
+      "A productivity app with a complete state management overhaul.",
+    fullDescription: [
+      `<p><strong>Description:</strong><br />
+      Atomize Pro is a productivity app where I led a comprehensive state management overhaul,
+      simplifying the codebase and improving performance.</p>`,
+
+      `<p><strong>Project Highlights:</strong></p>`,
+
+      `<ul>
+        <li>Consolidated 30 state variables into 9 using the <code>useReducer</code> pattern, reducing complexity.</li>
+        <li>Optimized app performance by eliminating 12 <code>useEffect</code> hooks through optimistic updates and presumptive rendering.</li>
+        <li>Migrated the codebase to TypeScript for enhanced type safety, improving code reliability.</li>
+        <li>Established a comprehensive test suite using Vitest, significantly boosting test coverage and quality.</li>
+      </ul>`
+    ],
   },
   {
     imageSrc: "/media/projects/portfoliowebsite.png",
@@ -194,16 +222,22 @@ export const PROJECTS = [
     title: "Portfolio Website",
     projectLink: "https://joshuaisaact.github.io/Portfolio-Website/",
     githubLink: "https://github.com/joshuaisaact/Portfolio-Website",
-    skills: ["Nextjs", "Typescript", "TailwindCSS", "CSS"],
+    skills: ["Typescript", "Nextjs", "TailwindCSS", "CSS"],
     description:
       "My portfolio website, created using a mixture of technologies, primarily Javascript for the main site, Hugo for the blog, and Express for the back-end.",
     fullDescription: [
-      "<p>A portfolio website to host my blog, covering my stream-of-consciousness thoughts and work on personal projects, as well as a way of demonstrating where I am currently at, in terms of front-end development</p>",
-      "<p>The general design philosophy was that most portfolio websites are either form or function, but rarely both - I wanted to design something that was quite minimalistic and easy to parse on first visit, but with a ton of themes that really played with form.</p>",
-      "<p>The majority of the site is built from scratch using JS, HTML and CSS, with various themes using additional libraries as required, however the blog is built using Hugo, a static site generator that auto-compiles html static sites from markdown files. This is using custom Hugo themes I built.</p>",
-      "<p>You can read more about the design philosophy and process of my portfolio site on my blog.</p>",
+      `<p><strong>Description:</strong><br />
+      This portfolio website is a personal project built to showcase my skills and serve as a central hub for my blog and personal projects.
+      The design balances form and function, focusing on a clean, minimalistic user experience.</p>`,
+
+      `<p><strong>Project Highlights:</strong></p>`,
+
+      `<ul>
+        <li>Designed and developed a fully responsive site using Next.js, TypeScript, and TailwindCSS for fast, modern front-end performance.</li>
+        <li>Integrated Hugo as a static site generator for the blog, using custom themes to compile markdown into static HTML.</li>
+        <li>Focused on accessibility and design aesthetics, ensuring an intuitive user experience across devices.</li>
+      </ul>`
     ],
-    videoSrc: null,
   },
   {
     imageSrc: "/media/projects/bratquiz.png",
@@ -211,44 +245,60 @@ export const PROJECTS = [
     title: "Brat quiz",
     projectLink: "https://joshuaisaact.github.io/bratQuiz/",
     githubLink: "https://github.com/joshuaisaact/bratQuiz",
-    skills: ["React", "Typescript", "CSS3"],
+    skills: ["Typescript", "React",  "CSS3"],
     description:
-      "An interactive binary-choice quiz website I made to learn CSS and Javascript, based off Charli XCX's brat album.",
+      "An interactive binary-choice quiz website I made to practise React and Typescript, based off Charli XCX's brat album.",
     fullDescription: [
-      "<p>A brat-themed quiz created using HTML, CSS, and JavaScript. I wanted to build something that would not only help me sharpen my coding skills but also something my friends would enjoy interacting with.</p>",
+      "<p>A brat-themed quiz written in Typescript using React, HTML, and CSS. I wanted to build something that would not only help me sharpen my coding skills but also something my friends would enjoy interacting with.</p>",
       '<p>I started with the basics in Javascript, setting up the structure of the quiz. My focus was on making it user-friendly and straightforward, ensuring that each question was clear and easy to navigate. This provided a solid foundation for the project. Next, I used CSS to bring the quiz to life visually - the style of "brat" is very forgiving, so this didn\'t take me long!</p>',
       '<p>The aim was to make the quiz visually appealing without overwhelming the user — clean, modern, and in line with the "brat" theme.</p>',
       "<p>It served as a practical project to solidify my understanding of HTML, CSS, and JavaScript, while also being a fun and unique way to showcase what I’ve learned.</p>",
     ],
   },
-  {
-    imageSrc: "/media/projects/TapMap.png",
-    imageAlt: "TapMap logo",
-    title: "TapMap",
-    projectLink: "https://joshuaisaact.github.io/TapMap/",
-    githubLink: "https://github.com/joshuaisaact/TapMap",
-    skills: ["TailwindCSS", "Javascript", "CSS3", "HTML"],
-    description:
-      "A simple web application designed to allow users to mark, categorize and track pubs and breweries on a map.",
-    fullDescription: [
-      "<p>TapMap is a simple web application designed to allow users to mark and track pubs and breweries on a map. </p>",
-      "<p>This project was built using Leaflet.js for mapping, Tailwind CSS for styling, and Vitest for testing. The main purpose of this project is to enhance my familiarity with Leaflet for interactive maps, Tailwind for responsive design, and writing basic unit tests using Vitest.</p>",
-      "<p>The application is also responsive, with different layouts for mobile and desktop</p>",
-    ],
-  },
-  {
-    imageSrc: "/media/projects/streamshuffle.jpg",
-    imageAlt: "Stream Shuffle logo",
-    title: "Stream Shuffle",
-    projectLink: "https://joshuaisaact.github.io/StreamShuffle/",
-    githubLink: "https://github.com/joshuaisaact/StreamShuffle",
-    skills: ["Express", "Nodejs", "Javascript"],
-    description:
-      "My first ever full-stack project, serving a random film to stream from UK streaming services using the TMDB API",
-    fullDescription: [
-      "<p>A static website built to practise using async fetch API within Javascript, and to practise working with an API key to filter and manipulate JSON files.</p>",
-      "<p>The website interacts with an express.js server hosted on Render that contains a private API key, that it uses to redirect data to the client.</p>",
-      "<p>The TMDB API doesn't let ypu filter by films available on UK streaming services, so data manipulation was required to introduce this new functionality</p>",
-    ],
-  },
+  // {
+  //   imageSrc: "/media/projects/TapMap.png",
+  //   imageAlt: "TapMap logo",
+  //   title: "TapMap",
+  //   projectLink: "https://joshuaisaact.github.io/TapMap/",
+  //   githubLink: "https://github.com/joshuaisaact/TapMap",
+  //   skills: ["TailwindCSS", "Javascript", "CSS3", "HTML"],
+  //   description:
+  //     "A simple web application designed to allow users to mark, categorize and track pubs and breweries on a map.",
+  //   fullDescription: [
+  //     `<p><strong>Description:</strong><br />
+  //   TapMap is a simple web app that allows users to mark, categorize, and track their favorite pubs and breweries on an interactive map.
+  //   This project enhanced my skills in map-based web applications and responsive design.</p>`,
+
+  //   `<p><strong>Project Highlights:</strong></p>`,
+
+  //   `<ul>
+  //     <li>Utilized Leaflet.js to create a dynamic map where users can pin and categorize locations.</li>
+  //     <li>Implemented responsive design with TailwindCSS, ensuring the app works seamlessly across mobile and desktop platforms.</li>
+  //     <li>Wrote basic unit tests using Vitest to ensure the core functionality of the app was reliable.</li>
+  //   </ul>`
+  //   ],
+  // },
+  // {
+  //   imageSrc: "/media/projects/streamshuffle.jpg",
+  //   imageAlt: "Stream Shuffle logo",
+  //   title: "Stream Shuffle",
+  //   projectLink: "https://joshuaisaact.github.io/StreamShuffle/",
+  //   githubLink: "https://github.com/joshuaisaact/StreamShuffle",
+  //   skills: ["Express", "Nodejs", "Javascript"],
+  //   description:
+  //     "My first ever full-stack project, serving a random film to stream from UK streaming services using the TMDB API",
+  //   fullDescription: [
+  //     `<p><strong>Description:</strong><br />
+  //     Stream Shuffle is a full-stack web app that helps users discover random films available on UK streaming services using the TMDB API.
+  //     This project focused on integrating external APIs and manipulating data for specific user needs.</p>`,
+
+  //     `<p><strong>Project Highlights:</strong></p>`,
+
+  //     `<ul>
+  //       <li>Developed an async-fetch mechanism to interact with the TMDB API and filter movie recommendations based on availability on UK streaming platforms.</li>
+  //       <li>Built the backend with Express.js, managing API security and data manipulation to introduce new filtering functionalities.</li>
+  //       <li>This project honed my skills in working with external APIs and building full-stack applications.</li>
+  //     </ul>`
+  //   ],
+  // },
 ];

@@ -29,7 +29,7 @@ export function AboutMe() {
 
   return (
     <section className="grid grid-cols-2 justify-center justify-items-end py-60 mx-12">
-      <p className="p-4 text-4xl dark:text-gray-200">
+      <p className="p-4 text-4xl dark:text-gray-200 leading-normal">
         {`Hi! I'm `}
         <span className="text-[var(--theme-1)] font-bold start-bouncing">
           Joshua Tuddenham
