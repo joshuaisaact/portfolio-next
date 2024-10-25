@@ -100,7 +100,7 @@ export const PROJECTS = [
     imageSrc: "/media/projects/portfoliowebsite.png",
     imageAlt: "Portfolio Website",
     title: "Portfolio Website",
-    projectLink: "https://joshuaisaact.github.io/Portfolio-Website/",
+    projectLink: "https://www.joshtuddenham.tech/",
     githubLink: "https://github.com/joshuaisaact/Portfolio-Website",
     skills: ["Typescript", "Nextjs", "TailwindCSS", "CSS3", "HTML5"],
     description:
