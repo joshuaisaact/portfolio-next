@@ -18,6 +18,7 @@ export const SKILL_FILES = [
   "postgresql.svg",
   "drizzle.svg",
   "sequelize.svg",
+  "tanstack-query.svg",
   "html5.svg",
   "css3.svg",
   "javascript.svg",
@@ -28,7 +29,6 @@ export const SKILL_FILES = [
   "hugo.svg",
   "github.svg",
   "git.svg",
-  "tanstack-query.svg",
 ] as const;
 
 export type SkillFile = (typeof SKILL_FILES)[number];
@@ -168,11 +168,11 @@ export const PROJECTS = [
     projectLink: "URL_TO_WOOSTER_PROJECT", // Replace with actual URL
     githubLink: "https://github.com/joshuaisaact/Wooster", // Replace with actual URL
     skills: [
-      "TypeScript",
       "React",
+      "Express",
+      "TypeScript",
       "TailwindCSS",
       "Nodejs",
-      "Express",
       "PostgreSQL",
       "Supabase",
       "Drizzle",
@@ -204,8 +204,8 @@ export const PROJECTS = [
     projectLink: "URL_TO_GOSS_PROJECT", // Replace with actual URL
     githubLink: "https://github.com/joshuaisaact/Goss", // Replace with actual URL
     skills: [
+      "Nextjs",
       "TypeScript",
-      "React",
       "Supabase",
       "TanStack-Query",
       "TailwindCSS",
@@ -236,6 +236,7 @@ export const PROJECTS = [
     skills: [
       "TypeScript",
       "React",
+      "Express",
       "Sequelize",
       "PostgreSQL",
       "Vitest",

@@ -32,7 +32,7 @@ export function Header() {
   ];
 
   return (
-    <header className="sticky top-0 w-full bg-white dark:bg-[#333] z-[3000]">
+    <header className="sticky top-0 w-full bg-white dark:bg-[#333] z-[50]">
       <div className="max-w-[1200px] mx-auto px-6 md:px-12">
         <nav className="flex justify-between items-center py-6">
           <Link
