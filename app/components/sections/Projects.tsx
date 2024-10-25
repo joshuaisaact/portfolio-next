@@ -8,7 +8,6 @@ import { ProjectModal } from "../ui/ProjectModal";
 
 export function Projects() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [isClosing, setIsClosing] = useState(false);
   const projectsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,11 +32,7 @@ export function Projects() {
 
   // Handle modal close with animation
   const handleClose = () => {
-    setIsClosing(true);
-    setTimeout(() => {
-      setSelectedProject(null);
-      setIsClosing(false);
-    }, 300); // Match animation duration
+    setSelectedProject(null);
   };
 
   // Handle ESC key

@@ -32,13 +32,14 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
       />
 
       <div
-        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-        w-[95%] sm:w-[85%] md:w-[75%] lg:w-[60%]
-        max-h-[90vh] sm:max-h-[85vh]
-        overflow-y-auto
-        bg-white dark:bg-[#444]
-        rounded-lg shadow-2xl z-[51]
-        transition-transform transform duration-300"
+        className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+          w-[95%] sm:w-[85%] md:w-[75%] lg:w-[60%]
+          max-h-[90vh] sm:max-h-[85vh]
+          overflow-y-auto
+          bg-white dark:bg-[#444]
+          rounded-lg shadow-2xl z-[51]
+          transition-transform transform duration-300
+         `}
       >
         <button
           className="absolute top-4 right-4

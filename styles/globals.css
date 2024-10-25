@@ -68,6 +68,16 @@ html {
   }
 }
 
+/* Modal Animations */
+.modal {
+  transition: opacity 0.3s ease-in-out;
+  opacity: 1;
+}
+
+.modal.closing {
+  opacity: 0;
+}
+
 /* Skills section */
 .skill-link {
   position: relative;

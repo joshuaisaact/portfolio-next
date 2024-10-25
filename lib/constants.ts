@@ -76,7 +76,8 @@ export const SKILL_INFO: Record<
     color: "#06B6D4",
     url: "https://tailwindcss.com/",
   },
-  "tanstack-query.svg": { // TanStack Query entry
+  "tanstack-query.svg": {
+    // TanStack Query entry
     name: "TanStack Query",
     color: "#FF4154", // TanStack Query brand color
     url: "https://tanstack.com/query",
@@ -175,11 +176,11 @@ export const PROJECTS = [
       "PostgreSQL",
       "Supabase",
       "Drizzle",
-         "Vitest",
-      "Jest"
+      "Vitest",
+      "Jest",
     ],
     description:
-    "An AI-powered travel companion that creates personalized trip itineraries using Google's Gemini API.",
+      "An AI-powered travel companion that creates personalized trip itineraries using Google's Gemini API.",
     fullDescription: [
       `I built Wooster to solve a problem I kept running into - spending hours planning trips instead of enjoying them.
        Using Google's Gemini API, it creates personalized travel plans that actually make sense, taking into account your
@@ -207,13 +208,10 @@ export const PROJECTS = [
       "React",
       "Supabase",
       "TanStack-Query",
-      "WebSockets",
-      "OpenAI",
-      "PlayHT",
-      "TailwindCSS"
+      "TailwindCSS",
     ],
     description:
-    "A voice-first social platform that brings the joy of real conversation back to social media.",
+      "A voice-first social platform that brings the joy of real conversation back to social media.",
     fullDescription: [
       `Goss started with a simple idea: what if social media felt more like actually talking to friends?
        I built a platform where voice is the star, making social interactions feel more natural and engaging.`,
@@ -241,10 +239,10 @@ export const PROJECTS = [
       "Sequelize",
       "PostgreSQL",
       "Vitest",
-      "TailwindCSS"
+      "TailwindCSS",
     ],
     description:
-    "A productivity app that got a complete makeover in performance and user experience.",
+      "A productivity app that got a complete makeover in performance and user experience.",
     fullDescription: [
       `When I joined the Atomize Pro team, I saw an opportunity to make something good even better.
        I led a complete overhaul of the app's state management, making it faster and more reliable without sacrificing features.`,
@@ -267,7 +265,7 @@ export const PROJECTS = [
     githubLink: "https://github.com/joshuaisaact/Portfolio-Website",
     skills: ["Typescript", "Nextjs", "TailwindCSS", "CSS3", "HTML5"],
     description:
-    "You're looking at it! A clean, modern portfolio built with Next.js and TypeScript.",
+      "You're looking at it! A clean, modern portfolio built with Next.js and TypeScript.",
     fullDescription: [
       `I wanted my portfolio to reflect my approach to development - clean, efficient, and enjoyable to use.
        Built with Next.js and TypeScript, it focuses on performance while maintaining a seamless user experience.`,
@@ -290,19 +288,19 @@ export const PROJECTS = [
     githubLink: "https://github.com/joshuaisaact/bratQuiz",
     skills: ["Typescript", "React", "CSS3", "HTML5"],
     description:
-    "A binary-choice quiz where you decide if things are 'brat' or 'not brat', inspired by Charli XCX's aesthetic.",
-      fullDescription: [
-        `Not every project needs to change the world! I built this personality quiz based on Charli XCX's 'BRAT' album
+      "A binary-choice quiz where you decide if things are 'brat' or 'not brat', inspired by Charli XCX's aesthetic.",
+    fullDescription: [
+      `Not every project needs to change the world! I built this personality quiz based on Charli XCX's 'BRAT' album
          as a way to learn React while creating something my friends would actually want to use. It turned into a great
          playground for trying out TypeScript and testing practices.`,
 
-        `<p><strong>Project Highlights:</strong></p>`,
+      `<p><strong>Project Highlights:</strong></p>`,
 
-        `<ul>
+      `<ul>
            <li>Built an interactive quiz flow in React where every answer poses the eternal question: brat or not brat?</li>
       <li>Added TypeScript support because even silly projects deserve type safety</li>
         </ul>`,
-      ],
+    ],
   },
   // {
   //   imageSrc: "/media/projects/TapMap.png",
