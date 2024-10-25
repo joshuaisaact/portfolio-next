@@ -1,5 +1,5 @@
 <div align="center">
-### Full Stack Engineer Portfolio Website
+<h2>Full Stack Engineer Portfolio Website</h2>
 
 ![License: All Rights Reserved](https://img.shields.io/badge/License-All%20Rights%20Reserved-red.svg)
 
