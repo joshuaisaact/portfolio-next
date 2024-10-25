@@ -101,7 +101,7 @@ export const PROJECTS = [
     imageAlt: "Portfolio Website",
     title: "Portfolio Website",
     projectLink: "https://www.joshtuddenham.tech/",
-    githubLink: "https://github.com/joshuaisaact/Portfolio-Website",
+    githubLink: "https://github.com/joshuaisaact/portfolio-next",
     skills: ["Typescript", "Nextjs", "TailwindCSS", "CSS3", "HTML5"],
     description:
       "You're looking at it! A clean, modern portfolio built with Next.js and TypeScript.",
