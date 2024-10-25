@@ -4,32 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { ThemeToggle } from "../ui/ThemeToggle";
-import { Menu, X } from "lucide-react"; // For hamburger icon
+import { Menu, X } from "lucide-react";
+import { navLinks, socialLinks } from "@/lib/constants/navigationConstants";
 
 export function Header() {
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const navLinks = [
-    { href: "#projects", label: "Projects" },
-    { href: "#blog", label: "Blog" },
-    { href: "#contact", label: "Contact" },
-  ];
-
-  const socialLinks = [
-    {
-      href: "https://www.linkedin.com/in/joshuatuddenham/",
-      icon: "/media/nav/linkedin-original.svg",
-      label: "LinkedIn",
-      id: "linkedin",
-    },
-    {
-      href: "https://github.com/joshuaisaact",
-      icon: "/media/nav/github.svg",
-      label: "GitHub",
-      id: "github",
-    },
-  ];
 
   return (
     <header className="sticky top-0 w-full bg-white dark:bg-[#333] z-[50]">
@@ -58,13 +38,13 @@ export function Header() {
                 <Image
                   src={icon}
                   alt={label}
-                  width={24} // Adjust size for better mobile usability
-                  height={24} // Adjust size for better mobile usability
+                  width={24}
+                  height={24}
                   className={`nav-img ${id === "github" ? "dark:invert" : ""}`}
                 />
               </Link>
             ))}
-            <ThemeToggle /> {/* Increase size for better mobile usability */}
+            <ThemeToggle />
           </div>
 
           {/* Mobile menu button */}
@@ -101,7 +81,6 @@ export function Header() {
 
             <li className="flex gap-4 items-center">
               {" "}
-              {/* Flex container for social links */}
               {socialLinks.map(({ href, icon, label, id }) => (
                 <Link
                   key={id}

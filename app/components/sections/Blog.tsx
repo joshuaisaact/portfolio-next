@@ -1,14 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import { BlogPost } from "@/types";
 import { useEffect, useState } from "react";
-
-interface BlogPost {
-  title: string;
-  content_text: string;
-  featured_image: string;
-  url: string;
-}
 
 export function Blog() {
   const [posts, setPosts] = useState<BlogPost[]>([]);

@@ -1,29 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
-
-const THEME_COLORS = [
-  "#e07a14",
-  "#723e5a",
-  "#9c852a",
-  "#C589A3",
-  "#42d499",
-  "#5459de",
-  "#481682",
-  "#3e7256",
-] as const;
+import { useRef } from "react";
+import { THEME_COLORS } from "@/lib/constants/themeConstants";
 
 export function AboutMe() {
-  const [colorIndex, setColorIndex] = useState(0);
+  const colorIndexRef = useRef(0);
 
   const cycleColor = () => {
-    const nextIndex = (colorIndex + 1) % THEME_COLORS.length;
-    setColorIndex(nextIndex);
-    // Update the CSS variable
+    colorIndexRef.current = (colorIndexRef.current + 1) % THEME_COLORS.length;
     document.documentElement.style.setProperty(
       "--theme-1",
-      THEME_COLORS[nextIndex],
+      THEME_COLORS[colorIndexRef.current],
     );
   };
 
