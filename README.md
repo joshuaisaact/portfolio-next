@@ -10,7 +10,7 @@ Personal portfolio website showcasing my projects and skills as a full-stack eng
 [![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 
-### [View Live Site](https://www.joshtuddenham.tech/))
+### [View Live Site](https://www.joshtuddenham.tech/)
 
 </div>
 
