@@ -7,6 +7,7 @@ export interface Project {
   skills: string[];
   description: string;
   fullDescription: string[];
+  videoSrc?: string;
 }
 
 export interface BlogPost {
