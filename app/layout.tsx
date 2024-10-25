@@ -17,9 +17,10 @@ export const metadata: Metadata = {
     description: SITE_CONFIG.description,
     url: SITE_CONFIG.url,
     siteName: SITE_CONFIG.title,
-    locale: "en_US",
+    locale: SITE_CONFIG.locale,
     type: "website",
   },
+  icons: SITE_CONFIG.icons,
 };
 
 export default function RootLayout({
