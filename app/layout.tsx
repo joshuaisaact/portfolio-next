@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "../styles/globals.css";
-import { SITE_CONFIG } from "@/lib/constants";
+import { SITE_CONFIG } from "@/lib/constants/siteConfig";
 import { Header } from "./components/layout/Header";
 import { BackToTop } from "./components/layout/BackToTop";
 import { Footer } from "./components/layout/Footer";

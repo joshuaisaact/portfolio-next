@@ -13,10 +13,11 @@ export interface Project {
 export interface BlogPost {
   slug: string;
   title: string;
-  content: string;
+  content_text: string;
+  url: string;
   excerpt: string;
   date: string;
-  featured_image?: string;
+  featured_image: string;
   tags?: string[];
 }
 

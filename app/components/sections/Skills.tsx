@@ -1,6 +1,6 @@
 "use client";
 
-import { SKILL_FILES, SKILL_INFO } from "@/lib/constants";
+import { SKILL_FILES, SKILL_INFO } from "@/lib/constants/skillConstants";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 

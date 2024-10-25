@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Project } from "@/types";
-import { PROJECTS } from "@/lib/constants";
+import { PROJECTS } from "@/lib/constants/projectConstants";
 import { ProjectModal } from "../ui/ProjectModal";
 
 export function Projects() {
@@ -30,7 +30,6 @@ export function Projects() {
     return () => observer.disconnect();
   }, []);
 
-  // Handle modal close with animation
   const handleClose = () => {
     setSelectedProject(null);
   };
