@@ -17,7 +17,7 @@ export function Skills() {
           }
         });
       },
-      { threshold: 0.1 },
+      { threshold: 0.5 },
     );
 
     const skillElements = skillsRef.current?.querySelectorAll(".skills-icon");
@@ -51,7 +51,7 @@ export function Skills() {
               height={75}
               className="skills-icon m-6 opacity-0 translate-x-full dark:invert-[.15]"
               style={{
-                transitionDelay: `${index * 0.2}s`,
+                transitionDelay: `${index * 0.1}s`,
               }}
               title={SKILL_INFO[file].name}
             />

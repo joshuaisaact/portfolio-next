@@ -42,7 +42,7 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <div className="inputContainer">
+      <div className="inputContainer flex flex-col">
         <label htmlFor="name" className="font-medium mb-2">
           Name
         </label>
@@ -58,7 +58,7 @@ export function ContactForm() {
         />
       </div>
 
-      <div className="inputContainer">
+      <div className="inputContainer flex flex-col">
         <label htmlFor="email" className="font-medium mb-2">
           Email
         </label>
@@ -74,7 +74,7 @@ export function ContactForm() {
         />
       </div>
 
-      <div className="inputContainer">
+      <div className="inputContainer flex flex-col">
         <label htmlFor="message" className="font-medium mb-2">
           Your Message
         </label>
@@ -91,7 +91,7 @@ export function ContactForm() {
       </div>
 
       {/* Honeypot field */}
-      <div className="honeypot-field">
+      <div className="honeypot-field hidden">
         <label htmlFor="honeypot">Leave this field empty</label>
         <input
           type="text"
@@ -101,7 +101,6 @@ export function ContactForm() {
           onChange={(e) =>
             setFormData((prev) => ({ ...prev, honeypot: e.target.value }))
           }
-          className="hidden"
         />
       </div>
 

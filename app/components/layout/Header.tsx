@@ -36,7 +36,7 @@ export function Header() {
       <div className="max-w-[1200px] mx-auto px-6 md:px-12">
         <nav className="flex justify-between items-center py-6">
           <Link
-            href="/"
+            href="#top"
             className={`nav-link custom-nav-link transition-opacity duration-300 text-xl  font-medium dark:text-gray-200 ${
               hoveredLink && hoveredLink !== "home" ? "opacity-50" : ""
             }`}

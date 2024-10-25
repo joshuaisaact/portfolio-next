@@ -32,6 +32,10 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 .dark {
   --color-background: #333;
   color-scheme: dark;
@@ -72,8 +76,8 @@
 
 .skills-icon {
   transition:
-    transform 0.5s ease,
-    opacity 0.5s ease;
+    transform 0.3s ease,
+    opacity 0.3s ease;
 }
 
 .skills-icon.slide-in {
