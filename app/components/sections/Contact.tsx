@@ -44,7 +44,7 @@ export function Contact() {
                 height={20}
                 className="dark:invert"
               />
-              github.com/joshuaisaact
+              /joshuaisaact
             </a>
           </div>
 
@@ -60,9 +60,8 @@ export function Contact() {
                 alt="linkedin"
                 width={20}
                 height={20}
-                className="dark:invert"
               />
-              linkedin.com/in/joshuatuddenham
+              /joshuatuddenham
             </a>
           </div>
         </section>

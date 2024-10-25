@@ -200,7 +200,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                     alt={skill}
                     width={20}
                     height={20}
-                    className="skills-icon dark:invert"
+                    className="skills-icon"
                   />
                   <span className="ml-2 font-medium hidden sm:inline">
                     {skill}
