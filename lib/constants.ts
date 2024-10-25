@@ -16,16 +16,19 @@ export const SKILL_FILES = [
   "tailwindcss.svg",
   "supabase.svg",
   "postgresql.svg",
-  "drizzle.png",
+  "drizzle.svg",
   "sequelize.svg",
   "html5.svg",
   "css3.svg",
   "javascript.svg",
   "npm.svg",
+  "vitest.svg",
+  "jest.svg",
   "mongodb.svg",
   "hugo.svg",
   "github.svg",
   "git.svg",
+  "tanstack-query.svg",
 ] as const;
 
 export type SkillFile = (typeof SKILL_FILES)[number];
@@ -45,7 +48,7 @@ export const SKILL_INFO: Record<
   },
   "nextjs.svg": {
     name: "Next.js",
-    color: "#000000", // Next.js uses black as its primary color
+    color: "#000000",
     url: "https://nextjs.org/",
   },
   "react.svg": {
@@ -73,6 +76,11 @@ export const SKILL_INFO: Record<
     color: "#06B6D4",
     url: "https://tailwindcss.com/",
   },
+  "tanstack-query.svg": { // TanStack Query entry
+    name: "TanStack Query",
+    color: "#FF4154", // TanStack Query brand color
+    url: "https://tanstack.com/query",
+  },
   "nodejs.svg": {
     name: "Node.js",
     color: "#339933",
@@ -82,6 +90,16 @@ export const SKILL_INFO: Record<
     name: "Express.js",
     color: "#000000",
     url: "https://expressjs.com/",
+  },
+  "vitest.svg": {
+    name: "Vitest",
+    color: "#6E9F18",
+    url: "https://vitest.dev/",
+  },
+  "jest.svg": {
+    name: "Jest",
+    color: "#C21325",
+    url: "https://jestjs.io/",
   },
   "npm.svg": {
     name: "NPM",
@@ -108,7 +126,7 @@ export const SKILL_INFO: Record<
     color: "#3FCF8E", // Supabase's brand green
     url: "https://supabase.com/",
   },
-  "drizzle.png": {
+  "drizzle.svg": {
     name: "Drizzle",
     color: "#C5F74F", // Drizzle's lime green color
     url: "https://orm.drizzle.team/",
@@ -148,23 +166,34 @@ export const PROJECTS = [
     title: "Wooster",
     projectLink: "URL_TO_WOOSTER_PROJECT", // Replace with actual URL
     githubLink: "https://github.com/joshuaisaact/Wooster", // Replace with actual URL
-    skills: ["TypeScript", "React", "TailwindCSS", "Nodejs"],
+    skills: [
+      "TypeScript",
+      "React",
+      "TailwindCSS",
+      "Nodejs",
+      "Express",
+      "PostgreSQL",
+      "Supabase",
+      "Drizzle",
+         "Vitest",
+      "Jest"
+    ],
     description:
-      "A full-stack web app generating personalised trips and activities using the Gemini LLM API.",
-      fullDescription: [
-        `<p><strong>Description:</strong><br />
-        Wooster is a full-stack web application designed to generate personalized travel itineraries and activity recommendations using the Gemini LLM API.
-        As the sole developer, I built the app from scratch, focusing on a seamless, responsive experience for both mobile and desktop users.</p>`,
+    "An AI-powered travel companion that creates personalized trip itineraries using Google's Gemini API.",
+    fullDescription: [
+      `I built Wooster to solve a problem I kept running into - spending hours planning trips instead of enjoying them.
+       Using Google's Gemini API, it creates personalized travel plans that actually make sense, taking into account your
+       interests, budget, and time constraints.`,
 
-        `<p><strong>Project Highlights:</strong></p>`,
+      `<p><strong>Project Highlights:</strong></p>`,
 
-        `<ul>
-          <li>Built an intuitive, responsive UI using React, TypeScript, and Tailwind for optimal performance and accessibility.</li>
-          <li>Developed a robust backend with Node.js/Express and PostgreSQL (Supabase-hosted), using Drizzle ORM for database management.</li>
-          <li>Integrated the Gemini API to generate personalized trip suggestions and utilized Leaflet for interactive maps.</li>
-          <li>Implemented comprehensive testing with Supertest and Jest, including Dockerized test databases for CI.</li>
-        </ul>`
-      ],
+      `<ul>
+          <li>Created a snappy, intuitive UI with React and TypeScript that works great on both phones and desktops</li>
+          <li>Built a robust backend using Node.js and PostgreSQL, with Supabase handling the heavy lifting for auth and storage</li>
+          <li>Integrated Gemini API to generate smart, contextual travel suggestions and used Leaflet for interactive maps</li>
+          <li>Set up a proper testing pipeline with Jest and Docker, because nobody likes unexpected surprises in production!</li>
+        </ul>`,
+    ],
     videoSrc: "/media/projects/videos/wooster.webm",
   },
   {
@@ -173,22 +202,30 @@ export const PROJECTS = [
     title: "Goss",
     projectLink: "URL_TO_GOSS_PROJECT", // Replace with actual URL
     githubLink: "https://github.com/joshuaisaact/Goss", // Replace with actual URL
-    skills: ["TypeScript", "React", "Supabase"],
+    skills: [
+      "TypeScript",
+      "React",
+      "Supabase",
+      "TanStack-Query",
+      "WebSockets",
+      "OpenAI",
+      "PlayHT",
+      "TailwindCSS"
+    ],
     description:
-      "A voice-based social media platform with real-time notifications.",
+    "A voice-first social platform that brings the joy of real conversation back to social media.",
     fullDescription: [
-      `<p><strong>Description:</strong><br />
-    Goss is a voice-based social media platform that facilitates real-time interactions and notifications.
-    I led the development of key social features, focusing on user engagement and live updates.</p>`,
+      `Goss started with a simple idea: what if social media felt more like actually talking to friends?
+       I built a platform where voice is the star, making social interactions feel more natural and engaging.`,
 
-    `<p><strong>Project Highlights:</strong></p>`,
+      `<p><strong>Project Highlights:</strong></p>`,
 
-    `<ul>
-      <li>Developed real-time notifications and follow system using WebSockets for instant communication.</li>
-      <li>Implemented state management with Tanstack Query for efficient data caching and optimistic updates.</li>
-      <li>Integrated OpenAI and PlayHT APIs for voice generation and transcription, improving platform accessibility.</li>
-      <li>Designed responsive, accessible UI components optimized for different device formats.</li>
-    </ul>`
+      `<ul>
+        <li>Built a real-time notification system using WebSockets that actually works (and won't drain your battery!)</li>
+        <li>Used TanStack Query for state management - making the app feel lightning-fast with optimistic updates</li>
+        <li>Integrated OpenAI and PlayHT to handle voice generation and transcription, making the platform accessible to everyone</li>
+        <li>Designed the UI to be intuitive across all devices - because social media should work wherever you are</li>
+      </ul>`,
     ],
     videoSrc: "/media/projects/videos/goss3.webm",
   },
@@ -198,22 +235,28 @@ export const PROJECTS = [
     title: "Atomize Pro",
     projectLink: "URL_TO_ATOMIZE_PRO_PROJECT", // Replace with actual URL
     githubLink: "https://github.com/joshuaisaact/Atomize-refactor/",
-    skills: ["TypeScript", "React", "Sequelize"],
+    skills: [
+      "TypeScript",
+      "React",
+      "Sequelize",
+      "PostgreSQL",
+      "Vitest",
+      "TailwindCSS"
+    ],
     description:
-      "A productivity app with a complete state management overhaul.",
+    "A productivity app that got a complete makeover in performance and user experience.",
     fullDescription: [
-      `<p><strong>Description:</strong><br />
-      Atomize Pro is a productivity app where I led a comprehensive state management overhaul,
-      simplifying the codebase and improving performance.</p>`,
+      `When I joined the Atomize Pro team, I saw an opportunity to make something good even better.
+       I led a complete overhaul of the app's state management, making it faster and more reliable without sacrificing features.`,
 
       `<p><strong>Project Highlights:</strong></p>`,
 
       `<ul>
-        <li>Consolidated 30 state variables into 9 using the <code>useReducer</code> pattern, reducing complexity.</li>
-        <li>Optimized app performance by eliminating 12 <code>useEffect</code> hooks through optimistic updates and presumptive rendering.</li>
-        <li>Migrated the codebase to TypeScript for enhanced type safety, improving code reliability.</li>
-        <li>Established a comprehensive test suite using Vitest, significantly boosting test coverage and quality.</li>
-      </ul>`
+        <li>Streamlined state management by consolidating 30 state variables into 9 using useReducer - less code, fewer bugs!</li>
+        <li>Boosted performance by replacing 12 useEffect hooks with optimistic updates - making the app feel instant</li>
+        <li>Added TypeScript support throughout the codebase because catching bugs early is better than debugging late</li>
+        <li>Built a comprehensive test suite that actually helps catch issues before they reach users</li>
+      </ul>`,
     ],
   },
   {
@@ -222,21 +265,21 @@ export const PROJECTS = [
     title: "Portfolio Website",
     projectLink: "https://joshuaisaact.github.io/Portfolio-Website/",
     githubLink: "https://github.com/joshuaisaact/Portfolio-Website",
-    skills: ["Typescript", "Nextjs", "TailwindCSS", "CSS"],
+    skills: ["Typescript", "Nextjs", "TailwindCSS", "CSS3", "HTML5"],
     description:
-      "My portfolio website, created using a mixture of technologies, primarily Javascript for the main site, Hugo for the blog, and Express for the back-end.",
+    "You're looking at it! A clean, modern portfolio built with Next.js and TypeScript.",
     fullDescription: [
-      `<p><strong>Description:</strong><br />
-      This portfolio website is a personal project built to showcase my skills and serve as a central hub for my blog and personal projects.
-      The design balances form and function, focusing on a clean, minimalistic user experience.</p>`,
+      `I wanted my portfolio to reflect my approach to development - clean, efficient, and enjoyable to use.
+       Built with Next.js and TypeScript, it focuses on performance while maintaining a seamless user experience.`,
 
       `<p><strong>Project Highlights:</strong></p>`,
 
       `<ul>
-        <li>Designed and developed a fully responsive site using Next.js, TypeScript, and TailwindCSS for fast, modern front-end performance.</li>
-        <li>Integrated Hugo as a static site generator for the blog, using custom themes to compile markdown into static HTML.</li>
-        <li>Focused on accessibility and design aesthetics, ensuring an intuitive user experience across devices.</li>
-      </ul>`
+        <li>Leveraged Next.js and TypeScript for a fast, modern site that's easy to maintain and extend</li>
+        <li>Implemented responsive design principles to ensure a great experience on any device</li>
+        <li>Added smooth animations and transitions to make browsing projects more engaging</li>
+        <li>Focused on accessibility because great websites should work for everyone</li>
+      </ul>`,
     ],
   },
   {
@@ -245,15 +288,21 @@ export const PROJECTS = [
     title: "Brat quiz",
     projectLink: "https://joshuaisaact.github.io/bratQuiz/",
     githubLink: "https://github.com/joshuaisaact/bratQuiz",
-    skills: ["Typescript", "React",  "CSS3"],
+    skills: ["Typescript", "React", "CSS3", "HTML5"],
     description:
-      "An interactive binary-choice quiz website I made to practise React and Typescript, based off Charli XCX's brat album.",
-    fullDescription: [
-      "<p>A brat-themed quiz written in Typescript using React, HTML, and CSS. I wanted to build something that would not only help me sharpen my coding skills but also something my friends would enjoy interacting with.</p>",
-      '<p>I started with the basics in Javascript, setting up the structure of the quiz. My focus was on making it user-friendly and straightforward, ensuring that each question was clear and easy to navigate. This provided a solid foundation for the project. Next, I used CSS to bring the quiz to life visually - the style of "brat" is very forgiving, so this didn\'t take me long!</p>',
-      '<p>The aim was to make the quiz visually appealing without overwhelming the user — clean, modern, and in line with the "brat" theme.</p>',
-      "<p>It served as a practical project to solidify my understanding of HTML, CSS, and JavaScript, while also being a fun and unique way to showcase what I’ve learned.</p>",
-    ],
+    "A binary-choice quiz where you decide if things are 'brat' or 'not brat', inspired by Charli XCX's aesthetic.",
+      fullDescription: [
+        `Not every project needs to change the world! I built this personality quiz based on Charli XCX's 'BRAT' album
+         as a way to learn React while creating something my friends would actually want to use. It turned into a great
+         playground for trying out TypeScript and testing practices.`,
+
+        `<p><strong>Project Highlights:</strong></p>`,
+
+        `<ul>
+           <li>Built an interactive quiz flow in React where every answer poses the eternal question: brat or not brat?</li>
+      <li>Added TypeScript support because even silly projects deserve type safety</li>
+        </ul>`,
+      ],
   },
   // {
   //   imageSrc: "/media/projects/TapMap.png",
