@@ -34,40 +34,42 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
       <div
         className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
           w-[95%] sm:w-[85%] md:w-[75%] lg:w-[60%]
-          max-h-[90vh] sm:max-h-[85vh]
+          max-h-[80vh] md:max-h-[85vh]
           overflow-y-auto
           bg-white dark:bg-[#444]
           rounded-lg shadow-2xl z-[51]
           transition-transform transform duration-300
          `}
       >
-        <button
-          className="absolute top-4 right-4
-            w-8 h-8 sm:w-10 sm:h-10
-            rounded-full
-            bg-gray-100 dark:bg-gray-800
-            text-gray-900 dark:text-white
-            hover:bg-gray-200 dark:hover:bg-gray-700
-            flex items-center justify-center
-            transition-colors duration-200
-            shadow-lg
-            z-[60]"
-          onClick={onClose}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+        <div className="sticky top-0 z-[60] bg-white dark:bg-[#444] p-4">
+          <button
+            className="
+    absolute top-4 right-4
+    w-10 h-10 sm:w-8 sm:h-8 md:w-8 md:h-8 // Increase size on mobile, default smaller for larger screens
+    rounded-full
+    bg-gray-100 dark:bg-gray-800
+    text-gray-900 dark:text-white
+    hover:bg-gray-200 dark:hover:bg-gray-700
+    flex items-center justify-center
+    transition-colors duration-200
+    shadow-lg"
+            onClick={onClose}
           >
-            <path d="M18 6L6 18"></path>
-            <path d="M6 6l12 12"></path>
-          </svg>
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M18 6L6 18"></path>
+              <path d="M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
 
         <div className="p-4 sm:p-6 md:p-8">
           {/* Image/Video */}
