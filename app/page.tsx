@@ -2,9 +2,7 @@ import { Metadata } from "next";
 import { AboutMe } from "./components/sections/AboutMe";
 import { Skills } from "./components/sections/Skills";
 import { Projects } from "./components/sections/Projects";
-import { Blog } from "./components/sections/Blog";
 import { Roboto, Source_Serif_4 } from "next/font/google";
-import { ContactForm } from "./components/ui/ContactForm";
 import { Contact } from "./components/sections/Contact";
 
 const roboto = Roboto({
