@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export function Contact() {
   return (
-    <section className="py-20 pb-section" id="contact">
+    <section className="py-5 md:py-20 pb-section" id="contact">
       <h2 className="text-center p-4 underline decoration-[var(--theme-1)] decoration-2 underline-offset-2 text-3xl">
         Contact
       </h2>

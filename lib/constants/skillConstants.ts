@@ -63,13 +63,13 @@ export const SKILL_INFO: Record<
     url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
   },
   "tailwindcss.svg": {
-    name: "Tailwind CSS",
+    name: "Tailwind",
     color: "#06B6D4",
     url: "https://tailwindcss.com/",
   },
   "tanstack-query.svg": {
     // TanStack Query entry
-    name: "TanStack Query",
+    name: "React Query",
     color: "#FF4154", // TanStack Query brand color
     url: "https://tanstack.com/query",
   },

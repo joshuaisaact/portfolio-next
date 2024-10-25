@@ -66,7 +66,7 @@ export const PROJECTS = [
     videoSrc: "/media/projects/videos/goss3.webm",
   },
   {
-    imageSrc: "/media/projects/atomizepro.png",
+    imageSrc: "/media/projects/atomic-icon.svg",
     imageAlt: "Atomize Pro logo",
     title: "Atomize Pro",
     projectLink: "URL_TO_ATOMIZE_PRO_PROJECT", // Replace with actual URL
