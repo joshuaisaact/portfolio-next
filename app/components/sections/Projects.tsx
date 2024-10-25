@@ -136,7 +136,7 @@ export function Projects() {
         ))}
       </div>
 
-    {selectedProject && (
+      {selectedProject && (
         <ProjectModal project={selectedProject} onClose={handleClose} />
       )}
     </section>

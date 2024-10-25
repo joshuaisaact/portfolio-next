@@ -4,9 +4,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { ThemeToggle } from "../ui/ThemeToggle";
+import { Menu, X } from "lucide-react"; // For hamburger icon
 
 export function Header() {
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = [
     { href: "#projects", label: "Projects" },
@@ -30,62 +32,121 @@ export function Header() {
   ];
 
   return (
-    <header className="sticky top-0 px-12 flex flex-col items-center w-full bg-white dark:bg-[#333] z-[3000]">
-      <nav className="flex justify-between items-center w-full py-8 px-4 text-xl font-medium dark:text-gray-200">
-        <Link
-          href="/"
-          className={`nav-link custom-nav-link transition-opacity duration-300 ${
-            hoveredLink && hoveredLink !== "home" ? "opacity-50" : ""
-          }`}
-          onMouseEnter={() => setHoveredLink("home")}
-          onMouseLeave={() => setHoveredLink(null)}
-        >
-          Joshua Tuddenham
-        </Link>
+    <header className="sticky top-0 w-full bg-white dark:bg-[#333] z-[3000]">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12">
+        <nav className="flex justify-between items-center py-6">
+          <Link
+            href="/"
+            className={`nav-link custom-nav-link transition-opacity duration-300 text-xl  font-medium dark:text-gray-200 ${
+              hoveredLink && hoveredLink !== "home" ? "opacity-50" : ""
+            }`}
+            onMouseEnter={() => setHoveredLink("home")}
+            onMouseLeave={() => setHoveredLink(null)}
+          >
+            Joshua Tuddenham
+          </Link>
 
-        <ul className="flex items-center gap-8">
-          {navLinks.map(({ href, label }) => (
-            <li key={href}>
+          <div className="flex gap-4 items-center md:hidden">
+            {socialLinks.map(({ href, icon, label, id }) => (
               <Link
-                href={href}
-                className={`custom-nav-link transition-opacity duration-300 ${
-                  hoveredLink && hoveredLink !== href ? "opacity-50" : ""
-                }`}
-                onMouseEnter={() => setHoveredLink(href)}
-                onMouseLeave={() => setHoveredLink(null)}
-              >
-                {label}
-              </Link>
-            </li>
-          ))}
-
-          {socialLinks.map(({ href, icon, label, id }) => (
-            <li key={id}>
-              <Link
+                key={id}
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`custom-nav-link transition-opacity duration-300 ${
-                  hoveredLink && hoveredLink !== id ? "opacity-50" : ""
-                }`}
-                onMouseEnter={() => setHoveredLink(id)}
-                onMouseLeave={() => setHoveredLink(null)}
+                className="custom-nav-link"
               >
                 <Image
                   src={icon}
                   alt={label}
-                  width={20}
-                  height={20}
+                  width={24} // Adjust size for better mobile usability
+                  height={24} // Adjust size for better mobile usability
                   className={`nav-img ${id === "github" ? "dark:invert" : ""}`}
                 />
               </Link>
+            ))}
+            <ThemeToggle /> {/* Increase size for better mobile usability */}
+          </div>
+
+          {/* Mobile menu button */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden p-2"
+            aria-label="Toggle menu"
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
+          >
+            {isMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+          </button>
+
+          {/* Desktop navigation */}
+          <ul className="hidden md:flex items-center gap-8">
+            {navLinks.map(({ href, label }) => (
+              <li key={href}>
+                <Link
+                  href={href}
+                  className={`custom-nav-link md:text-lg transition-opacity duration-300 ${
+                    hoveredLink && hoveredLink !== href ? "opacity-50" : ""
+                  }`}
+                  onMouseEnter={() => setHoveredLink(href)}
+                  onMouseLeave={() => setHoveredLink(null)}
+                >
+                  {label}
+                </Link>
+              </li>
+            ))}
+
+            <li className="flex gap-4 items-center">
+              {" "}
+              {/* Flex container for social links */}
+              {socialLinks.map(({ href, icon, label, id }) => (
+                <Link
+                  key={id}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`custom-nav-link`}
+                >
+                  <Image
+                    src={icon}
+                    alt={label}
+                    width={24}
+                    height={24}
+                    className={`nav-img ${id === "github" ? "dark:invert" : ""}`}
+                  />
+                </Link>
+              ))}
+              <ThemeToggle />
             </li>
-          ))}
-          <li>
-            <ThemeToggle />
-          </li>
-        </ul>
-      </nav>
+          </ul>
+        </nav>
+      </div>
+
+      {/* Mobile menu */}
+      <div
+        className={`md:hidden absolute inset-x-0 top-full transition-opacity duration-300 ease-in-out ${
+          isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
+        }`}
+      >
+        <div className="bg-white dark:bg-[#333] px-6 py-4">
+          <ul className="flex flex-col gap-4">
+            {navLinks.map(({ href, label }) => (
+              <li key={href}>
+                <Link
+                  href={href}
+                  className="block py-2 custom-nav-link text-lg"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </header>
   );
 }

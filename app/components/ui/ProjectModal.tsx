@@ -26,96 +26,185 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
   return createPortal(
     <>
-      {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300"
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-opacity duration-300"
         onClick={onClose}
       />
 
-      {/* Modal */}
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] sm:w-[60%] max-h-[90vh] overflow-y-auto bg-white dark:bg-[#444] rounded-lg shadow-2xl z-50 transition-transform transform duration-300">
+      <div
+        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+        w-[95%] sm:w-[85%] md:w-[75%] lg:w-[60%]
+        max-h-[90vh] sm:max-h-[85vh]
+        overflow-y-auto
+        bg-white dark:bg-[#444]
+        rounded-lg shadow-2xl z-[51]
+        transition-transform transform duration-300"
+      >
         <button
-          className="absolute top-5 right-5 w-12 h-12 rounded-full bg-white dark:bg-[#555] border-2 border-[var(--theme-1)] hover:bg-[var(--color-primary)] hover:text-white transition-colors group shadow-md"
+          className="absolute top-4 right-4
+            w-8 h-8 sm:w-10 sm:h-10
+            rounded-full
+            bg-gray-100 dark:bg-gray-800
+            text-gray-900 dark:text-white
+            hover:bg-gray-200 dark:hover:bg-gray-700
+            flex items-center justify-center
+            transition-colors duration-200
+            shadow-lg
+            z-[60]"
           onClick={onClose}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 100 100"
+            className="h-5 w-5"
+            viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="5"
-            className="group-hover:stroke-white transition-colors"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
-            <line x1="30" y1="30" x2="70" y2="70" />
-            <line x1="70" y1="30" x2="30" y2="70" />
+            <path d="M18 6L6 18"></path>
+            <path d="M6 6l12 12"></path>
           </svg>
         </button>
 
-        <div className="p-6 sm:p-8">
-          <Image
-            src={project.imageSrc}
-            alt={project.imageAlt}
-            width={800}
-            height={400}
-            className="rounded-lg w-full h-[300px] object-cover shadow-md mb-6"
-            priority
-          />
+        <div className="p-4 sm:p-6 md:p-8">
+          {/* Image/Video */}
+          {project.videoSrc ? (
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="rounded-lg w-full h-[200px] sm:h-[250px] md:h-[300px] object-cover shadow-md mb-4 sm:mb-6"
+            >
+              <source src={project.videoSrc} type="video/webm" />
+              Your browser does not support the video tag.
+            </video>
+          ) : (
+            <Image
+              src={project.imageSrc}
+              alt={project.imageAlt}
+              width={800}
+              height={400}
+              className="rounded-lg w-full h-[200px] sm:h-[250px] md:h-[300px] object-cover shadow-md mb-4 sm:mb-6"
+              priority
+            />
+          )}
 
-          <h3 className="text-2xl underline decoration-[var(--theme-1)] font-bold text-center mt-4 mb-4 text-gray-800 dark:text-white">
+          {/* Title */}
+          <h3
+            className="text-xl sm:text-2xl underline decoration-[var(--theme-1)]
+            font-bold text-center mt-2 sm:mt-4 mb-6
+            text-gray-800 dark:text-white"
+          >
             {project.title}
           </h3>
 
-          <ul className="flex justify-center gap-4 my-4 flex-wrap">
-            {project.skills.map((skill) => (
-              <li key={skill} className="flex items-center border border-[var(--theme-1)] rounded-full px-3 py-1">
-                <Image
-                  src={`/media/skills/${skill.toLowerCase()}.svg`}
-                  alt={skill}
-                  width={30}
-                  height={30}
-                  className="skills-icon"
-                  aria-label={skill}
-                  title={skill}
-                />
-                <span className="ml-2 font-medium">{skill}</span>
-              </li>
-            ))}
-          </ul>
+          {/* Description Content */}
+          <div className="prose dark:prose-invert max-w-none mb-8">
+            {/* Main intro */}
+            <div
+              className="text-lg sm:text-xl leading-relaxed text-gray-700 dark:text-gray-300 mb-6"
+              dangerouslySetInnerHTML={{
+                __html: project.fullDescription[0].replace(
+                  "<strong>Description:</strong><br />",
+                  "",
+                ),
+              }}
+            />
 
-          <div className="flex justify-center gap-8 my-6">
-          <a
-  href={project.githubLink}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="flex items-center bg-gray-800 text-white hover:bg-gray-900 transition duration-300 rounded-lg px-5 py-2 shadow"
->
-  <Image
-    src="/media/skills/github.svg"
-    alt="GitHub"
-    width={24}
-    height={24}
-    className="mr-2"
-  />
-  GitHub
-</a>
-            <a
-              href={project.projectLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn bg-green-600 text-white hover:bg-green-700 transition duration-300 rounded-lg px-4 py-2 shadow"
-            >
-              Visit Site
-            </a>
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-8 my-8">
+              <a
+                href={project.githubLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center
+                bg-gray-100 dark:bg-gray-800
+                text-gray-900 dark:text-white
+                hover:bg-gray-200 dark:hover:bg-gray-700
+                transition duration-300 rounded-lg
+                px-4 sm:px-5 py-2 shadow group"
+              >
+                <Image
+                  src="/media/skills/github.svg"
+                  alt="GitHub"
+                  width={20}
+                  height={20}
+                  className="mr-2 dark:invert group-hover:brightness-95 dark:group-hover:brightness-125 transition-all"
+                />
+                GitHub
+              </a>
+              <a
+                href={project.projectLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center border-2 border-[var(--theme-1)]
+                text-[var(--theme-1)] dark:text-gray-200
+                hover:bg-[var(--theme-1)] hover:text-white
+                transition-all duration-300 rounded-lg
+                px-4 sm:px-5 py-2 shadow"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  className="w-5 h-5 mr-2"
+                  strokeWidth="2"
+                >
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+                Visit Site
+              </a>
+            </div>
+
+            {/* Highlights section */}
+            <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-6">
+              <div
+                className="space-y-3"
+                dangerouslySetInnerHTML={{
+                  __html: project.fullDescription[2]
+                    .replace("<ul>", '<ul class="space-y-3">')
+                    .replace(
+                      /<li>/g,
+                      `<li class="relative pl-6 text-base sm:text-lg text-gray-700 dark:text-gray-300">
+                        <span class="absolute left-0 text-[var(--theme-1)] font-bold">•</span>`,
+                    ),
+                }}
+              />
+            </div>
           </div>
 
-          <div className="prose dark:prose-invert max-w-none">
-            {project.fullDescription.map((para, index) => (
-              <div
-                key={index}
-                className="my-4 text-lg leading-relaxed text-gray-700 dark:text-gray-300"
-                dangerouslySetInnerHTML={{ __html: para }}
-              />
-            ))}
+          {/* Skills at bottom with separator */}
+          <div className="mt-8 pt-6 border-t border-gray-100 dark:border-gray-700">
+            <ul className="flex flex-wrap justify-center gap-2 sm:gap-4">
+              {project.skills.map((skill) => (
+                <li
+                  key={skill}
+                  className="flex items-center
+                    bg-gray-100 dark:bg-gray-800
+                    text-gray-900 dark:text-white
+                    hover:bg-gray-200 dark:hover:bg-gray-700
+                    transition-colors duration-300
+                    rounded-lg px-3 py-1.5 shadow-sm"
+                >
+                  <Image
+                    src={`/media/skills/${skill.toLowerCase()}.svg`}
+                    alt={skill}
+                    width={20}
+                    height={20}
+                    className="skills-icon dark:invert"
+                  />
+                  <span className="ml-2 font-medium hidden sm:inline">
+                    {skill}
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
