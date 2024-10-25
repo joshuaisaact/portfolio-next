@@ -3,9 +3,11 @@
 import { SKILL_FILES, SKILL_INFO } from "@/lib/constants/skillConstants";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
+import { useTheme } from "next-themes";
 
 export function Skills() {
   const skillsRef = useRef<HTMLDivElement>(null);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -56,10 +58,12 @@ export function Skills() {
             />
             <span
               className={`absolute -bottom-6 sm:-bottom-2 left-1/2 -translate-x-1/2
-             md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300
-             ${file.includes("tanstack") ? "text-[9px]" : "text-xs"} sm:text-xs md:text-sm
-             font-medium dark:text-gray-200 whitespace-nowrap`}
-              style={{ color: SKILL_INFO[file].color }}
+    md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300
+    ${file.includes("tanstack") ? "text-[9px]" : "text-xs"} sm:text-xs md:text-sm
+    font-medium whitespace-nowrap`}
+              style={{
+                color: theme === "dark" ? "#e5e7eb" : SKILL_INFO[file].color,
+              }}
             >
               {SKILL_INFO[file].name}
             </span>

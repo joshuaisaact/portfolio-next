@@ -29,6 +29,7 @@ export const SKILL_INFO: Record<
   {
     name: string;
     color?: string;
+    textColorDark?: string;
     url: string;
   }
 > = {
@@ -40,6 +41,7 @@ export const SKILL_INFO: Record<
   "nextjs.svg": {
     name: "Next.js",
     color: "#000000",
+    textColorDark: "text-gray-200",
     url: "https://nextjs.org/",
   },
   "react.svg": {
@@ -81,6 +83,7 @@ export const SKILL_INFO: Record<
   "express.svg": {
     name: "Express.js",
     color: "#000000",
+    textColorDark: "text-gray-200",
     url: "https://expressjs.com/",
   },
   "vitest.svg": {
@@ -131,6 +134,7 @@ export const SKILL_INFO: Record<
   "github.svg": {
     name: "GitHub",
     color: "#181717",
+    textColorDark: "text-gray-200",
     url: "https://github.com/",
   },
   "git.svg": {

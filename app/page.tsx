@@ -61,7 +61,7 @@ export default function Home() {
       {/* Skills Section */}
       <section
         id="skills"
-        className="w-full py-5 md:py-20 pb-section"
+        className="w-full pb-section"
         aria-label="My technical skills"
       >
         <Skills />
@@ -70,7 +70,7 @@ export default function Home() {
       {/* Projects Section */}
       <section
         id="projects"
-        className="w-full py-5 md:py-20 pb-section"
+        className="w-full pb-section"
         aria-label="My portfolio projects"
       >
         <Projects />
@@ -89,7 +89,7 @@ export default function Home() {
 
       <section
         id="contact"
-        className="w-full py-5 md:py-20 pb-section"
+        className="w-full  pb-section"
         aria-label="Contact form"
       >
         <Contact />
