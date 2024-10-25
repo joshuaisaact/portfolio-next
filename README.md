@@ -3,6 +3,8 @@
 
 ![License: All Rights Reserved](https://img.shields.io/badge/License-All%20Rights%20Reserved-red.svg)
 
+<img src="./public/media/projects/portfoliowebsite.png" alt="Portfolio Website Screenshot" title="Portfolio Website" style="width:400px;"/>
+
 Personal portfolio website showcasing my projects and skills as a full-stack engineer. Built with Next.js, TypeScript, and Tailwind CSS, deployed on Vercel.
 
 [![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
