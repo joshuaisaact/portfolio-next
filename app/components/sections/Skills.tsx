@@ -29,7 +29,7 @@ export function Skills() {
   return (
     <section className="py-10 md:py-60 pb-section">
       <h2 className="padding-medium text-3xl text-center font-sans underline decoration-[var(--theme-1)] decoration-2 underline-offset-[2px] dark:text-gray-200">
-        Technologies
+        Skills
       </h2>
 
       <div
