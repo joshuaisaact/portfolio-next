@@ -44,7 +44,7 @@ export function Contact() {
                 height={20}
                 className="dark:invert"
               />
-              /joshuaisaact
+              joshuaisaact
             </a>
           </div>
 
@@ -61,7 +61,7 @@ export function Contact() {
                 width={20}
                 height={20}
               />
-              /joshuatuddenham
+              joshuatuddenham
             </a>
           </div>
         </section>

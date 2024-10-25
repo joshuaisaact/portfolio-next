@@ -122,8 +122,8 @@ export const PROJECTS = [
   {
     imageSrc: "/media/projects/bratquiz.png",
     imageAlt: "brat image",
-    title: "Brat quiz",
-    projectLink: "https://github.com/joshuaisaact/brat-quiz",
+    title: "brat quiz",
+    projectLink: "https://joshuaisaact.github.io/brat-quiz/",
     githubLink: "https://github.com/joshuaisaact/bratQuiz",
     skills: ["Typescript", "React", "CSS3", "HTML5"],
     description:

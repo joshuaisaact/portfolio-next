@@ -94,11 +94,10 @@ export function Projects() {
               />
             )}
 
-            <a
-              href={project.projectLink}
-              className="mt-4 text-xl hover:underline decoration-[var(--color-primary)]"
-            >
-              <h3>{project.title}</h3>
+            <a href={project.projectLink} className="mt-4 text-xl ">
+              <h3 className="hover:underline decoration-[var(--theme-1)]">
+                {project.title}
+              </h3>
             </a>
 
             <div className="p-6 w-full">
