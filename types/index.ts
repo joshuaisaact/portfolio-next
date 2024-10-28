@@ -4,6 +4,7 @@ export interface Project {
   title: string;
   projectLink: string;
   githubLink: string;
+  submissionLink?: string;
   skills: string[];
   description: string;
   fullDescription: string[];

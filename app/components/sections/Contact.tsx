@@ -25,6 +25,7 @@ export function Contact() {
                 width={20}
                 height={20}
                 className="dark:invert"
+                sizes="20px"
               />
               joshuaisaact@gmail.com
             </a>
@@ -43,6 +44,7 @@ export function Contact() {
                 width={20}
                 height={20}
                 className="dark:invert"
+                sizes="20px"
               />
               joshuaisaact
             </a>
@@ -60,6 +62,7 @@ export function Contact() {
                 alt="linkedin"
                 width={20}
                 height={20}
+                sizes="20px"
               />
               joshuatuddenham
             </a>

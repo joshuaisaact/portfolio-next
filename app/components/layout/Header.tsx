@@ -40,7 +40,8 @@ export function Header() {
                   alt={label}
                   width={24}
                   height={24}
-                  className={`nav-img ${id === "github" ? "dark:invert" : ""}`}
+                  className={`nav-icon ${id === "github" ? "dark:invert" : ""}`}
+                  style={{ width: "24px", height: "24px" }}
                 />
               </Link>
             ))}
@@ -94,7 +95,8 @@ export function Header() {
                     alt={label}
                     width={24}
                     height={24}
-                    className={`nav-img ${id === "github" ? "dark:invert" : ""}`}
+                    className={`nav-icon ${id === "github" ? "dark:invert" : ""}`}
+                    style={{ height: "auto" }}
                   />
                 </Link>
               ))}
