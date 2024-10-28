@@ -3,7 +3,6 @@
 import { SKILL_FILES, SKILL_INFO } from "@/lib/constants/skillConstants";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
-import { useTheme } from "next-themes";
 
 export function Skills() {
   const skillsRef = useRef<HTMLDivElement>(null);

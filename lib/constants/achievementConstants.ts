@@ -10,14 +10,14 @@ export const ACHIEVEMENT = {
   submissionLink: "https://www.hackathonparty.com/hackathons/6/projects/98",
   fullDescription: [
     "Built a transparency platform for company diversity and inclusion data, visualizing gender pay gap statistics and employee-provided insights. Led frontend development using Next.js and TypeScript, implementing responsive UI with Tailwind CSS and shadcn/ui components.",
-    "", // Empty string for second index
+    "",
     `<ul>
       <li>Won Best in Category at JumpStart Hackathon</li>
       <li>Integrated real gender pay gap data for 11,000+ UK companies</li>
       <li>Built data pipeline to transform and visualize UK gender pay gap statistics</li>
+      <li>Handled core frontend development with Next.js and TypeScript</li>
       <li>Implemented demo companies (Evil Corp, Angel Corp) to showcase full feature set</li>
-      <li>Led frontend development using Next.js and TypeScript</li>
       <li>Completed full project lifecycle from ideation to deployment in 24 hours</li>
-    </ul>`, // Third index for highlights
+    </ul>`,
   ],
 };
