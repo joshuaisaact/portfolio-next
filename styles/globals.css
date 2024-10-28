@@ -103,6 +103,10 @@ html {
   transition: transform 0.2s ease-out;
 }
 
+.nav-icon {
+  transition: transform 0.3s ease;
+}
+
 .skill-tooltip {
   transition: all 0.2s ease-out;
   pointer-events: none;
@@ -112,6 +116,70 @@ html {
 .skill-link:hover .skill-tooltip {
   transform: translate(-50%, 0);
   opacity: 1;
+}
+
+.text-skill-typescript {
+  @apply text-[#3178C6] dark:text-gray-200;
+}
+.text-skill-nextjs {
+  @apply text-black dark:text-gray-200;
+}
+.text-skill-react {
+  @apply text-[#61DAFB] dark:text-gray-200;
+}
+.text-skill-nodejs {
+  @apply text-[#339933] dark:text-gray-200;
+}
+.text-skill-express {
+  @apply text-black dark:text-gray-200;
+}
+.text-skill-tailwind {
+  @apply text-[#06B6D4] dark:text-gray-200;
+}
+.text-skill-supabase {
+  @apply text-[#3ECF8E] dark:text-gray-200;
+}
+.text-skill-postgresql {
+  @apply text-[#4169E1] dark:text-gray-200;
+}
+.text-skill-drizzle {
+  @apply text-[#C5F74F] dark:text-gray-200;
+}
+.text-skill-sequelize {
+  @apply text-[#52B0E6] dark:text-gray-200;
+}
+.text-skill-reactquery {
+  @apply text-[#FF4154] dark:text-gray-200;
+}
+.text-skill-html5 {
+  @apply text-[#E34F26] dark:text-gray-200;
+}
+.text-skill-css3 {
+  @apply text-[#1572B6] dark:text-gray-200;
+}
+.text-skill-javascript {
+  @apply text-[#F7DF1E] dark:text-gray-200;
+}
+.text-skill-npm {
+  @apply text-[#CB3837] dark:text-gray-200;
+}
+.text-skill-vitest {
+  @apply text-[#6E9F18] dark:text-gray-200;
+}
+.text-skill-jest {
+  @apply text-[#C21325] dark:text-gray-200;
+}
+.text-skill-mongodb {
+  @apply text-[#47A248] dark:text-gray-200;
+}
+.text-skill-hugo {
+  @apply text-[#FF4088] dark:text-gray-200;
+}
+.text-skill-github {
+  @apply text-[#181717] dark:text-gray-200;
+}
+.text-skill-git {
+  @apply text-[#F05032] dark:text-gray-200;
 }
 
 /* Dark mode image handling */

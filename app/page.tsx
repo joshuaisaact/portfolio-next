@@ -4,6 +4,7 @@ import { Skills } from "./components/sections/Skills";
 import { Projects } from "./components/sections/Projects";
 import { Roboto, Source_Serif_4 } from "next/font/google";
 import { Contact } from "./components/sections/Contact";
+import { Achievements } from "./components/sections/Achievements";
 
 const roboto = Roboto({
   weight: ["100", "300", "400", "500", "700", "900"],
@@ -56,6 +57,14 @@ export default function Home() {
       {/* Hero Section */}
       <section id="hero" className="w-full">
         <AboutMe />
+      </section>
+
+      <section
+        id="achievements"
+        className="w-full pb-section"
+        aria-label="Recent achievements"
+      >
+        <Achievements />
       </section>
 
       {/* Skills Section */}
