@@ -94,7 +94,7 @@ export function Achievements() {
             </p>
 
             <div className="flex justify-center gap-4">
-              <a
+              {/* <a
                 href={ACHIEVEMENT.projectLink}
                 className="btn btn-scale"
                 target="_blank"
@@ -109,7 +109,7 @@ export function Achievements() {
                 rel="noopener noreferrer"
               >
                 Project Details
-              </a>
+              </a> */}
               <button
                 className="btn btn-scale"
                 onClick={() => setShowModal(true)}
