@@ -6,10 +6,6 @@ import Image from "next/image";
 export function Contact() {
   return (
     <section className="py-5 md:py-10 pb-section" id="contact">
-      <h2 className="text-center p-4 underline decoration-[var(--theme-1)] decoration-2 underline-offset-2 text-3xl">
-        Contact
-      </h2>
-
       <div className="blog-grid grid grid-cols-1 lg:grid-cols-2 gap-20 mx-auto w-4/5 mt-6">
         {" "}
         <ContactForm />

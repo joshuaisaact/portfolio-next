@@ -1,67 +1,19 @@
-"use client";
-
+import { navLinks, socialLinks } from "@/lib/constants/navigationConstants";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
-import { ThemeToggle } from "../ui/ThemeToggle";
-import { Menu, X } from "lucide-react";
-import { navLinks, socialLinks } from "@/lib/constants/navigationConstants";
 
-export function Header() {
-  const [hoveredLink, setHoveredLink] = useState<string | null>(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+export default function Header() {
   return (
-    <header className="sticky top-0 w-full bg-white dark:bg-[#333] z-[50]">
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12">
-        <nav className="flex justify-between items-center py-6">
+    <header className="sticky top-0 w-full z-[50] bg-white dark:bg-gray-900 shadow-md">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav className="flex justify-between items-center h-16 sm:h-20">
+          {/* Logo/Name */}
           <Link
-            href="#top"
-            className={`nav-link custom-nav-link transition-opacity duration-300 text-xl  font-medium dark:text-gray-200 ${
-              hoveredLink && hoveredLink !== "home" ? "opacity-50" : ""
-            }`}
-            onMouseEnter={() => setHoveredLink("home")}
-            onMouseLeave={() => setHoveredLink(null)}
+            href="/"
+            className="text-lg sm:text-xl font-medium tracking-tight hover:text-gray-600 dark:text-gray-200 dark:hover:text-gray-50 transition"
           >
             Joshua Tuddenham
           </Link>
-
-          <div className="flex gap-4 items-center md:hidden">
-            {socialLinks.map(({ href, icon, label, id }) => (
-              <Link
-                key={id}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="custom-nav-link"
-              >
-                <Image
-                  src={icon}
-                  alt={label}
-                  width={24}
-                  height={24}
-                  className={`nav-icon ${id === "github" ? "dark:invert" : ""}`}
-                  style={{ width: "24px", height: "24px" }}
-                />
-              </Link>
-            ))}
-            <ThemeToggle />
-          </div>
-
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2"
-            aria-label="Toggle menu"
-            aria-expanded={isMenuOpen}
-            aria-controls="mobile-menu"
-          >
-            {isMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
-          </button>
 
           {/* Desktop navigation */}
           <ul className="hidden md:flex items-center gap-8">
@@ -69,57 +21,59 @@ export function Header() {
               <li key={href}>
                 <Link
                   href={href}
-                  className={`custom-nav-link md:text-lg transition-opacity duration-300 ${
-                    hoveredLink && hoveredLink !== href ? "opacity-50" : ""
-                  }`}
-                  onMouseEnter={() => setHoveredLink(href)}
-                  onMouseLeave={() => setHoveredLink(null)}
+                  className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-50 py-2 transition-colors"
                 >
                   {label}
                 </Link>
               </li>
             ))}
-
-            <li className="flex gap-4 items-center">
-              {" "}
-              {socialLinks.map(({ href, icon, label, id }) => (
-                <Link
-                  key={id}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`custom-nav-link`}
-                >
-                  <Image
-                    src={icon}
-                    alt={label}
-                    width={24}
-                    height={24}
-                    className={`nav-icon ${id === "github" ? "dark:invert" : ""}`}
-                    style={{ height: "auto" }}
-                  />
-                </Link>
-              ))}
-              <ThemeToggle />
-            </li>
           </ul>
+
+          {/* Social links & theme toggle */}
+          <div className="hidden md:flex items-center gap-6">
+            {socialLinks.map(({ href, icon, label, id }) => (
+              <Link
+                key={id}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-opacity hover:opacity-70"
+              >
+                <Image
+                  src={icon}
+                  alt={label}
+                  width={20}
+                  height={20}
+                  className={`${id === "github" ? "dark:invert" : ""}`}
+                />
+              </Link>
+            ))}
+            {/* <ThemeToggle /> */}
+          </div>
         </nav>
       </div>
 
-      {/* Mobile menu */}
-      <div
-        className={`md:hidden absolute inset-x-0 top-full transition-opacity duration-300 ease-in-out ${
-          isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
-        }`}
-      >
-        <div className="bg-white dark:bg-[#333] px-6 py-4">
-          <ul className="flex flex-col gap-4">
+      {/* Mobile Menu */}
+      <div className="md:hidden">
+        {/* Hidden checkbox to control mobile menu */}
+        <input type="checkbox" id="menu-toggle" className="hidden" />
+
+        {/* Label for the hamburger icon */}
+        <label
+          htmlFor="menu-toggle"
+          className="p-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-50"
+        >
+          <span className="block w-6 h-6">BURGER</span>
+        </label>
+
+        {/* Mobile Menu */}
+        <div className="absolute inset-x-0 top-full bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 shadow-lg transform translate-y-2 transition-all duration-200">
+          <ul className="space-y-4 px-4 py-4">
             {navLinks.map(({ href, label }) => (
               <li key={href}>
                 <Link
                   href={href}
-                  className="block py-2 custom-nav-link text-lg"
-                  onClick={() => setIsMenuOpen(false)}
+                  className="block py-2 text-base text-gray-600 dark:text-gray-300"
                 >
                   {label}
                 </Link>

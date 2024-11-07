@@ -3,6 +3,7 @@ export const PROJECTS = [
     imageSrc: "/media/projects/wooster.png", // Adjust the image source as needed
     imageAlt: "Wooster logo",
     title: "Wooster",
+    slug: "wooster",
     projectLink: "https://github.com/joshuaisaact/Wooster", // Replace with actual URL
     githubLink: "https://github.com/joshuaisaact/Wooster", // Replace with actual URL
     skills: [
@@ -39,6 +40,7 @@ export const PROJECTS = [
     imageSrc: "/media/projects/goss.png", // Adjust the image source as needed
     imageAlt: "Goss logo",
     title: "Goss",
+    slug: "goss",
     projectLink: "https://github.com/joshuaisaact/Goss", // Replace with actual URL
     githubLink: "https://github.com/joshuaisaact/Goss", // Replace with actual URL
     skills: [
@@ -69,6 +71,7 @@ export const PROJECTS = [
     imageSrc: "/media/projects/atomic-icon.svg",
     imageAlt: "Atomize Pro logo",
     title: "Atomize Pro",
+    slug: "atomize-pro",
     projectLink: "https://github.com/joshuaisaact/Atomize-refactor", // Replace with actual URL
     githubLink: "https://github.com/joshuaisaact/Atomize-refactor/",
     skills: [
@@ -100,6 +103,7 @@ export const PROJECTS = [
     imageSrc: "/media/projects/portfoliowebsite.png",
     imageAlt: "Portfolio Website",
     title: "Portfolio Website",
+    slug: "portfolio-website",
     projectLink: "https://www.joshtuddenham.tech/",
     githubLink: "https://github.com/joshuaisaact/portfolio-next",
     skills: ["Typescript", "Nextjs", "TailwindCSS", "CSS3", "HTML5"],
@@ -123,6 +127,7 @@ export const PROJECTS = [
     imageSrc: "/media/projects/bratquiz.png",
     imageAlt: "brat image",
     title: "brat quiz",
+    slug: "brat-quiz",
     projectLink: "https://joshuaisaact.github.io/brat-quiz/",
     githubLink: "https://github.com/joshuaisaact/bratQuiz",
     skills: ["Typescript", "React", "CSS3", "HTML5"],

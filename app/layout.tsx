@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import "../styles/globals.css";
 import { SITE_CONFIG } from "@/lib/constants/siteConfig";
-import { Header } from "./components/layout/Header";
-import { BackToTop } from "./components/layout/BackToTop";
-import { Footer } from "./components/layout/Footer";
+import Header from "./components/layout/Header";
+
 import { Providers } from "./components/Providers";
 
 export const metadata: Metadata = {
@@ -34,8 +33,6 @@ export default function RootLayout({
         <Providers>
           <Header />
           {children}
-          <BackToTop />
-          <Footer />
         </Providers>
       </body>
     </html>

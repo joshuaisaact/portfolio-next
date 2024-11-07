@@ -1,6 +1,9 @@
+import { MDXRemoteSerializeResult } from "next-mdx-remote";
+
 export interface Project {
   imageSrc: string;
   imageAlt: string;
+  slug: string;
   title: string;
   projectLink: string;
   githubLink: string;
@@ -11,15 +14,21 @@ export interface Project {
   videoSrc?: string;
 }
 
-export interface BlogPost {
-  slug: string;
+export interface BlogFrontmatter {
   title: string;
-  content_text: string;
-  url: string;
-  excerpt: string;
   date: string;
   featured_image: string;
-  tags?: string[];
+  excerpt: string;
+}
+
+export interface BlogPost {
+  slug: string;
+  frontmatter: BlogFrontmatter;
+  content: string; // We'll keep raw content as string for now
+}
+
+export interface RenderedBlogPost extends Omit<BlogPost, "content"> {
+  content: MDXRemoteSerializeResult;
 }
 
 export interface Skill {
