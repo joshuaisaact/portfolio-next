@@ -1,15 +1,16 @@
 import { BlogHeader } from "@/app/components/mdx/BlogHeader";
 
 export const metadata = {
-title: "Building Wooster's Backend Brain",
-date: "2024-11-08",
-featured_image: "/images/blog/wooster/wooster-server.png",
-excerpt:
-"Teaching an AI dog new tricks: database design, Express endpoints, and why I'm probably overthinking this.",
-tags: ["Express", "Supabase", "PostgreSQL", "Backend"],
+  title: "Building Wooster's Backend Brain",
+  date: "2024-11-08",
+  featured_image: "/images/blog/wooster/wooster-server.png",
+  excerpt:
+    "Teaching an AI dog new tricks: database design, Express endpoints, and why I'm probably overthinking this.",
+  tags: ["Express", "Supabase", "PostgreSQL", "Backend"],
 };
 
 {" "}
+
 <BlogHeader {...metadata} />
 
 ### Backend First, Questions Later
@@ -17,6 +18,7 @@ tags: ["Express", "Supabase", "PostgreSQL", "Backend"],
 For once in my life, I decided to be sensible and start with the backend. I know, I know - usually I'm straight into React, convinced that THIS is the project that finally needs a bespoke global state management solution with time travel debugging, but not this time.
 
 {" "}
+
 <Figure
   src="/images/blog/wooster/drakememe.png"
   alt="A 'Drake' meme showing preference for backend first over frontend first"
@@ -33,6 +35,7 @@ Before writing a single line of Express code, I needed to figure out what data W
 3. **Activities** - Things to do (besides staring at database diagrams)
 
 {" "}
+
 <Figure
   src="/images/blog/ai-trip/database-design.png"
   alt="Database relationship diagram"
@@ -49,18 +52,17 @@ After debating with myself (and briefly considering asking Wooster for advice), 
 
 1. **Token Economy**
 
-
-    - Why ask the LLM to describe Paris for the 47th time?
-    - My bank account says "thank you"
+   - Why ask the LLM to describe Paris for the 47th time?
+   - My bank account says "thank you"
 
 2. **Performance Boost**
 
-
-    - Preloaded destinations = happy users
-    - Cached data = happy servers
-    - Less database bloat = happy developer (I think they call this normalization... I Googled it)
+   - Preloaded destinations = happy users
+   - Cached data = happy servers
+   - Less database bloat = happy developer (I think they call this normalization... I Googled it)
 
 {" "}
+
 <Figure
   src="/images/blog/wooster/charlie-day.png"
   alt="A meme about sharing data"
@@ -133,6 +135,7 @@ And so, the realization dawned that a “saved destinations” table is not only
 Next up: building the Express endpoints. But that's a story for another post, probably written after I've recovered from all this database normalization.
 
 {" "}
+
 <Figure
   src="/images/blog/wooster/endpoints.png"
   alt="'But wait, there's more' meme with Express endpoints"

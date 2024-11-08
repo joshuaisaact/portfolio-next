@@ -6,12 +6,6 @@ import { BackToProjects } from "@/app/components/navigation/BackToProjects";
 import dynamic from "next/dynamic";
 import { Trophy } from "lucide-react";
 
-interface PageProps {
-  params: {
-    slug: string;
-  };
-}
-
 const LazyVideoComponent = dynamic(
   () => import("../../components/VideoComponent"),
   { loading: () => <div>Loading video...</div> },
@@ -25,9 +19,11 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({
   params,
-}: PageProps): Promise<Metadata> {
-  const resolvedParams = await params;
-  const item = PROJECTS.find((p) => p.slug === resolvedParams.slug);
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const item = PROJECTS.find((p) => p.slug === slug);
 
   if (!item) {
     return {
@@ -61,9 +57,13 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProjectPage({ params }: PageProps) {
-  const resolvedParams = await params;
-  const project = PROJECTS.find((p) => p.slug === resolvedParams.slug);
+export default async function ProjectPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const project = PROJECTS.find((p) => p.slug === slug);
   if (!project) notFound();
 
   return (
