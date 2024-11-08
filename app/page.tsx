@@ -52,7 +52,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div
-      className={`${jakarta.className} min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50/80 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900`}
+      className={`${jakarta.className} min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50/80 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 overflow-hidden`} // Added overflow-hidden
     >
       <a
         href="#main-content"
@@ -62,19 +62,19 @@ export default function Home() {
       </a>
       {/* Subtle dot pattern overlay */}
       <div
-        className="fixed inset-0 bg-[radial-gradient(circle_at_1px_1px,rgb(0_0_0_/_0.03)_1px,transparent_0)] [background-size:24px_24px] dark:bg-[radial-gradient(circle_at_1px_1px,rgb(255_255_255_/_0.03)_1px,transparent_0)]"
+        className="fixed inset-0 bg-[radial-gradient(circle_at_1px_1px,rgb(0_0_0_/_0.03)_1px,transparent_0)] [background-size:24px_24px] dark:bg-[radial-gradient(circle_at_1px_1px,rgb(255_255_255_/_0.03)_1px,transparent_0)] pointer-events-none"
         aria-hidden="true"
       />
       <main
         id="main-content"
-        className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
+        className="relative z-10 mx-auto max-w-7xl px-2 sm:px-4 lg:px-8" // Reduced padding on mobile
         role="main"
       >
         {/* Hero Section */}
         <section
-          className="relative py-12 border-t border-gray-200 dark:border-gray-800
-            dark:before:absolute dark:before:inset-0 dark:before:bg-gradient-to-b
-            dark:before:from-accent-500/[0.03] dark:before:to-transparent dark:before:pointer-events-none"
+          className="relative py-8 sm:py-12 border-t border-gray-200 dark:border-gray-800
+    dark:before:absolute dark:before:inset-0 dark:before:bg-gradient-to-b
+    dark:before:from-accent-500/[0.03] dark:before:to-transparent dark:before:pointer-events-none"
           aria-label="Introduction"
         >
           <AboutMe />
@@ -102,10 +102,10 @@ export default function Home() {
       </main>
 
       <footer
-        className="border-t border-gray-200 dark:border-gray-800 mt-16"
+        className="border-t border-gray-200 dark:border-gray-800 mt-12 sm:mt-16"
         role="contentinfo"
       >
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+        <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 py-8 sm:py-12">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
             <p className="text-sm text-gray-500 dark:text-gray-400">
               © {new Date().getFullYear()} Joshua Tuddenham. All rights

@@ -32,7 +32,7 @@ html {
 /* Base styles */
 @layer base {
   body {
-    @apply mx-auto px-4 bg-white dark:bg-[#333] text-black dark:text-gray-200;
+    @apply mx-auto bg-white dark:bg-[#333] text-black dark:text-gray-200;
   }
   h1 {
     @apply m-0 p-0 text-inherit;
@@ -56,6 +56,16 @@ html {
   .custom-nav-link {
     @apply underline decoration-[var(--theme-1)] decoration-2 underline-offset-[2px]
            dark:text-gray-200;
+  }
+}
+
+@layer utilities {
+  .content-container {
+    @apply w-full max-w-[95%] sm:max-w-[90%] md:max-w-[85%] lg:max-w-7xl mx-auto;
+  }
+
+  .section-padding {
+    @apply px-2 sm:px-4 md:px-6 lg:px-8;
   }
 }
 

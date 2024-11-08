@@ -29,18 +29,28 @@ interface CardImageProps {
   src: string;
   alt: string;
   video?: boolean;
+  className?: string;
+  containerClassName?: string;
 }
 
-export function CardImage({ src, alt, video }: CardImageProps) {
+export function CardImage({
+  src,
+  alt,
+  video,
+  className = "",
+  containerClassName = "",
+}: CardImageProps) {
   return (
-    <div className="relative aspect-[16/9] overflow-hidden">
+    <div
+      className={`relative aspect-[16/9] overflow-hidden ${containerClassName}`}
+    >
       {video ? (
         <video
           autoPlay
           loop
           muted
           playsInline
-          className="w-full h-full object-cover"
+          className={`w-full h-full object-cover ${className}`}
         >
           <source src={src} type="video/mp4" />
           <source src={src.replace(".mp4", ".webm")} type="video/webm" />
@@ -51,13 +61,19 @@ export function CardImage({ src, alt, video }: CardImageProps) {
           src={src}
           alt={alt}
           fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          className={`object-cover transition-transform duration-300 group-hover:scale-105 ${className}`}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" // Added responsive sizes
         />
       )}
     </div>
   );
 }
 
-export function CardContent({ children }: { children: React.ReactNode }) {
-  return <div className="p-6">{children}</div>;
+interface CardContentProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export function CardContent({ children, className = "" }: CardContentProps) {
+  return <div className={`p-4 sm:p-6 ${className}`}>{children}</div>;
 }
