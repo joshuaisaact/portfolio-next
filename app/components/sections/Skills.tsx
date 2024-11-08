@@ -1,69 +1,102 @@
-"use client";
-
 import { SKILL_FILES, SKILL_INFO } from "@/lib/constants/skillConstants";
 import Image from "next/image";
-import { useEffect, useRef } from "react";
 
 export function Skills() {
-  const skillsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("slide-in");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.5 },
-    );
-
-    const skillElements = skillsRef.current?.querySelectorAll(".skills-icon");
-    skillElements?.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
+  const businessSkills = [
+    {
+      name: "Capital Markets",
+      description:
+        "5 years delivering analytics solutions to hedge funds and asset managers",
+    },
+    {
+      name: "Complex Systems",
+      description:
+        "Translated quantitative trading requirements into technical specifications",
+    },
+    {
+      name: "Enterprise Solutions",
+      description:
+        "Architected solutions for financial institutions while collaborating with engineering teams",
+    },
+  ];
 
   return (
-    <section className="py-10 md:py-60 pb-section">
-      <h2 className="padding-medium text-3xl text-center font-sans underline decoration-[var(--theme-1)] decoration-2 underline-offset-[2px] dark:text-gray-200">
-        Skills
-      </h2>
+    <section aria-label="Skills" className="space-y-8">
+      <div>
+        <p className="text-lg text-gray-700 dark:text-gray-300">
+          Beyond the tech stack, my background includes five years at an
+          early-stage behavioral analytics fintech, working closely with
+          engineering teams to deliver solutions to hedge funds. More recently,
+          I helped drive enterprise feature development at a fast-growing
+          expense management platform.
+        </p>
+      </div>
 
-      <div
-        ref={skillsRef}
-        className="flex flex-wrap justify-center gap-4 sm:gap-[5%] pt-10 px-4 fade-in delay-4"
-      >
-        {SKILL_FILES.map((file) => (
-          <a
-            key={file}
-            href={SKILL_INFO[file].url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="skill-link group relative mb-8 sm:mb-6"
-          >
-            <Image
-              src={`/media/skills/${file}`}
-              alt={SKILL_INFO[file].name}
-              width={96}
-              height={96}
-              className="skills-icon m-2 sm:m-3 md:m-4 lg:m-6 opacity-0 translate-x-full dark:invert-[.15]
-                 w-10 h-10 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24
-                 transition-all duration-300"
-              title={SKILL_INFO[file].name}
-            />
-            <span
-              className={`absolute -bottom-6 sm:-bottom-2 left-1/2 -translate-x-1/2
-                md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300
-                ${file.includes("tanstack") ? "text-[9px]" : "text-xs"} sm:text-xs md:text-sm
-                font-medium whitespace-nowrap text-skill-${file.split(".")[0]} dark:text-gray-200`}
+      {/* Technical Skills */}
+      <div className="space-y-6">
+        <h3 className="text-xl font-medium text-gray-900 dark:text-gray-100">
+          Tech Stack
+        </h3>
+        <div
+          className="flex flex-wrap justify-center gap-6 px-4"
+          role="list"
+          aria-label="Technical skills"
+        >
+          {SKILL_FILES.map((file) => (
+            <div key={file} role="listitem">
+              <a
+                href={SKILL_INFO[file].url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="skill-link group relative block"
+                aria-label={`Learn more about ${SKILL_INFO[file].name}`}
+              >
+                <Image
+                  src={`/media/skills/${file}`}
+                  alt=""
+                  width={64}
+                  height={64}
+                  className="skills-icon m-2 dark:invert-[.15] w-16 h-16"
+                  aria-hidden="true"
+                />
+                <span
+                  className={`absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-center
+                  opacity-0 group-hover:opacity-100 transition-opacity
+                  text-xs font-medium whitespace-nowrap text-skill-${file.split(".")[0]} dark:text-gray-200`}
+                >
+                  {SKILL_INFO[file].name}
+                </span>
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Additional Skills */}
+      <div className="space-y-6">
+        <h3 className="text-xl font-medium text-gray-900 dark:text-gray-100">
+          Additional Experience
+        </h3>
+        <div
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+          role="list"
+          aria-label="Business experience"
+        >
+          {businessSkills.map((skill) => (
+            <div
+              key={skill.name}
+              className="p-4 rounded-lg bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              role="listitem"
             >
-              {SKILL_INFO[file].name}
-            </span>
-          </a>
-        ))}
+              <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">
+                {skill.name}
+              </h4>
+              <p className="text-sm text-gray-600 dark:text-gray-300">
+                {skill.description}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

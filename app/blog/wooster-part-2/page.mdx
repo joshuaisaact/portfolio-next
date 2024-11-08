@@ -1,0 +1,147 @@
+import { BlogHeader } from "@/app/components/mdx/BlogHeader";
+
+export const metadata = {
+  title: "Building Wooster's Backend Brain",
+  date: "2024-11-08",
+  featured_image: "/images/blog/wooster/wooster-server.png",
+  excerpt:
+    "Teaching an AI dog new tricks: database design, Express endpoints, and why I'm probably overthinking this.",
+  tags: ["Express", "Supabase", "PostgreSQL", "Backend"],
+};
+
+{" "}
+
+<BlogHeader {...metadata} />
+
+### Backend First, Questions Later
+
+For once in my life, I decided to be sensible and start with the backend. I know, I know - usually I'm straight into React, convinced that THIS is the project that finally needs a bespoke global state management solution with time travel debugging, but not this time.
+
+{" "}
+
+<Figure
+  src="/images/blog/wooster/drakememe.png"
+  alt="A 'Drake' meme showing preference for backend first over frontend first"
+  title="Me, pretending to be a serious developer who plans things properly"
+/>
+
+## Database Design (Or: Teaching Wooster About Relationships)
+
+Before writing a single line of Express code, I needed to figure out what data Wooster (our AI golden retriever that I'm already anthropomorphizing
+) would need to juggle. After a LOT of coffee, I landed on three main tables:
+
+1. **Trips** - Because you can't have a trip planner without, you know, trips
+2. **Destinations** - Places to go (other than the kitchen for more coffee)
+3. **Activities** - Things to do (besides staring at database diagrams)
+
+{" "}
+
+<Figure
+  src="/images/blog/ai-trip/database-design.png"
+  alt="Database relationship diagram"
+  title="My database relationships. Entity Relationship Diagrams are like family trees, but nerdier."
+/>
+
+## The Great Data Sharing Debate
+
+Now, here's where it gets interesting. Supabase comes with a built-in users table (thanks, Postgres!), complete with UUIDs that you couldn't remove if you tried. This meant the trips table needed a user_id column as a foreign key - simple enough.
+
+But then came the big question: should destinations and activities be shared between users?
+
+After debating with myself (and briefly considering asking Wooster for advice), I decided to make them shared tables. Here's why:
+
+1. **Token Economy**
+
+   - Why ask the LLM to describe Paris for the 47th time?
+   - My bank account says "thank you"
+
+2. **Performance Boost**
+
+   - Preloaded destinations = happy users
+   - Cached data = happy servers
+   - Less database bloat = happy developer (I think they call this normalization... I Googled it)
+
+{" "}
+
+<Figure
+  src="/images/blog/wooster/charlie-day.png"
+  alt="A meme about sharing data"
+  title="How it feels explaining database normalization to non-technical friends"
+/>
+
+## The Final Schema (or is it?)
+
+Here's what my database ended up looking like:
+
+```sql
+-- Users table (courtesy of Supabase)
+-- Just imagine it's here, looking all auth-y and secure
+
+-- Trips
+CREATE TABLE trips (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES auth.users,
+  destination_id UUID REFERENCES destinations,
+  start_date DATE,
+  end_date DATE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Destinations (shared)
+CREATE TABLE destinations (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  country TEXT,
+  description TEXT,
+  climate TEXT,
+  best_time_to_visit TEXT
+);
+
+-- Activities (shared)
+CREATE TABLE activities (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  destination_id UUID REFERENCES destinations,
+  name TEXT NOT NULL,
+  description TEXT,
+  duration TEXT,
+  cost_range TEXT
+);
+```
+
+BUT WAIT! I wasn't finished here, dear reader (yes, all one of you). I had a bright idea!
+
+## An Itinerary, Day by Day (or: Overthinking Strikes Yet Again)
+
+So, in what I considered a clever bit of database design at the time, I added a new table: itinerary_days. The idea was that, since activities and destinations were shared, I needed a way for each user to build out a custom day-by-day itinerary without having their personal plans clutter up the entire database. After all, nobody wants to see “Day 3: Louvre again” listed 87 times. This itinerary_days table would link each trip to specific activities, organized by day—thus preventing global chaos, and giving me a nice pat on the back.
+
+```
+-- Itinerary Days
+CREATE TABLE itinerary_days (
+  day_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  trip_id UUID REFERENCES trips,
+  day_number INT NOT NULL,
+  activity_id UUID REFERENCES activities
+);
+```
+
+It felt incredibly forward-thinking at the time, and I did feel a bit smug about avoiding duplicate entries and making the backend future-proof (or so I thought). Turns out, though, I might have been a little too pleased with myself.
+
+## Also, Cue the “Saved Destinations” Table (The Bit I Missed Entirely)
+
+Because here’s what I didn’t account for until I added user authentication: everyone now shares the same list of destinations. Brilliant. Every user logs in, and, lo and behold, they see exactly the same list of places, just as if we’re running a one-size-fits-all holiday agency.
+
+And so, the realization dawned that a “saved destinations” table is not only useful—it’s painfully necessary. Each user clearly needs their own list of favorite spots, not the global collection. So, another table to the rescue… just after I’ve finished congratulating myself on a “complete” schema. I can only assume future-me is already sighing at all the refactoring.
+
+Next up: building the Express endpoints. But that's a story for another post, probably written after I've recovered from all this database normalization.
+
+{" "}
+
+<Figure
+  src="/images/blog/wooster/endpoints.png"
+  alt="'But wait, there's more' meme with Express endpoints"
+  title="Coming soon to a codebase near you..."
+/>
+
+---
+
+_Stay tuned for Part 3, where we'll dive into Express endpoints, middleware madness, and why I should have just taught the actual Wooster to use Postman._

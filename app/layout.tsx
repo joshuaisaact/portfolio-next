@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import "../styles/globals.css";
 import { SITE_CONFIG } from "@/lib/constants/siteConfig";
-import { Header } from "./components/layout/Header";
-import { BackToTop } from "./components/layout/BackToTop";
-import { Footer } from "./components/layout/Footer";
-import { Providers } from "./components/Providers";
+import { jakarta } from "@/lib/fonts";
+
+import Header from "./components/layout/Header";
+import { ThemeProvider } from "next-themes";
 
 export const metadata: Metadata = {
   title: {
@@ -30,13 +30,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
-        <Providers>
+      <body className={`${jakarta.className}`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+        >
           <Header />
           {children}
-          <BackToTop />
-          <Footer />
-        </Providers>
+        </ThemeProvider>
       </body>
     </html>
   );

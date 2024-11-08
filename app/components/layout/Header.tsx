@@ -1,132 +1,110 @@
-"use client";
-
+import { navLinks, socialLinks } from "@/lib/constants/navigationConstants";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
 import { ThemeToggle } from "../ui/ThemeToggle";
-import { Menu, X } from "lucide-react";
-import { navLinks, socialLinks } from "@/lib/constants/navigationConstants";
+import { Menu } from "lucide-react";
 
-export function Header() {
-  const [hoveredLink, setHoveredLink] = useState<string | null>(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+export default function Header() {
   return (
-    <header className="sticky top-0 w-full bg-white dark:bg-[#333] z-[50]">
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12">
-        <nav className="flex justify-between items-center py-6">
-          <Link
-            href="#top"
-            className={`nav-link custom-nav-link transition-opacity duration-300 text-xl  font-medium dark:text-gray-200 ${
-              hoveredLink && hoveredLink !== "home" ? "opacity-50" : ""
-            }`}
-            onMouseEnter={() => setHoveredLink("home")}
-            onMouseLeave={() => setHoveredLink(null)}
-          >
-            Joshua Tuddenham
-          </Link>
+    <header className="sticky top-0 z-[50] w-full backdrop-blur-lg">
+      <div className="border-b border-gray-200 bg-white/80 dark:border-gray-800/50 dark:bg-gray-900/80">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <nav className="flex h-16 items-center justify-between sm:h-20">
+            <Link
+              href="/"
+              className="text-lg font-medium tracking-tight text-gray-900 transition-colors hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 sm:text-xl"
+            >
+              Joshua Tuddenham
+            </Link>
 
-          <div className="flex gap-4 items-center md:hidden">
-            {socialLinks.map(({ href, icon, label, id }) => (
-              <Link
-                key={id}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="custom-nav-link"
-              >
-                <Image
-                  src={icon}
-                  alt={label}
-                  width={24}
-                  height={24}
-                  className={`nav-icon ${id === "github" ? "dark:invert" : ""}`}
-                  style={{ width: "24px", height: "24px" }}
-                />
-              </Link>
-            ))}
-            <ThemeToggle />
-          </div>
+            {/* Desktop navigation */}
+            <ul className="hidden items-center gap-8 md:flex">
+              {navLinks.map(({ href, label }) => (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    className="text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
+                  >
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
 
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2"
-            aria-label="Toggle menu"
-            aria-expanded={isMenuOpen}
-            aria-controls="mobile-menu"
-          >
-            {isMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
-          </button>
-
-          {/* Desktop navigation */}
-          <ul className="hidden md:flex items-center gap-8">
-            {navLinks.map(({ href, label }) => (
-              <li key={href}>
-                <Link
-                  href={href}
-                  className={`custom-nav-link md:text-lg transition-opacity duration-300 ${
-                    hoveredLink && hoveredLink !== href ? "opacity-50" : ""
-                  }`}
-                  onMouseEnter={() => setHoveredLink(href)}
-                  onMouseLeave={() => setHoveredLink(null)}
-                >
-                  {label}
-                </Link>
-              </li>
-            ))}
-
-            <li className="flex gap-4 items-center">
-              {" "}
+            {/* Social links & theme toggle */}
+            <div className="hidden items-center gap-6 md:flex">
               {socialLinks.map(({ href, icon, label, id }) => (
                 <Link
                   key={id}
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`custom-nav-link`}
+                  className="transition-opacity hover:opacity-70"
                 >
                   <Image
                     src={icon}
                     alt={label}
-                    width={24}
-                    height={24}
-                    className={`nav-icon ${id === "github" ? "dark:invert" : ""}`}
-                    style={{ height: "auto" }}
+                    width={20}
+                    height={20}
+                    className={`${
+                      id === "github" ? "dark:invert" : ""
+                    } opacity-80 transition-opacity hover:opacity-100`}
                   />
                 </Link>
               ))}
               <ThemeToggle />
-            </li>
-          </ul>
-        </nav>
+            </div>
+
+            {/* Mobile Menu Toggle */}
+            <div className="flex items-center gap-4 md:hidden">
+              <div className="relative z-20">
+                <ThemeToggle />
+              </div>
+              <label
+                htmlFor="menu-toggle"
+                className="cursor-pointer rounded-lg bg-gray-100 p-2 text-gray-600 transition-colors hover:bg-gray-200 hover:text-gray-900 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
+              >
+                <Menu className="h-5 w-5" />
+              </label>
+            </div>
+          </nav>
+        </div>
       </div>
 
-      {/* Mobile menu */}
-      <div
-        className={`md:hidden absolute inset-x-0 top-full transition-opacity duration-300 ease-in-out ${
-          isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
-        }`}
-      >
-        <div className="bg-white dark:bg-[#333] px-6 py-4">
-          <ul className="flex flex-col gap-4">
-            {navLinks.map(({ href, label }) => (
-              <li key={href}>
-                <Link
-                  href={href}
-                  className="block py-2 custom-nav-link text-lg"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {label}
-                </Link>
-              </li>
+      {/* Mobile Menu - CSS only implementation */}
+      <input type="checkbox" id="menu-toggle" className="peer hidden" />
+      <div className="absolute -z-10 w-full bg-white/90 opacity-0 shadow-lg backdrop-blur-lg transition-all duration-200 peer-checked:z-0 peer-checked:translate-y-0 peer-checked:opacity-100 dark:bg-gray-900/90 md:hidden">
+        <ul className="grid gap-2 px-4 py-4">
+          {navLinks.map(({ href, label }) => (
+            <li key={href}>
+              <Link
+                href={href}
+                className="block rounded-md px-4 py-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+              >
+                {label}
+              </Link>
+            </li>
+          ))}
+          <li className="mt-2 grid grid-cols-3 gap-4 border-t border-gray-200 pt-4 dark:border-gray-800">
+            {socialLinks.map(({ href, icon, label, id }) => (
+              <Link
+                key={id}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center rounded-md bg-gray-100 py-2 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
+              >
+                <Image
+                  src={icon}
+                  alt={label}
+                  width={20}
+                  height={20}
+                  className={`${id === "github" ? "dark:invert" : ""}`}
+                />
+              </Link>
             ))}
-          </ul>
-        </div>
+          </li>
+        </ul>
       </div>
     </header>
   );

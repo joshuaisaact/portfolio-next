@@ -1,137 +1,31 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import Image from "next/image";
-import { Project } from "@/types";
 import { PROJECTS } from "@/lib/constants/projectConstants";
-import { ProjectModal } from "../ui/ProjectModal";
+import { ProjectCard } from "../ui/cards/ProjectCard";
 
 export function Projects() {
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const projectsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("slide-in");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 },
-    );
-
-    const projectElements =
-      projectsRef.current?.querySelectorAll(".project-card");
-    projectElements?.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
-
-  const handleClose = () => {
-    setSelectedProject(null);
-  };
-
-  // Handle ESC key
-  useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === "Escape") handleClose();
-    };
-
-    if (selectedProject) {
-      window.addEventListener("keydown", handleEsc);
-      document.body.style.overflow = "hidden";
-    }
-
-    return () => {
-      window.removeEventListener("keydown", handleEsc);
-      document.body.style.overflow = "unset";
-    };
-  }, [selectedProject]);
-
   return (
-    <section className="py-20 pb-section">
-      <h2 className="padding-medium text-center font-sans text-3xl underline decoration-[var(--theme-1)] decoration-2 underline-offset-[2px]">
-        Projects
-      </h2>
-
+    <section aria-label="Projects" className="space-y-8">
+      <div>
+        <p className="text-lg text-gray-700 dark:text-gray-300">
+          Drawing on my enterprise software background, I build applications
+          that solve real problems at scale. From a DEI transparency platform
+          that won at JumpStart, to a full-stack AI travel planner, these
+          projects showcase my transition from working with engineering teams to
+          building production-ready solutions myself.
+        </p>
+      </div>
       <div
-        ref={projectsRef}
-        className="grid grid-cols-1 lg:grid-cols-2 gap-20 mx-auto w-4/5 mt-6"
+        className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+        role="list"
+        aria-label="Project list"
       >
-        {PROJECTS.map((project, index) => (
-          <div
-            key={project.title}
-            className="project-card flex flex-col items-center justify-between rounded bg-white dark:bg-[#333] shadow-md overflow-hidden"
-            style={{ transitionDelay: `${index * 0.1}s` }}
-          >
-            {project.videoSrc ? (
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                width={300}
-                height={195}
-                className="w-full h-[195px] object-cover"
-              >
-                <source src={project.videoSrc} type="video/mp4" />
-                <source
-                  src={project.videoSrc.replace(".mp4", ".webm")}
-                  type="video/webm"
-                />
-                Your browser does not support the video tag.
-              </video>
-            ) : (
-              <Image
-                src={project.imageSrc}
-                alt={project.imageAlt}
-                width={300}
-                height={195}
-                className="w-full h-[195px] object-cover"
-              />
-            )}
-
-            <a href={project.projectLink} className="mt-4 text-xl ">
-              <h3 className="hover:underline decoration-[var(--theme-1)]">
-                {project.title}
-              </h3>
-            </a>
-
-            <div className="p-6 w-full">
-              {/* Display skills as icons */}
-              <ul className="flex justify-center gap-4 mb-4">
-                {project.skills.slice(0, 3).map((skill) => (
-                  <li key={skill} className="flex items-center">
-                    <Image
-                      src={`/media/skills/${skill.toLowerCase()}.svg`} // Adjust the path as per your file names
-                      alt={skill}
-                      width={30}
-                      height={30}
-                      className="skills-icon"
-                      aria-label={skill}
-                      title={skill}
-                    />
-                  </li>
-                ))}
-              </ul>
-              <p className="text-lg mb-6">{project.description}</p>
-              <button
-                className="btn w-full btn-scale"
-                onClick={() => setSelectedProject(project)}
-              >
-                Learn More
-              </button>
-            </div>
+        {PROJECTS.map((project) => (
+          <div key={project.title} role="listitem">
+            <ProjectCard project={project} />
           </div>
         ))}
       </div>
-
-      {selectedProject && (
-        <ProjectModal project={selectedProject} onClose={handleClose} />
-      )}
     </section>
   );
 }

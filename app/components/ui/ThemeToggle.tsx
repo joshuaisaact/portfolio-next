@@ -1,14 +1,12 @@
 "use client";
 
-"use client";
-
 import { Sun, Moon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
 export function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
 
   useEffect(() => setMounted(true), []);
   if (!mounted) return null;
@@ -21,10 +19,12 @@ export function ThemeToggle() {
         transition-colors duration-200 ease-in-out
         focus:outline-none focus:ring-2 focus:ring-[var(--theme-1)]"
       aria-label={
-        theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+        resolvedTheme === "dark"
+          ? "Switch to light mode"
+          : "Switch to dark mode"
       }
     >
-      {theme === "dark" ? (
+      {resolvedTheme === "dark" ? (
         <Sun className="w-5 h-5 text-gray-200 transition-transform hover:rotate-45 duration-200" />
       ) : (
         <Moon className="w-5 h-5 transition-transform hover:rotate-12 duration-200" />
