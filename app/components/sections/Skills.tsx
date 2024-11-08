@@ -21,7 +21,7 @@ export function Skills() {
   ];
 
   return (
-    <section aria-label="Skills" className="space-y-8">
+    <section aria-label="Skills" className="space-y-6 sm:space-y-8">
       <div>
         <p className="text-lg text-gray-700 dark:text-gray-300">
           Beyond the tech stack, my background includes five years at an
@@ -33,12 +33,12 @@ export function Skills() {
       </div>
 
       {/* Technical Skills */}
-      <div className="space-y-6">
-        <h3 className="text-xl font-medium text-gray-900 dark:text-gray-100">
+      <div className="space-y-4 sm:space-y-6">
+        <h3 className="text-lg sm:text-xl font-medium text-gray-900 dark:text-gray-100">
           Tech Stack
         </h3>
         <div
-          className="flex flex-wrap justify-center gap-6 px-4"
+          className="flex flex-wrap justify-center gap-3 sm:gap-6 px-2 sm:px-4"
           role="list"
           aria-label="Technical skills"
         >
@@ -56,7 +56,7 @@ export function Skills() {
                   alt=""
                   width={64}
                   height={64}
-                  className="skills-icon m-2 dark:invert-[.15] w-16 h-16"
+                  className="skills-icon m-1 sm:m-2 dark:invert-[.15] w-12 h-12 sm:w-16 sm:h-16"
                   aria-hidden="true"
                 />
                 <span
@@ -74,11 +74,11 @@ export function Skills() {
 
       {/* Additional Skills */}
       <div className="space-y-6">
-        <h3 className="text-xl font-medium text-gray-900 dark:text-gray-100">
+        <h3 className="text-lg sm:text-xl font-medium text-gray-900 dark:text-gray-100">
           Additional Experience
         </h3>
         <div
-          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
           role="list"
           aria-label="Business experience"
         >
