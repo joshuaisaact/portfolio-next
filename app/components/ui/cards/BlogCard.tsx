@@ -6,6 +6,7 @@ interface BlogCardProps {
   title: string;
   image: string;
   excerpt: string;
+  role: string;
 }
 
 export function BlogCard({ slug, title, image, excerpt }: BlogCardProps) {

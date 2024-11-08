@@ -10,8 +10,14 @@ export default function BlogPage() {
       {/* Subtle dot pattern overlay */}
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_1px_1px,rgb(0_0_0_/_0.03)_1px,transparent_0)] [background-size:24px_24px] dark:bg-[radial-gradient(circle_at_1px_1px,rgb(255_255_255_/_0.03)_1px,transparent_0)]" />
 
-      <main className="relative mx-auto max-w-4xl px-6 py-12">
+      <main className="relative mx-auto max-w-4xl px-6 ">
         <Section id="blog" title="Blog">
+          <p className="text-lg text-gray-700 dark:text-gray-300">
+            Deep dives into technical challenges I've tackled, from teaching an
+            AI dog new tricks to wrestling with WebSockets. These posts explore
+            the reality of software development - accidental rabbit holes and
+            JSON-induced existential crisis.
+          </p>
           <div className="grid gap-8 md:grid-cols-2">
             {posts.map((post) => (
               <article key={post.slug} className="group relative">

@@ -37,8 +37,8 @@ export function AboutMe() {
           <p className="text-lg text-gray-700 dark:text-gray-300">
             I combine deep technical expertise with hands-on experience driving
             enterprise software adoption. I recently led the frontend
-            development of an award-winning DEI platform, and I'm passionate
-            about creating applications that make a real difference.
+            development of an award-winning DEI platform, and I&apos;m
+            passionate about creating applications that make a real difference.
           </p>
 
           <div className="flex gap-4 pt-4">

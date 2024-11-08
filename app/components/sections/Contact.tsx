@@ -5,65 +5,78 @@ import Image from "next/image";
 
 export function Contact() {
   return (
-    <section className="py-5 md:py-10 pb-section" id="contact">
-      <div className="blog-grid grid grid-cols-1 lg:grid-cols-2 gap-20 mx-auto w-4/5 mt-6">
-        {" "}
-        <ContactForm />
-        <section className="contact-info ml-auto space-y-8">
-          <div className="contact-line flex items-center gap-4 pt-8">
-            <a
-              href="mailto:joshuaisaact@gmail.com"
-              className="underline flex flex-row gap-4 decoration-[var(--theme-1)]"
-            >
-              <Image
-                src="/media/nav/email.png"
-                alt="email"
-                width={20}
-                height={20}
-                className="dark:invert"
-                sizes="20px"
-              />
-              joshuaisaact@gmail.com
-            </a>
-          </div>
+    <section
+      className="pb-section"
+      id="contact"
+      aria-label="Contact Information"
+    >
+      <div className="space-y-8">
+        <div>
+          <p className="text-lg text-gray-700 dark:text-gray-300">
+            Looking to build something interesting? I&apos;m always open to
+            discussing new opportunities, technical challenges, or the perfect
+            state management pattern.
+          </p>
+        </div>
 
-          <div className="contact-line flex items-center gap-4">
-            <a
-              href="https://github.com/joshuaisaact"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline flex flex-row gap-4 decoration-[var(--theme-1)]"
-            >
-              <Image
-                src="/media/skills/github.svg"
-                alt="github"
-                width={20}
-                height={20}
-                className="dark:invert"
-                sizes="20px"
-              />
-              joshuaisaact
-            </a>
-          </div>
-
-          <div className="contact-line flex items-center gap-4">
-            <a
-              href="https://www.linkedin.com/in/joshuatuddenham/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline flex flex-row gap-4 decoration-[var(--theme-1)]"
-            >
-              <Image
-                src="/media/nav/linkedin-original.svg"
-                alt="linkedin"
-                width={20}
-                height={20}
-                sizes="20px"
-              />
-              joshuatuddenham
-            </a>
-          </div>
-        </section>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20">
+          <ContactForm />
+          <section
+            className="space-y-6 lg:space-y-8"
+            aria-label="Contact Links"
+          >
+            {[
+              {
+                href: "mailto:joshuaisaact@gmail.com",
+                icon: "/media/nav/email.png",
+                label: "Email: joshuaisaact@gmail.com",
+                text: "joshuaisaact@gmail.com",
+                darkInvert: true,
+              },
+              {
+                href: "https://github.com/joshuaisaact",
+                icon: "/media/skills/github.svg",
+                label: "GitHub Profile: joshuaisaact",
+                text: "joshuaisaact",
+                darkInvert: true,
+              },
+              {
+                href: "https://www.linkedin.com/in/joshuatuddenham/",
+                icon: "/media/nav/linkedin-original.svg",
+                label: "LinkedIn Profile: joshuatuddenham",
+                text: "joshuatuddenham",
+                darkInvert: false,
+              },
+            ].map((link) => (
+              <div key={link.href} className="flex items-center gap-4">
+                <a
+                  href={link.href}
+                  target={link.href.startsWith("mailto") ? undefined : "_blank"}
+                  rel={
+                    link.href.startsWith("mailto")
+                      ? undefined
+                      : "noopener noreferrer"
+                  }
+                  className="group flex items-center gap-4 hover:text-[var(--theme-1)] transition-colors"
+                  aria-label={link.label}
+                >
+                  <Image
+                    src={link.icon}
+                    alt=""
+                    width={20}
+                    height={20}
+                    className={`${link.darkInvert ? "dark:invert" : ""} opacity-75 group-hover:opacity-100 transition-opacity`}
+                    sizes="20px"
+                    aria-hidden="true"
+                  />
+                  <span className="underline decoration-[var(--theme-1)]">
+                    {link.text}
+                  </span>
+                </a>
+              </div>
+            ))}
+          </section>
+        </div>
       </div>
     </section>
   );

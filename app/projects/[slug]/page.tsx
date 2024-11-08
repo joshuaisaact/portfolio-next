@@ -11,11 +11,6 @@ interface PageProps {
     slug: string;
   };
 }
-interface ProjectLink {
-  type: "github" | "live" | "submission";
-  url: string;
-  label: string;
-}
 
 const LazyVideoComponent = dynamic(
   () => import("../../components/VideoComponent"),
