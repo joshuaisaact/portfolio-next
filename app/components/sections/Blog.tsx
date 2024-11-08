@@ -1,4 +1,4 @@
-import { BlogCard } from "../../ui/cards/BlogCard";
+import { BlogCard } from "../ui/cards/BlogCard";
 import { posts } from "@/app/blog/posts";
 
 export async function Blog() {

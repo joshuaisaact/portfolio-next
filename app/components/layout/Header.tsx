@@ -1,6 +1,7 @@
 import { navLinks, socialLinks } from "@/lib/constants/navigationConstants";
 import Link from "next/link";
 import Image from "next/image";
+import { ThemeToggle } from "../ui/ThemeToggle";
 
 export default function Header() {
   return (
@@ -48,17 +49,15 @@ export default function Header() {
                 />
               </Link>
             ))}
-            {/* <ThemeToggle /> */}
+            <ThemeToggle />
           </div>
         </nav>
       </div>
 
       {/* Mobile Menu */}
       <div className="md:hidden">
-        {/* Hidden checkbox to control mobile menu */}
         <input type="checkbox" id="menu-toggle" className="hidden" />
 
-        {/* Label for the hamburger icon */}
         <label
           htmlFor="menu-toggle"
           className="p-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-50"

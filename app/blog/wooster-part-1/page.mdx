@@ -1,0 +1,79 @@
+import { BlogHeader } from "@/app/components/mdx/BlogHeader";
+
+export const metadata = {
+  title: "Building an AI Trip Planner (With a Dog)",
+  date: "2024-11-07",
+  featured_image: "/images/blog/wooster/hero-image.png",
+  excerpt:
+    "What happens when you combine artificial intelligence, a golden retriever, and absolutely no time management skills? This, apparently.",
+  tags: ["React", "Express", "Supabase", "AI", "LLM"],
+};
+
+<BlogHeader {...metadata} />
+
+### Challenge Accepted (Perhaps Foolishly)
+
+I decided to challenge myself to build a full-stack MVP in a week. Why a week? Because I apparently hate sleep and love arbitrary deadlines. I'd been wanting to play with LLM APIs for a while, and after several questionable ideas were binned, I landed on a trip planning application.
+
+<Figure
+  src="/images/blog/wooster/thisisfine.webp"
+  alt="A 'This is fine' meme but with project timelines"
+  title="Me, planning a week-long project with absolutely no consideration for basic human needs like food or sleep"
+/>
+
+The concept was simple: users log in, fill out a form, and an AI plans their perfect trip. But it needed something... else. Enter Wooster, my wife's childhood golden retriever, now reincarnated as an AI travel assistant. Because nothing says "trust my travel advice" quite like taking recommendations from a dog, right?
+
+<Figure
+  src="/images/blog/wooster/hero-image.png"
+  alt="A 'This is fine' meme but with project timelines"
+  title="This guy would definitely get you to where you needed to go"
+  height="200px"
+/>
+
+## Tech Stack Decisions (Or: How I Learned to Stop Worrying and Love Express)
+
+Time to pick the tech stack. Given the one-week timeline, this had to be quick:
+
+1. **Backend**: Express, because sometimes you just want things to work, and don't want to spend hours defining objects and interfaces
+2. **Frontend**: Considered Next.js, but learning a new framework in a week? That's a bit like trying to learn Japanese the night before a holiday to Tokyo
+3. **Database**: Supabase, because:
+   - It's hosted (one less thing to break)
+   - Built-in auth
+   - Postgres under the hood (proper SQL, none of that NoSQL "is it a document? is it a database? who knows!" business)
+   - Has a GUI (but can still take SQL queries too)
+
+<Figure
+  src="/images/blog/wooster/wooster-server.png"
+  alt="A very scientific diagram of my tech choices"
+  title="He can even help you with tech stacks too!"
+/>
+
+## The Features (Or: A List of Things I'll Probably Regret Promising)
+
+I fired up Excalidraw (other drawing tools are available, but are they this adorably basic?) and mapped out two lists:
+
+**Week One Must-Haves:**
+
+- Location querying (for when "somewhere hot" isn't specific enough)
+- Trip planning form (the bread and butter)
+- AI integration (the whole point, really)
+- Basic itinerary display (no Comic Sans, promise)
+
+**Future Nice-to-Haves:**
+
+- Activity-based search (find me places to scuba dive!)
+- Time machine (might be pushing it)
+
+<Figure
+  src="/images/blog/ai-trip/excalidraw-mess.png"
+  alt="My Excalidraw wireframes"
+  title="My wireframes. Leonardo da Vinci can rest easy."
+/>
+
+## What Could Possibly Go Wrong?
+
+With planning done and optimism still inexplicably high, it was time to start building. Join me in part 2 where I discover exactly how many cups of coffee it takes to build an AI travel planner, and whether Wooster's digital reincarnation is more "helpful assistant" or "chaotic good".
+
+---
+
+_Coming soon in Part 2: The inevitable "why isn't this working?" moments, the Stack Overflow deep dives, and the point where I seriously considered teaching my actual dog to code instead._

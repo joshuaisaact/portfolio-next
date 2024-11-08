@@ -8,13 +8,13 @@ interface FigureProps {
 
 export function Figure({ src, alt, title }: FigureProps) {
   return (
-    <figure className="my-8">
+    <figure className="my-8 flex flex-col items-center">
       <Image
         src={src}
         alt={alt}
-        width={800}
-        height={400}
-        className="w-full rounded-lg"
+        width={600}
+        height={200}
+        className="rounded-lg"
       />
       {title && (
         <figcaption className="text-center text-sm text-gray-400 mt-2 italic">

@@ -14,6 +14,18 @@ export interface Project {
   videoSrc?: string;
 }
 
+export interface Achievement {
+  imageSrc: string;
+  slug: string;
+  videoSrc?: string;
+  imageAlt: string;
+  title: string;
+  skills: string[];
+  description: string;
+  projectLink?: string;
+  submissionLink?: string;
+}
+
 export interface BlogFrontmatter {
   title: string;
   date: string;

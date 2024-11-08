@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import "../styles/globals.css";
 import { SITE_CONFIG } from "@/lib/constants/siteConfig";
-import Header from "./components/layout/Header";
+import { jakarta } from "@/lib/fonts";
 
 import { Providers } from "./components/Providers";
+import Link from "next/link";
+import Header from "./components/layout/Header";
 
 export const metadata: Metadata = {
   title: {
@@ -28,12 +30,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${jakarta.className} dark`}
+      style={{ colorScheme: "dark" }}
+    >
       <body>
-        <Providers>
-          <Header />
-          {children}
-        </Providers>
+        <Header />
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

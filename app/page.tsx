@@ -5,8 +5,9 @@ import { Projects } from "./components/sections/Projects";
 import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
 import { Contact } from "./components/sections/Contact";
 import { Achievements } from "./components/sections/Achievements";
-import { Blog } from "./components/sections/blog";
+import { Blog } from "./components/sections/Blog";
 import { Suspense } from "react";
+import Header from "./components/layout/Header";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -73,17 +74,16 @@ export default function Home() {
 
         {/* Achievements Section */}
         <section
+          id="achievements"
           className="relative py-12 md:py-16
-            border-t border-gray-200 dark:border-gray-800
-            dark:before:absolute dark:before:inset-0 dark:before:bg-gradient-to-b
-            dark:before:from-accent-500/[0.03] dark:before:to-transparent dark:before:pointer-events-none"
+            before:absolute before:inset-0 before:bg-gradient-to-b
+            before:from-accent-500/[0.03] before:to-transparent before:pointer-events-none"
         >
           <div className="relative z-10">
             <h2
               className={`${outfit.className} text-3xl font-semibold
-                text-gray-900 dark:text-transparent dark:bg-gradient-to-br
-                dark:from-white dark:to-gray-200 dark:bg-clip-text
-                sm:text-4xl`}
+              bg-gradient-to-br from-white to-gray-200 bg-clip-text text-transparent
+              sm:text-4xl`}
             >
               Achievements
             </h2>

@@ -25,26 +25,14 @@
   --padding-large: 2rem;
 }
 
-/* Dark mode adjustments */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: #333;
-  }
-}
-
 html {
   scroll-padding-top: 4rem;
-}
-
-.dark {
-  --color-background: #333;
-  color-scheme: dark;
 }
 
 /* Base styles */
 @layer base {
   body {
-    @apply max-w-[1200px] mx-auto px-4 bg-white dark:bg-[#333] text-black dark:text-gray-200;
+    @apply mx-auto px-4 bg-white dark:bg-[#333] text-black dark:text-gray-200;
   }
   h1 {
     @apply m-0 p-0 text-inherit;
@@ -184,11 +172,6 @@ html {
 .text-skill-git {
   @apply text-[#F05032] dark:text-gray-200;
 }
-
-/* Dark mode image handling */
-/* .dark img[src*=".svg"]:not(.no-dark-invert) {
-  filter: invert(0.85);
-} */
 
 .dark img[src*="github.svg"],
 .dark img[src*="express.svg"],

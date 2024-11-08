@@ -1,15 +1,22 @@
-// app/projects/[slug]/page.tsx
 import { notFound } from "next/navigation";
 import { PROJECTS } from "@/lib/constants/projectConstants";
 import Image from "next/image";
 import { Metadata } from "next";
 import { BackToProjects } from "@/app/components/navigation/BackToProjects";
+import dynamic from "next/dynamic";
 
 interface ProjectPageProps {
   params: {
     slug: string;
   };
 }
+
+const LazyVideoComponent = dynamic(
+  () => import("../../components/VideoComponent"),
+  {
+    loading: () => <div>Loading video...</div>,
+  },
+);
 
 export async function generateStaticParams() {
   return PROJECTS.map((project) => ({
@@ -54,9 +61,6 @@ export async function generateMetadata({
       description: cleanDescription,
       images: [project.imageSrc],
     },
-    alternates: {
-      canonical: `https://joshuatuddenham.com/projects/${resolvedParams.slug}`,
-    },
     keywords: [...project.skills, "portfolio", "project", "development"],
   };
 }
@@ -64,7 +68,6 @@ export async function generateMetadata({
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const resolvedParams = await params;
   const project = PROJECTS.find((p) => p.slug === resolvedParams.slug);
-
   if (!project) notFound();
 
   return (
@@ -83,19 +86,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           {/* Project media */}
           <div className="relative aspect-video rounded-xl overflow-hidden shadow-lg mb-8">
             {project.videoSrc ? (
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="w-full h-full object-cover"
-              >
-                <source src={project.videoSrc} type="video/mp4" />
-                <source
-                  src={project.videoSrc.replace(".mp4", ".webm")}
-                  type="video/webm"
-                />
-              </video>
+              <LazyVideoComponent videoSrc={project.videoSrc} />
             ) : (
               <Image
                 src={project.imageSrc}

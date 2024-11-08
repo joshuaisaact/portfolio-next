@@ -9,7 +9,7 @@ interface ProjectCardProps {
 export function ProjectCard({ project }: ProjectCardProps) {
   return (
     <Link href={`/projects/${project.slug}`}>
-      <Card className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+      <Card className=" hover:-translate-y-0.5 hover:shadow-md">
         <CardImage
           src={project.videoSrc || project.imageSrc}
           alt={project.imageAlt}

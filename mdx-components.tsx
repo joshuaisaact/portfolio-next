@@ -1,9 +1,61 @@
 import type { MDXComponents } from "mdx/types";
 import { Figure } from "./app/components/mdx/Figure";
+import { BlogHeader } from "./app/components/mdx/BlogHeader";
 import Image from "next/image";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+
+interface BlogMetadata {
+  title: string;
+  date: string;
+  featured_image?: string;
+  excerpt?: string;
+  tags?: string[];
+}
+
+function BlogLayout({
+  children,
+  metadata,
+}: {
+  children: React.ReactNode;
+  metadata?: BlogMetadata;
+}) {
+  return (
+    <div className="min-h-[calc(100vh-4rem)] w-full bg-white dark:bg-gray-950">
+      {/* Subtle dot pattern overlay */}
+      <div className="fixed inset-0 bg-dot-pattern [background-size:24px_24px] opacity-50 dark:opacity-[0.07]" />
+
+      {/* Subtle gradient overlays */}
+      <div className="fixed inset-0 bg-gradient-radial from-green-500/[0.03] to-transparent dark:from-green-500/[0.02]" />
+
+      <main className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <article className="py-12 md:py-16">
+          <div className="max-w-3xl mx-auto">
+            {metadata && (
+              <BlogHeader
+                title={metadata.title}
+                date={metadata.date}
+                featured_image={metadata.featured_image}
+                tags={metadata.tags}
+              />
+            )}
+            {children}
+          </div>
+        </article>
+      </main>
+    </div>
+  );
+}
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
+    wrapper: (props) => {
+      // Access metadata from Next.js MDX file
+      const { metadata } = props as any;
+
+      return <BlogLayout metadata={metadata}>{props.children}</BlogLayout>;
+    },
+
     // Images
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     img: (props: any) => (
@@ -11,8 +63,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         sizes="100vw"
         style={{ width: "100%", height: "auto" }}
         className="rounded-lg my-8"
-        width={800}
-        height={400}
+        width={600}
+        height={200}
         alt={props.alt || ""}
         {...props}
       />
