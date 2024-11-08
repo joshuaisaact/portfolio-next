@@ -69,17 +69,29 @@ export default async function ProjectPage({ params }: PageProps) {
   return (
     <>
       <header className="sticky top-0 z-10 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+          aria-label="Main navigation"
+        >
           <div className="flex items-center h-16">
             <BackToProjects />
           </div>
         </nav>
       </header>
 
-      <main className="min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 pb-16">
-        <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
+      <main
+        id="main-content"
+        className="min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 pb-16"
+      >
+        <article
+          className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-12"
+          aria-labelledby="project-title"
+        >
           {/* Project media */}
-          <div className="relative aspect-video rounded-xl overflow-hidden shadow-lg mb-8">
+          <div
+            className="relative aspect-video rounded-xl overflow-hidden shadow-lg mb-8"
+            aria-label="Project preview"
+          >
             {project.videoSrc ? (
               <LazyVideoComponent videoSrc={project.videoSrc} />
             ) : (
@@ -97,12 +109,21 @@ export default async function ProjectPage({ params }: PageProps) {
           {/* Project header */}
           <div className="text-center mb-12">
             <div className="flex items-center justify-center gap-3 mb-6">
-              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
+              <h1
+                className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white"
+                id="project-title"
+              >
                 {project.title}
               </h1>
               {project.award && (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100 dark:bg-amber-500/20 rounded-full">
-                  <Trophy className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                <div
+                  className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100 dark:bg-amber-500/20 rounded-full"
+                  aria-label={`Award: ${project.award}`}
+                >
+                  <Trophy
+                    className="w-5 h-5 text-amber-600 dark:text-amber-400"
+                    aria-hidden="true"
+                  />
                   <span className="text-sm font-medium text-amber-600 dark:text-amber-400">
                     {project.award}
                   </span>
@@ -110,7 +131,11 @@ export default async function ProjectPage({ params }: PageProps) {
               )}
             </div>
 
-            <div className="flex flex-wrap justify-center gap-4">
+            <div
+              className="flex flex-wrap justify-center gap-4"
+              role="navigation"
+              aria-label="Project links"
+            >
               {project.links.map((link) => {
                 switch (link.type) {
                   case "github":
@@ -128,6 +153,7 @@ export default async function ProjectPage({ params }: PageProps) {
                           width={20}
                           height={20}
                           className="mr-2 dark:invert"
+                          aria-hidden="true"
                         />
                         {link.label}
                       </a>
@@ -146,6 +172,7 @@ export default async function ProjectPage({ params }: PageProps) {
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
+                          aria-hidden="true"
                         >
                           <path
                             strokeLinecap="round"
@@ -166,7 +193,7 @@ export default async function ProjectPage({ params }: PageProps) {
                         rel="noopener noreferrer"
                         className="inline-flex items-center px-4 py-2 rounded-lg bg-amber-100 hover:bg-amber-200 dark:bg-amber-500/20 dark:hover:bg-amber-500/30 text-amber-600 dark:text-amber-400 transition-all"
                       >
-                        <Trophy className="w-5 h-5 mr-2" />
+                        <Trophy className="w-5 h-5 mr-2" aria-hidden="true" />
                         {link.label}
                       </a>
                     );
@@ -180,21 +207,28 @@ export default async function ProjectPage({ params }: PageProps) {
           {/* Project content */}
           <div className="prose dark:prose-invert max-w-none">
             {/* Overview */}
-            <div className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+            <div
+              className="text-lg leading-relaxed text-gray-700 dark:text-gray-300"
+              aria-label="Project overview"
+            >
               {project.overview}
             </div>
 
             {/* Key Features */}
-            <section className="my-12">
-              <h2 className="text-xl font-semibold mb-6">Key Features</h2>
+            <section className="my-12" aria-labelledby="features-heading">
+              <h2 id="features-heading" className="text-xl font-semibold mb-6">
+                Key Features
+              </h2>
               <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-8">
-                <ul className="space-y-4">
+                <ul className="space-y-4" role="list">
                   {project.features.map((feature, index) => (
                     <li
                       key={index}
-                      className="flex items-start gap-3 text-gray-700 dark:text-gray-300"
+                      className="flex items-baseline gap-3 text-gray-700 dark:text-gray-300" // Changed from items-start to items-baseline
                     >
-                      <span className="text-blue-500 mt-1">•</span>
+                      <span className="text-blue-500" aria-hidden="true">
+                        •
+                      </span>
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -203,36 +237,38 @@ export default async function ProjectPage({ params }: PageProps) {
             </section>
 
             {/* Technical Architecture */}
-            <section className="my-12">
-              <h2 className="text-xl font-semibold mb-6">
+            <section className="my-12" aria-labelledby="architecture-heading">
+              <h2
+                id="architecture-heading"
+                className="text-xl font-semibold mb-6"
+              >
                 Technical Architecture
               </h2>
               <div className="space-y-8">
-                <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-8">
-                  <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-3">
-                    Frontend
-                  </h3>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    {project.architecture.frontend}
-                  </p>
-                </div>
-
-                <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-8">
-                  <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-3">
-                    Backend
-                  </h3>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    {project.architecture.backend}
-                  </p>
-                </div>
-
-                <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-8">
-                  <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-3">
-                    Infrastructure
-                  </h3>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    {project.architecture.infrastructure}
-                  </p>
+                <div className="space-y-8">
+                  {[
+                    {
+                      title: "Frontend",
+                      content: project.architecture.frontend,
+                    },
+                    { title: "Backend", content: project.architecture.backend },
+                    {
+                      title: "Infrastructure",
+                      content: project.architecture.infrastructure,
+                    },
+                  ].map(({ title, content }) => (
+                    <div
+                      key={title}
+                      className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-8"
+                    >
+                      <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-3">
+                        {title}
+                      </h3>
+                      <p className="text-gray-700 dark:text-gray-300">
+                        {content}
+                      </p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </section>

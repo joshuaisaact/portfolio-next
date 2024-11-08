@@ -1,0 +1,161 @@
+import { BlogHeader } from "@/app/components/mdx/BlogHeader";
+
+export const metadata = {
+  title: "Teaching an AI Dog New Tricks (The Gemini Integration)",
+  date: "2024-11-08",
+  featured_image: "/images/blog/wooster/wooster-server.png",
+  excerpt:
+    "Integrating Google's Gemini API to give Wooster its personality: prompt engineering, response parsing, and teaching an AI to think like a golden retriever.",
+  tags: ["Gemini API", "Express", "Supabase", "PostgreSQL", "TypeScript", "AI"],
+};
+
+### Teaching an AI Dog New Tricks (The Gemini Integration)
+
+After getting my database sorted, it was time for the fun part - making Wooster actually... work. This meant integrating Google's Gemini API, which is like ChatGPT's slightly more reasonable cousin who actually RSVPs to events. And by reasonable, I just mean it has a generous free API tier.
+
+<Figure
+  src="/images/blog/ai-trip/gemini-convo.jpg"
+  alt="A chat conversation with increasingly bizarre travel suggestions"
+  title="Early testing conversations with Wooster went... interestingly"
+/>
+
+## The Art of Prompt Engineering (Or: How I Learned to Stop Worrying and Trust the AI)
+
+First attempt at prompting Gemini:
+
+```typescript
+const prompt = "Plan a nice trip";
+```
+
+Result: _"Have you considered going somewhere? Perhaps doing things when you get there? Maybe eating food?"_
+
+Right. Maybe I need to be a bit more specific.
+
+## Take Two: The First Real Attempt
+
+My first serious attempt at structuring the prompts was... well, let's say Wooster had some creative interpretations:
+
+```typescript
+type BasicTripRequest = {
+  destination: string;
+  duration: number;
+  startDate: string;
+};
+
+const firstPrompt = `
+  Plan a ${tripRequest.duration} day trip to ${tripRequest.destination}
+  starting on ${tripRequest.startDate}.
+
+  Please include:
+  - Daily activities
+  - Locations
+  - Approximate costs
+  - Duration of activities
+`;
+```
+
+The results were... interesting. Sometimes I'd get a novel, sometimes a bullet list, and occasionally what appeared to be Wooster's stream of consciousness about squirrels. Time for attempt number two.
+
+## Adding More Structure (But Not Enough)
+
+```typescript
+const secondPrompt = `
+  Generate a JSON itinerary for a ${tripRequest.duration}-day trip to ${tripRequest.destination}.
+  Each day should have 2-3 activities.
+
+  Format:
+  {
+    "days": [
+      {
+        "dayNumber": number,
+        "activities": [
+          {
+            "name": string,
+            "location": string,
+            "description": string,
+            "duration": string,
+            "category": string,  // This caused problems later...
+            "cost": string
+          }
+        ]
+      }
+    ]
+  }
+`;
+```
+
+This worked better, but the categorization was a mess.I got everything from "Fun stuff" to "Walking around looking at things" as categories. Not exactly what you'd call structured data.
+
+## The Category Crisis
+
+Here's where things got interesting. I started seeing responses like:
+
+```json
+{
+  "category": "Vibing with the locals",
+  "duration": "until whenever",
+  "cost": "arm and leg",
+  "description": "Just hang out, you know?"
+}
+```
+
+Time to get serious about types.
+
+## The Final Evolution
+
+After much trial and error (and Wooster suggesting "belly rubs" as a valid activity category), I landed on this much more structured approach:
+
+```typescript
+export const createPrompt = (
+  days: number,
+  location: string,
+  startDate: string,
+): string => `
+  Generate **ONLY** JSON data for a ${days}-day trip to ${location}, starting on ${startDate}.
+  Have no more than three activities per day. Exclude arrival and departure logistics.
+
+  Duration must be in format "X hours" or "X.5 hours".
+  Price must be in format "$X" where X is a number.
+
+  Activities MUST include:
+  - "activityName": string
+  - "description": string (20-50 words)
+  - "location": string
+  - "price": string
+  - "duration": string
+  - "difficulty": "Easy" | "Moderate" | "Challenging"
+  - "category": "Adventure" | "Cultural" | "Nature" | "Food & Drink" | "Shopping" | "Entertainment"
+  - "bestTime": "Early Morning" | "Morning" | "Afternoon" | "Evening" | "Night"
+  - "bookingRequired": boolean
+`;
+```
+
+And later, after realizing I needed geolocation for mapping of activities:
+
+```typescript
+export const destinationPromptTemplate = (destination: string) => `
+  Generate **ONLY** a valid JSON object for ${destination}.
+  Include:
+  - "latitude": number (decimal degrees)
+  - "longitude": number (decimal degrees)
+  - "destinationName": string
+  - "country": string
+  - "description": string (50-200 words)
+  // ... other structured fields
+`;
+```
+
+## What I Actually Learned
+
+1. Start with strict types from the beginning (future you will thank you)
+2. Be explicit about formats - "some time in the afternoon" is not a valid time format
+3. The more specific the prompt constraints, the better the results
+4. Always validate AI responses - even when they look valid, they might be... creative
+5. Geolocation data should have been there from the start
+6. Rate limiting is still important (Wooster did get overenthusiastic)
+
+Next up: the frontend implementation, or as I like to call it, "Making Wooster Look Presentable for Company" (and this time with proper TypeScript interfaces from day one).
+
+```
+
+```

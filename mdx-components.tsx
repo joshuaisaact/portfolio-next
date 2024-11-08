@@ -22,18 +22,38 @@ function BlogLayout({
 }) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50/80 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_1px_1px,rgb(0_0_0_/_0.03)_1px,transparent_0)] [background-size:24px_24px] dark:bg-[radial-gradient(circle_at_1px_1px,rgb(255_255_255_/_0.03)_1px,transparent_0)]" />
+      {/* Skip to main content */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white dark:focus:bg-gray-900 focus:text-blue-600"
+      >
+        Skip to main content
+      </a>
 
-      <main className="relative mx-auto max-w-4xl px-6 py-12">
-        <Link
-          href="/blog"
-          className="group mb-8 inline-flex items-center text-sm text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
+      <div
+        className="fixed inset-0 bg-[radial-gradient(circle_at_1px_1px,rgb(0_0_0_/_0.03)_1px,transparent_0)] [background-size:24px_24px] dark:bg-[radial-gradient(circle_at_1px_1px,rgb(255_255_255_/_0.03)_1px,transparent_0)]"
+        aria-hidden="true"
+      />
+
+      <main id="main-content" className="relative mx-auto max-w-4xl px-6 py-12">
+        <nav aria-label="Back to blog">
+          <Link
+            href="/blog"
+            className="group mb-8 inline-flex items-center text-sm text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
+            aria-label="Return to blog listing"
+          >
+            <ArrowLeft
+              className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1"
+              aria-hidden="true"
+            />
+            Back to blog
+          </Link>
+        </nav>
+
+        <article
+          className="prose-quoteless prose prose-gray mx-auto max-w-none dark:prose-invert"
+          aria-labelledby="article-title"
         >
-          <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
-          Back to blog
-        </Link>
-
-        <article className="prose-quoteless prose prose-gray mx-auto max-w-none dark:prose-invert">
           {metadata && (
             <BlogHeader
               title={metadata.title}
@@ -54,10 +74,12 @@ function BlogLayout({
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     wrapper: (props) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { metadata } = props as any;
       return <BlogLayout metadata={metadata}>{props.children}</BlogLayout>;
     },
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     img: (props: any) => (
       <Image
         sizes="100vw"
@@ -72,22 +94,34 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     Figure,
 
     h1: (props) => (
-      <h1 className="relative z-10 bg-gradient-to-b from-gray-900 to-gray-700 bg-clip-text text-4xl font-bold tracking-tight text-transparent dark:from-gray-100 dark:to-gray-300">
+      <h1
+        id="article-title"
+        className="relative z-10 bg-gradient-to-b from-gray-900 to-gray-700 bg-clip-text text-4xl font-bold tracking-tight text-transparent dark:from-gray-100 dark:to-gray-300"
+      >
         {props.children}
       </h1>
     ),
     h2: (props) => (
-      <h2 className="relative z-10 bg-gradient-to-b from-gray-800 to-gray-600 bg-clip-text text-3xl font-semibold tracking-tight text-transparent dark:from-gray-200 dark:to-gray-400">
+      <h2
+        className="relative z-10 bg-gradient-to-b from-gray-800 to-gray-600 bg-clip-text text-3xl font-semibold tracking-tight text-transparent dark:from-gray-200 dark:to-gray-400"
+        id={`heading-${props.children?.toString().toLowerCase().replace(/\s+/g, "-")}`}
+      >
         {props.children}
       </h2>
     ),
     h3: (props) => (
-      <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-200">
+      <h3
+        className="text-2xl font-semibold text-gray-800 dark:text-gray-200"
+        id={`subheading-${props.children?.toString().toLowerCase().replace(/\s+/g, "-")}`}
+      >
         {props.children}
       </h3>
     ),
     h4: (props) => (
-      <h4 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+      <h4
+        className="text-xl font-semibold text-gray-800 dark:text-gray-200"
+        id={`subheading-${props.children?.toString().toLowerCase().replace(/\s+/g, "-")}`}
+      >
         {props.children}
       </h4>
     ),
@@ -97,37 +131,44 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         {props.children}
       </p>
     ),
-    strong: (props) => (
-      <strong className="font-semibold text-gray-900 dark:text-gray-100">
-        {props.children}
-      </strong>
-    ),
-    em: (props) => (
-      <em className="italic text-gray-700 dark:text-gray-300">
-        {props.children}
-      </em>
-    ),
 
     ul: (props) => (
-      <ul className="list-disc list-outside ml-6 space-y-2 text-gray-700 dark:text-gray-300">
+      <ul
+        role="list"
+        className="list-disc list-outside ml-6 space-y-2 text-gray-700 dark:text-gray-300"
+      >
         {props.children}
       </ul>
     ),
     ol: (props) => (
-      <ol className="list-decimal list-outside ml-6 space-y-2 text-gray-700 dark:text-gray-300">
+      <ol
+        role="list"
+        className="list-decimal list-outside ml-6 space-y-2 text-gray-700 dark:text-gray-300"
+      >
         {props.children}
       </ol>
     ),
-    li: (props) => <li className="pl-2 leading-relaxed">{props.children}</li>,
+    li: (props) => (
+      <li role="listitem" className="pl-2 leading-relaxed">
+        {props.children}
+      </li>
+    ),
 
     blockquote: (props) => (
-      <blockquote className="border-l-4 border-gray-200 pl-6 italic text-gray-700 dark:border-gray-700 dark:text-gray-400">
+      <blockquote
+        className="border-l-4 border-gray-200 pl-6 italic text-gray-700 dark:border-gray-700 dark:text-gray-400"
+        role="quote"
+      >
         {props.children}
       </blockquote>
     ),
 
     pre: (props) => (
-      <pre className="rounded-lg bg-gray-50/50 p-4 shadow-sm ring-1 ring-gray-900/5 backdrop-blur-sm dark:bg-gray-800/50 dark:ring-white/5">
+      <pre
+        className="rounded-lg bg-gray-50/50 p-4 shadow-sm ring-1 ring-gray-900/5 backdrop-blur-sm dark:bg-gray-800/50 dark:ring-white/5"
+        role="region"
+        aria-label="Code example"
+      >
         {props.children}
       </pre>
     ),
@@ -138,7 +179,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ),
 
     hr: () => (
-      <hr className="my-12 border-t border-gray-200 dark:border-gray-800" />
+      <hr
+        className="my-12 border-t border-gray-200 dark:border-gray-800"
+        role="separator"
+      />
     ),
 
     a: (props) => (
@@ -147,6 +191,11 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         className="text-gray-900 underline decoration-gray-300 underline-offset-2 transition-colors hover:decoration-gray-700 dark:text-gray-100 dark:decoration-gray-700 dark:hover:decoration-gray-400"
         target={props.href?.startsWith("http") ? "_blank" : undefined}
         rel={props.href?.startsWith("http") ? "noopener noreferrer" : undefined}
+        aria-label={
+          props.href?.startsWith("http")
+            ? `${props.children} (opens in new tab)`
+            : undefined
+        }
       />
     ),
 
