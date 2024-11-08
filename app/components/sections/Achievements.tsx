@@ -1,7 +1,9 @@
+"use client";
+
 import { ACHIEVEMENTS } from "@/lib/constants/achievementConstants";
 import { AchievementCard } from "../ui/cards/AchievementCard";
 
-export async function Achievements() {
+export function Achievements() {
   return (
     <>
       <div className="grid grid-cols-1  gap-8">

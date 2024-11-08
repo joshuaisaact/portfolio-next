@@ -9,7 +9,10 @@ interface AchievementCardProps {
 
 export function AchievementCard({ achievement }: AchievementCardProps) {
   return (
-    <Link href={`/projects/${achievement.slug}`}>
+    <Link
+      href={`/projects/${achievement.slug}`}
+      onClick={() => window.scrollTo(0, 0)}
+    >
       <Card className=" hover:-translate-y-0.5 hover:shadow-md">
         <CardImage
           src={achievement.videoSrc || achievement.imageSrc}

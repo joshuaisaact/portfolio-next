@@ -4,14 +4,14 @@
 
 :root {
   /* Theme colors */
-  --theme-1: #e07a14;
-  --theme-2: #723e5a;
-  --theme-3: #9c852a;
-  --theme-4: #c589a3;
-  --theme-5: #42d499;
-  --theme-6: #5459de;
-  --theme-7: #481682;
-  --theme-8: #3e7256;
+  --theme-1: #9c6c44; /* Warm muted terracotta */
+  --theme-2: #586f7c; /* Steel blue grey */
+  --theme-3: #7c7052; /* Warm taupe */
+  --theme-4: #8c6c7a; /* Muted mauve */
+  --theme-5: #4a7c6a; /* Forest sage */
+  --theme-6: #4a5d7c; /* Deep blue grey */
+  --theme-7: #635d7c; /* Muted purple grey */
+  --theme-8: #4a7c5d; /* Deep sage */
 
   /* System colors */
   --color-primary: #3e7256;
@@ -39,7 +39,7 @@ html {
   }
 
   h2 {
-    @apply p-4 text-center underline decoration-[var(--theme-1)] decoration-2 underline-offset-2 dark:text-gray-200;
+    @apply underline decoration-[var(--theme-1)] decoration-2 underline-offset-2 dark:text-gray-200;
   }
 }
 

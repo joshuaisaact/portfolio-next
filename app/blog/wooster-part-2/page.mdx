@@ -23,7 +23,8 @@ For once in my life, I decided to be sensible and start with the backend. I know
 
 ## Database Design (Or: Teaching Wooster About Relationships)
 
-Before writing a single line of Express code, I needed to figure out what data Wooster (our AI golden retriever, keep up) would need to juggle. After a LOT of coffee, I landed on three main tables:
+Before writing a single line of Express code, I needed to figure out what data Wooster (our AI golden retriever that I'm already anthropomorphizing
+) would need to juggle. After a LOT of coffee, I landed on three main tables:
 
 1. **Trips** - Because you can't have a trip planner without, you know, trips
 2. **Destinations** - Places to go (other than the kitchen for more coffee)
@@ -54,12 +55,12 @@ After debating with myself (and briefly considering asking Wooster for advice), 
    - Less database bloat = happy developer (I think they call this normalization... I Googled it)
 
 <Figure
-  src="/images/blog/ai-trip/data-sharing.jpg"
+  src="/images/blog/wooster/charlie-day.png"
   alt="A meme about sharing data"
   title="How it feels explaining database normalization to non-technical friends"
 />
 
-## The Final Schema
+## The Final Schema (or is it?)
 
 Here's what my database ended up looking like:
 
@@ -97,6 +98,30 @@ CREATE TABLE activities (
   cost_range TEXT
 );
 ```
+
+BUT WAIT! I wasn't finished here, dear reader (yes, all one of you). I had a bright idea!
+
+## An Itinerary, Day by Day (or: Overthinking Strikes Yet Again)
+
+So, in what I considered a clever bit of database design at the time, I added a new table: itinerary_days. The idea was that, since activities and destinations were shared, I needed a way for each user to build out a custom day-by-day itinerary without having their personal plans clutter up the entire database. After all, nobody wants to see “Day 3: Louvre again” listed 87 times. This itinerary_days table would link each trip to specific activities, organized by day—thus preventing global chaos, and giving me a nice pat on the back.
+
+```
+-- Itinerary Days
+CREATE TABLE itinerary_days (
+  day_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  trip_id UUID REFERENCES trips,
+  day_number INT NOT NULL,
+  activity_id UUID REFERENCES activities
+);
+```
+
+It felt incredibly forward-thinking at the time, and I did feel a bit smug about avoiding duplicate entries and making the backend future-proof (or so I thought). Turns out, though, I might have been a little too pleased with myself.
+
+## Also, Cue the “Saved Destinations” Table (The Bit I Missed Entirely)
+
+Because here’s what I didn’t account for until I added user authentication: everyone now shares the same list of destinations. Brilliant. Every user logs in, and, lo and behold, they see exactly the same list of places, just as if we’re running a one-size-fits-all holiday agency.
+
+And so, the realization dawned that a “saved destinations” table is not only useful—it’s painfully necessary. Each user clearly needs their own list of favorite spots, not the global collection. So, another table to the rescue… just after I’ve finished congratulating myself on a “complete” schema. I can only assume future-me is already sighing at all the refactoring.
 
 Next up: building the Express endpoints. But that's a story for another post, probably written after I've recovered from all this database normalization.
 

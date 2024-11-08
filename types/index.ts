@@ -1,17 +1,21 @@
 import { MDXRemoteSerializeResult } from "next-mdx-remote";
 
 export interface Project {
+  title: string;
+  slug: string;
+  description: string;
   imageSrc: string;
   imageAlt: string;
-  slug: string;
-  title: string;
-  projectLink: string;
-  githubLink: string;
-  submissionLink?: string;
-  skills: string[];
-  description: string;
-  fullDescription: string[];
   videoSrc?: string;
+  award?: string;
+  skills: string[];
+  overview: string;
+  features: string[];
+  architecture: {
+    frontend: string;
+    backend: string;
+    infrastructure: string;
+  };
 }
 
 export interface Achievement {

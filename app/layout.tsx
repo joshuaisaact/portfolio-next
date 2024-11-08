@@ -3,9 +3,8 @@ import "../styles/globals.css";
 import { SITE_CONFIG } from "@/lib/constants/siteConfig";
 import { jakarta } from "@/lib/fonts";
 
-import { Providers } from "./components/Providers";
-import Link from "next/link";
 import Header from "./components/layout/Header";
+import { ThemeProvider } from "next-themes";
 
 export const metadata: Metadata = {
   title: {
@@ -30,14 +29,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`${jakarta.className} dark`}
-      style={{ colorScheme: "dark" }}
-    >
-      <body>
-        <Header />
-        <Providers>{children}</Providers>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${jakarta.className}`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+        >
+          <Header />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

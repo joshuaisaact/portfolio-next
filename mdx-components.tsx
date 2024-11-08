@@ -21,24 +21,28 @@ function BlogLayout({
   metadata?: BlogMetadata;
 }) {
   return (
-    <div className="min-h-[calc(100vh-4rem)] w-full bg-white dark:bg-gray-950">
-      {/* Subtle dot pattern overlay */}
-      <div className="fixed inset-0 bg-dot-pattern [background-size:24px_24px] opacity-50 dark:opacity-[0.07]" />
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50/80 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_1px_1px,rgb(0_0_0_/_0.03)_1px,transparent_0)] [background-size:24px_24px] dark:bg-[radial-gradient(circle_at_1px_1px,rgb(255_255_255_/_0.03)_1px,transparent_0)]" />
 
-      {/* Subtle gradient overlays */}
-      <div className="fixed inset-0 bg-gradient-radial from-green-500/[0.03] to-transparent dark:from-green-500/[0.02]" />
+      <main className="relative mx-auto max-w-4xl px-6 py-12">
+        <Link
+          href="/blog"
+          className="group mb-8 inline-flex items-center text-sm text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
+          Back to blog
+        </Link>
 
-      <main className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <article className="py-12 md:py-16">
-          <div className="max-w-3xl mx-auto">
-            {metadata && (
-              <BlogHeader
-                title={metadata.title}
-                date={metadata.date}
-                featured_image={metadata.featured_image}
-                tags={metadata.tags}
-              />
-            )}
+        <article className="prose-quoteless prose prose-gray mx-auto max-w-none dark:prose-invert">
+          {metadata && (
+            <BlogHeader
+              title={metadata.title}
+              date={metadata.date}
+              featured_image={metadata.featured_image}
+              tags={metadata.tags}
+            />
+          )}
+          <div className="mt-8 rounded-lg bg-white/80 p-8 shadow-lg backdrop-blur-sm ring-1 ring-gray-900/5 dark:bg-gray-900/80 dark:ring-white/5">
             {children}
           </div>
         </article>
@@ -50,19 +54,15 @@ function BlogLayout({
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     wrapper: (props) => {
-      // Access metadata from Next.js MDX file
       const { metadata } = props as any;
-
       return <BlogLayout metadata={metadata}>{props.children}</BlogLayout>;
     },
 
-    // Images
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     img: (props: any) => (
       <Image
         sizes="100vw"
         style={{ width: "100%", height: "auto" }}
-        className="rounded-lg my-8"
+        className="my-8 rounded-lg ring-1 ring-gray-900/5 dark:ring-white/5"
         width={600}
         height={200}
         alt={props.alt || ""}
@@ -71,85 +71,80 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ),
     Figure,
 
-    // Headings
     h1: (props) => (
-      <h1 className="text-4xl font-bold mt-8 mb-6 dark:text-gray-200 tracking-tight">
+      <h1 className="relative z-10 bg-gradient-to-b from-gray-900 to-gray-700 bg-clip-text text-4xl font-bold tracking-tight text-transparent dark:from-gray-100 dark:to-gray-300">
         {props.children}
       </h1>
     ),
     h2: (props) => (
-      <h2 className="text-3xl font-semibold mt-12 mb-6 dark:text-gray-300 tracking-tight">
+      <h2 className="relative z-10 bg-gradient-to-b from-gray-800 to-gray-600 bg-clip-text text-3xl font-semibold tracking-tight text-transparent dark:from-gray-200 dark:to-gray-400">
         {props.children}
       </h2>
     ),
     h3: (props) => (
-      <h3 className="text-2xl font-semibold mt-8 mb-4 dark:text-gray-300">
+      <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-200">
         {props.children}
       </h3>
     ),
     h4: (props) => (
-      <h4 className="text-xl font-semibold mt-6 mb-4 dark:text-gray-300">
+      <h4 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
         {props.children}
       </h4>
     ),
 
-    // Paragraphs and text
     p: (props) => (
-      <p className="text-lg leading-relaxed mb-6 dark:text-gray-300">
+      <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
         {props.children}
       </p>
     ),
     strong: (props) => (
-      <strong className="font-semibold dark:text-gray-200">
+      <strong className="font-semibold text-gray-900 dark:text-gray-100">
         {props.children}
       </strong>
     ),
     em: (props) => (
-      <em className="italic dark:text-gray-300">{props.children}</em>
+      <em className="italic text-gray-700 dark:text-gray-300">
+        {props.children}
+      </em>
     ),
 
-    // Lists
     ul: (props) => (
-      <ul className="list-disc list-outside ml-6 mb-6 space-y-2 text-lg dark:text-gray-300">
+      <ul className="list-disc list-outside ml-6 space-y-2 text-gray-700 dark:text-gray-300">
         {props.children}
       </ul>
     ),
     ol: (props) => (
-      <ol className="list-decimal list-outside ml-6 mb-6 space-y-2 text-lg dark:text-gray-300">
+      <ol className="list-decimal list-outside ml-6 space-y-2 text-gray-700 dark:text-gray-300">
         {props.children}
       </ol>
     ),
     li: (props) => <li className="pl-2 leading-relaxed">{props.children}</li>,
 
-    // Blockquotes
     blockquote: (props) => (
-      <blockquote className="border-l-4 border-gray-300 dark:border-gray-700 pl-4 my-6 italic text-gray-700 dark:text-gray-400">
+      <blockquote className="border-l-4 border-gray-200 pl-6 italic text-gray-700 dark:border-gray-700 dark:text-gray-400">
         {props.children}
       </blockquote>
     ),
 
-    // Code blocks
     pre: (props) => (
-      <pre className="bg-gray-100 dark:bg-gray-900 rounded-lg p-4 overflow-x-auto mb-6 text-sm">
+      <pre className="rounded-lg bg-gray-50/50 p-4 shadow-sm ring-1 ring-gray-900/5 backdrop-blur-sm dark:bg-gray-800/50 dark:ring-white/5">
         {props.children}
       </pre>
     ),
     code: (props) => (
-      <code className="bg-gray-100 dark:bg-gray-800 rounded px-1.5 py-0.5 text-sm font-mono">
+      <code className="rounded bg-gray-100/70 px-1.5 py-0.5 text-sm font-mono text-gray-800 dark:bg-gray-800/70 dark:text-gray-200">
         {props.children}
       </code>
     ),
 
-    // Horizontal rule
     hr: () => (
       <hr className="my-12 border-t border-gray-200 dark:border-gray-800" />
     ),
 
-    // Links
     a: (props) => (
       <a
         {...props}
-        className="text-blue-600 dark:text-blue-400 hover:underline"
+        className="text-gray-900 underline decoration-gray-300 underline-offset-2 transition-colors hover:decoration-gray-700 dark:text-gray-100 dark:decoration-gray-700 dark:hover:decoration-gray-400"
         target={props.href?.startsWith("http") ? "_blank" : undefined}
         rel={props.href?.startsWith("http") ? "noopener noreferrer" : undefined}
       />

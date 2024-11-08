@@ -2,22 +2,13 @@ import { Metadata } from "next";
 import { AboutMe } from "./components/sections/AboutMe";
 import { Skills } from "./components/sections/Skills";
 import { Projects } from "./components/sections/Projects";
-import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
+import { outfit, jakarta } from "@/lib/fonts";
 import { Contact } from "./components/sections/Contact";
 import { Achievements } from "./components/sections/Achievements";
 import { Blog } from "./components/sections/Blog";
 import { Suspense } from "react";
 import Header from "./components/layout/Header";
-
-const jakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const outfit = Outfit({
-  subsets: ["latin"],
-  display: "swap",
-});
+import { Section } from "./components/ui/Section";
 
 export const metadata: Metadata = {
   title: "Joshua Tuddenham | Full-Stack Engineer",
@@ -52,19 +43,14 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div
-      id="top"
-      className={`${jakarta.className} min-h-[calc(100vh-4rem)] w-full bg-white dark:bg-gray-950`}
+      className={`${jakarta.className} min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50/80 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900`}
     >
       {/* Subtle dot pattern overlay */}
-      <div className="fixed inset-0 bg-dot-pattern [background-size:24px_24px] opacity-50 dark:opacity-[0.07]" />
-
-      {/* Subtle gradient overlays */}
-      <div className="fixed inset-0 bg-gradient-radial from-green-500/[0.03] to-transparent dark:from-green-500/[0.02]" />
-
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_1px_1px,rgb(0_0_0_/_0.03)_1px,transparent_0)] [background-size:24px_24px] dark:bg-[radial-gradient(circle_at_1px_1px,rgb(255_255_255_/_0.03)_1px,transparent_0)]" />
       <main className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Hero Section */}
         <section
-          className="relative py-12 md:py-16
+          className="relative py-12
             border-t border-gray-200 dark:border-gray-800
             dark:before:absolute dark:before:inset-0 dark:before:bg-gradient-to-b
             dark:before:from-accent-500/[0.03] dark:before:to-transparent dark:before:pointer-events-none"
@@ -72,102 +58,25 @@ export default function Home() {
           <AboutMe />
         </section>
 
-        {/* Achievements Section */}
-        <section
-          id="achievements"
-          className="relative py-12 md:py-16
-            before:absolute before:inset-0 before:bg-gradient-to-b
-            before:from-accent-500/[0.03] before:to-transparent before:pointer-events-none"
-        >
-          <div className="relative z-10">
-            <h2
-              className={`${outfit.className} text-3xl font-semibold
-              bg-gradient-to-br from-white to-gray-200 bg-clip-text text-transparent
-              sm:text-4xl`}
-            >
-              Achievements
-            </h2>
-            <Achievements />
-          </div>
-        </section>
-
         {/* Skills Section */}
-        <section
-          id="skills"
-          className="py-12 md:py-16 border-t border-gray-100 dark:border-gray-800"
-          aria-label="My technical skills"
-        >
-          <div className="space-y-6">
-            <h2
-              className={`${outfit.className} text-3xl font-semibold text-gray-900 dark:text-white sm:text-4xl`}
-            >
-              Skills
-            </h2>
-            <Skills />
-          </div>
-        </section>
+        <Section id="skills" title="Skills">
+          <Skills />
+        </Section>
 
         {/* Projects Section */}
-        <section
-          id="projects"
-          className="relative py-12 md:py-16
-            before:absolute before:inset-0 before:bg-gradient-to-b
-            before:from-accent-500/[0.03] before:to-transparent before:pointer-events-none"
-        >
-          <div className="relative z-10">
-            <h2
-              className={`${outfit.className} text-3xl font-semibold
-              bg-gradient-to-br from-white to-gray-200 bg-clip-text text-transparent
-              sm:text-4xl`}
-            >
-              Projects
-            </h2>
-            <Projects />
-          </div>
-        </section>
+        <Section id="projects" title="Projects">
+          <Projects />
+        </Section>
 
         {/* Blog Section */}
-        <section
-          id="blog"
-          className="py-12 md:py-16 border-t border-gray-100 dark:border-gray-800"
-          aria-label="My blog posts"
-        >
-          <div className="space-y-6">
-            <h2
-              className={`${outfit.className} text-3xl font-semibold text-gray-900 dark:text-white sm:text-4xl`}
-            >
-              Blog
-            </h2>
-            <Suspense
-              fallback={
-                <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
-                  <div className="h-48 bg-white dark:bg-gray-800 rounded-lg shadow-sm ring-1 ring-gray-900/5" />
-                  <div className="h-48 bg-white dark:bg-gray-800 rounded-lg shadow-sm ring-1 ring-gray-900/5" />
-                </div>
-              }
-            >
-              <Blog />
-            </Suspense>
-          </div>
-        </section>
+        <Section id="blog" title="Blog">
+          <Blog />
+        </Section>
 
         {/* Contact Section */}
-        <section
-          id="contact"
-          className="py-12 md:py-16 border-t border-gray-100 dark:border-gray-800"
-          aria-label="Contact form"
-        >
-          <div className="space-y-6">
-            <h2
-              className={`${outfit.className} text-3xl font-semibold text-gray-900 dark:text-white sm:text-4xl`}
-            >
-              Get in Touch
-            </h2>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm ring-1 ring-gray-900/5 p-8">
-              <Contact />
-            </div>
-          </div>
-        </section>
+        <Section id="contact" title="Contact">
+          <Contact />
+        </Section>
       </main>
 
       <footer className="border-t border-gray-200 dark:border-gray-800 mt-16">
