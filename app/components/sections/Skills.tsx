@@ -11,12 +11,12 @@ export function Skills() {
     {
       name: "Complex Systems",
       description:
-        "Translated quantitative trading requirements into technical specifications",
+        "Translated complex quantitative trading requirements into actionable technical specifications",
     },
     {
       name: "Enterprise Solutions",
       description:
-        "Architected solutions for financial institutions while collaborating with engineering teams",
+        "Architected tailored enterprise solutions for financial institutions while collaborating closely with engineering teams",
     },
   ];
 

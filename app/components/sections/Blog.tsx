@@ -1,7 +1,9 @@
+"use client";
+
 import { BlogCard } from "../ui/cards/BlogCard";
 import { posts } from "@/app/blog/posts";
 
-export async function Blog() {
+export function Blog() {
   return (
     <section aria-label="Blog" className="space-y-6 sm:space-y-8">
       <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
@@ -21,9 +23,7 @@ export async function Blog() {
             key={post.slug}
             slug={post.slug}
             role="listitem"
-            title={post.metadata.title}
-            image={post.metadata.featured_image}
-            excerpt={post.metadata.excerpt}
+            metadata={post.metadata}
           />
         ))}
       </div>

@@ -35,8 +35,11 @@ function BlogLayout({
         aria-hidden="true"
       />
 
-      <main id="main-content" className="relative mx-auto max-w-4xl px-6 py-12">
-        <nav aria-label="Back to blog">
+      <main
+        id="main-content"
+        className="relative z-10 mx-auto max-w-7xl px-2 sm:px-4 lg:px-8 py-10"
+      >
+        {/* <nav aria-label="Back to blog">
           <Link
             href="/blog"
             className="group mb-8 inline-flex items-center text-sm text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
@@ -48,7 +51,7 @@ function BlogLayout({
             />
             Back to blog
           </Link>
-        </nav>
+        </nav> */}
 
         <article
           className="prose-quoteless prose prose-gray mx-auto max-w-none dark:prose-invert"

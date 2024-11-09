@@ -3,9 +3,10 @@ import Image from "next/image";
 interface CardProps {
   children: React.ReactNode;
   className?: string;
+  role?: string;
 }
 
-export function Card({ children, className = "" }: CardProps) {
+export function Card({ children, className = "", role }: CardProps) {
   return (
     <div
       className={`
@@ -19,6 +20,7 @@ export function Card({ children, className = "" }: CardProps) {
         hover:shadow-md hover:-translate-y-0.5
         ${className}
       `}
+      role={role}
     >
       {children}
     </div>
@@ -42,7 +44,7 @@ export function CardImage({
 }: CardImageProps) {
   return (
     <div
-      className={`relative aspect-[16/9] overflow-hidden ${containerClassName}`}
+      className={`relative aspect-[4/3] overflow-hidden bg-gray-100 dark:bg-gray-800 ${containerClassName}`}
     >
       {video ? (
         <video
@@ -61,8 +63,8 @@ export function CardImage({
           src={src}
           alt={alt}
           fill
-          className={`object-cover transition-transform duration-300 group-hover:scale-105 ${className}`}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" // Added responsive sizes
+          className={` transition-transform duration-300 group-hover:scale-105 ${className}`}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
       )}
     </div>

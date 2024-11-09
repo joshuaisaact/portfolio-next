@@ -1,50 +1,77 @@
 import Link from "next/link";
 import { Card, CardImage, CardContent } from "./Card";
+import { formatDate } from "@/app/components/utils/formatDate";
 
 interface BlogCardProps {
   slug: string;
-  title: string;
-  image: string;
-  excerpt: string;
-  role: string;
+  metadata: {
+    title: string;
+    date: string;
+    excerpt: string;
+    featured_image: string;
+    tags: string[];
+  };
+  role?: string;
 }
 
-export function BlogCard({ slug, title, image, excerpt }: BlogCardProps) {
+export function BlogCard({ slug, metadata, role }: BlogCardProps) {
   return (
-    <Card className="h-full flex flex-col">
-      <CardImage
-        src={image}
-        alt={title}
-        containerClassName="sm:aspect-[16/9] md:aspect-[2/1]"
-        className="transition-transform duration-500"
-      />
-      <CardContent>
-        <Link
-          href={`/blog/${slug}`}
-          className="block text-lg sm:text-xl font-semibold
-          hover:text-blue-600 dark:hover:text-blue-400
-          transition-colors line-clamp-2 mb-2"
-        >
-          {title}
-        </Link>
-        <p
-          className="text-sm sm:text-base text-gray-600 dark:text-gray-300
-          line-clamp-3 mb-4 flex-grow"
-        >
-          {excerpt}
-        </p>
-        <Link
-          href={`/blog/${slug}`}
-          className="inline-flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium
-          text-blue-600 dark:text-blue-400
-          bg-blue-50 dark:bg-blue-900/20
-          hover:bg-blue-100 dark:hover:bg-blue-900/30
-          rounded-md transition-colors
-          self-start"
-        >
-          Read Article
-        </Link>
-      </CardContent>
-    </Card>
+    <Link
+      href={`/blog/${slug}`}
+      className="block h-full"
+      onClick={() => window.scrollTo(0, 0)}
+    >
+      <Card
+        className="group hover:-translate-y-0.5 hover:shadow-md h-full flex flex-col"
+        role={role}
+      >
+        <CardImage
+          src={metadata.featured_image}
+          alt={metadata.title}
+          containerClassName="aspect-[3/2] sm:aspect-[4/3] bg-gray-100 dark:bg-gray-800"
+          className="transition-transform duration-500 group-hover:scale-105 object-contain"
+        />
+        <CardContent>
+          {/* Date and tags row */}
+          <div className="flex flex-wrap items-center gap-2 mb-2">
+            <time
+              dateTime={metadata.date}
+              className="text-sm text-gray-600 dark:text-gray-400"
+            >
+              {formatDate(metadata.date)}
+            </time>
+            <div
+              className="flex flex-wrap gap-1.5 sm:gap-2"
+              role="list"
+              aria-label="Article tags"
+            >
+              {metadata.tags.map((tag) => (
+                <span
+                  key={tag}
+                  role="listitem"
+                  className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <h2
+            className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100
+            group-hover:text-blue-600 dark:group-hover:text-blue-400
+            transition-colors line-clamp-2 mb-2"
+          >
+            {metadata.title}
+          </h2>
+          <p
+            className="text-sm sm:text-base text-gray-600 dark:text-gray-300
+            line-clamp-3 mb-4 flex-grow"
+          >
+            {metadata.excerpt}
+          </p>
+        </CardContent>
+      </Card>
+    </Link>
   );
 }

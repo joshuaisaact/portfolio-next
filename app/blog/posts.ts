@@ -24,7 +24,7 @@ export const posts = [
       date: "2024-10-19",
       featured_image: "/images/blog/wooster/wooster-server.png",
       excerpt:
-        "Building a full-stack AI trip planner in one week - featuring a golden retriever named Wooster",
+        "Teaching an AI dog new tricks: database design, Express endpoints, and why I'm probably overthinking this.",
       tags: ["React", "Typescript", "Express", "Supabase", "AI", "LLM"],
     },
   },
@@ -44,7 +44,7 @@ export const posts = [
     metadata: {
       title: "Hugo with the flow",
       date: "2024-08-24",
-      featured_image: "images/blog/hugo/hugo-logo.svg",
+      featured_image: "images/blog/hugo/hugo-logo-wide.svg",
       excerpt:
         "How I used Hugo to automate my blog static site generation, and how to set up Hugo with an existing website",
       tags: ["Hugo", "Javascript", "CSS", "HTML"],

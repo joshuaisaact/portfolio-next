@@ -3,7 +3,7 @@ import { BlogHeader } from "@/app/components/mdx/BlogHeader";
 export const metadata = {
   title: "Hugo with the flow",
   date: "2024-08-24",
-  featured_image: "media/skills/hugo.svg",
+  featured_image: "/images/blog/hugo-logo-wide.svg",
   excerpt:
     "How I used Hugo to automate my blog static site generation, and how to set up Hugo with an existing website",
   tags: ["Hugo", "Javascript", "CSS", "HTML"],
@@ -12,7 +12,7 @@ export const metadata = {
 <BlogHeader
   title="Hugo with the flow"
   date="2024-08-24"
-  featured_image="images/blog/hugo/hugo-logo.svg"
+  featured_image="/images/blog/hugo/hugo-logo-wide.svg"
   tags={["Hugo", "HTML", "CSS", "Javascript"]}
 />
 
@@ -56,7 +56,7 @@ This was painless, and set me up with a skeleton of folders that would be used t
 
 This folder structure is the skeleton of an entire static website:
 
-**Archetypes:**
+### Archetypes:
 
 Content templates that come with pre-set frontmatter variables. You can customize these templates or create your own to suit your needs. For instance, if you want a template specifically for blog posts, you'd create a file named "posts.md" in the "archetypes" folder. Hugo will then automatically apply the variables from this file whenever you generate a new post.
 
@@ -70,37 +70,37 @@ $ hugo new posts/new-post.md
 
 This creates a new blank post in the content/posts directory with the frontmatter values pre-populated.
 
-**Content**:
+### Content:
 
 This directory is where all the website's content is stored. You can organize it with subfolders that represent different sections of your site. For instance, if your site includes a blog, you could create a "blog" folder to hold all the articles for that section.
 
-**Data:**
+### Data:
 
 I haven't used this (yet), but you can populate it with JSON and other data files from external sources, and then pull that data into your Hugo static sites.
 
-**Layout:**
+### Layout:
 
 Perhaps one of the most important folders, this contains all the HTML template files used for pages on your Hugo site. For example, single.html is the template for every blog post, and baseof.html is the base template that's used across all your sites.
 
-**Static**:
+### Static:
 
 The static directory is quite simple—it holds the static assets for your website, like CSS, JavaScript, and images. The contents of this directory are served exactly as they are, without any modifications by Hugo.
 
-**Config.toml**:
+### Config.toml:
 
 The basic configuration file for any Hugo project. It can also be created as a JSON or YAML if you prefer, but the concept remains the same. There is a wide variety of directives that ship with Hugo which can be used that will enable you to fine tune your environment. Most projects will have a single config file which will reside inside the root of the project but for larger projects you can create a config directory which could contain multiple config files for various purposes or environments such as staging and production.
 
 Hugo creates two additional directories after you've built your project for the first time:
 
-**Resources:**
+### Resources:
 
 A cache of images and css files, to help your site load faster.
 
-**Public:**
+### Public:
 
 All of the public-facing files Hugo generates - the production folder you'd use in order to launch your project on the internet.
 
-**Additional setup:**
+### Additional setup:
 
 I knew I wanted to integrate my Hugo outputs with an existing site, and so I needed to have a continuously updating JSON output of all of my blog posts. Luckily, Hugo offers this, and I added this to my config.toml file:
 
@@ -136,7 +136,7 @@ It worked perfectly - I can now just either deposit a premade markdown file in m
 
 It did take me a little while to figure out the best way to handle embedded images. Hugo has lots of different options for handling them, but a few of them are cumbersome and require writing long relative file paths. The best way to set up your blog images (in my humble experience) is to create a folder for each blog post - if you do this, you can put any embedded images directly in there, and then reference them directly with no file paths:
 
-```
+```typescript
 <Figure
   src="/images/blog/hugo/example.jpg"
   alt="an example"
@@ -156,11 +156,27 @@ The next step was integrating it with my existing site, which I was nervous abou
 
 Hugo has a JSON export function -- you can use it to set up a templated JSON export that automatically runs every time your Hugo site compiles. This includes an array of blog posts, with lots of helpful fields surfaced. Here's how I set up my JSON template:
 
-<Figure
-  src="/images/blog/hugo/json template.png"
-  alt="JSON file template"
-  title="Not that I'm an expert, I'm sure you can make a more useful one, but this worked for me"
-/>
+```json
+{
+  "version": "https://jsonfeed.org/version/1",
+  "title": "{{.Site.Title}}",
+  "home_page_url": "{{.Site.BaseURL}}",
+  "feed_url": "{{.Permalink}}index.json",
+  "description": "{{.Site.Params.description}}",
+  "items": [
+    {{- $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections -}}
+    {{- range $index, $page := $pages}}
+    {{- if $index }}, {{ end }}
+    {
+      "id": "{{$page.RelPermalink }}",
+      "url": "{{$page.RelPermalink }}",
+      "title": "{{$page.Title}}",
+      "context_text": {{ $page.summary | jsonify }},
+    }
+    {{- end}}
+  ]
+}
+```
 
 With this JSON, I could then enlist the help of a very dear, very old friend -- the IIFE div generator function! Using this, I can automatically create a grid on my main static site, automatically populated with my most recent blog articles.
 
@@ -183,3 +199,5 @@ And with that, I had Hugo set up and ready to roll! There were a few other fiddl
 In summary - Hugo is great, I couldn't recommend it more as a static site generator that automates lots of the tedious parts of managing a website - the routing, page generation, and copy/pasting of page after page, and let's you focus on what's most important -- writing dumb blog posts and making sick skins.
 
 ---
+
+_If you're reading this on my new portfolio site, dear reader, I'm ashamed to admit I've migrated to Next's inbuilt SSG features, primarily because I wanted to use MDX files. Sorry Hugo!._
