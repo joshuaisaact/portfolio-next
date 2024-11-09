@@ -9,7 +9,6 @@ import { SectionSkeleton } from "./components/ui/SectionSkeleton";
 import { siteMetadata } from "@/lib/metadata";
 
 export const dynamic = "force-static";
-export const runtime = "edge";
 export const preferredRegion = "auto";
 export const metadata = siteMetadata;
 
