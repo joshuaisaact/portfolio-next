@@ -20,11 +20,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           <Trophy className="w-4 h-4 sm:w-5 sm:h-5" />
         </div>
       )}
-      <Link
-        onClick={() => window.scrollTo(0, 0)}
-        href={`/projects/${project.slug}`}
-        className="block h-full"
-      >
+      <Link href={`/projects/${project.slug}`} className="block h-full">
         <Card className="group hover:-translate-y-0.5 hover:shadow-md">
           <CardImage
             src={project.videoSrc || project.imageSrc}

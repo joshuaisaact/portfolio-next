@@ -16,11 +16,7 @@ interface BlogCardProps {
 
 export function BlogCard({ slug, metadata, role }: BlogCardProps) {
   return (
-    <Link
-      href={`/blog/${slug}`}
-      className="block h-full"
-      onClick={() => window.scrollTo(0, 0)}
-    >
+    <Link href={`/blog/${slug}`} className="block h-full">
       <Card
         className="group hover:-translate-y-0.5 hover:shadow-md h-full flex flex-col"
         role={role}
