@@ -8,7 +8,11 @@ import { Trophy } from "lucide-react";
 
 const LazyVideoComponent = dynamic(
   () => import("../../components/VideoComponent"),
-  { loading: () => <div>Loading video...</div> },
+  {
+    loading: () => (
+      <div className="aspect-video w-full bg-gray-100 dark:bg-gray-800 animate-pulse rounded-xl" />
+    ),
+  },
 );
 
 export async function generateStaticParams() {

@@ -6,6 +6,7 @@ import { jakarta } from "@/lib/fonts";
 import Header from "./components/navigation/NavBar";
 import { ThemeProvider } from "next-themes";
 import { Footer } from "./components/Footer";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: {
@@ -47,6 +48,7 @@ export default function RootLayout({
           {children}
           <Footer />
         </ThemeProvider>
+        <Toaster position="bottom-right" />
       </body>
     </html>
   );
