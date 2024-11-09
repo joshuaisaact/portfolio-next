@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { AboutMe } from "./components/sections/AboutMe";
 import { Skills } from "./components/sections/Skills";
 import { Projects } from "./components/sections/Projects";
-import { Contact } from "./components/sections/Contact";
+import Contact from "./components/sections/Contact";
 import { Blog } from "./components/sections/Blog";
 import { Section } from "./components/ui/Section";
 

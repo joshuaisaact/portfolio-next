@@ -33,6 +33,7 @@ interface CardImageProps {
   video?: boolean;
   className?: string;
   containerClassName?: string;
+  posterImage?: string;
 }
 
 export function CardImage({
@@ -41,6 +42,7 @@ export function CardImage({
   video,
   className = "",
   containerClassName = "",
+  posterImage,
 }: CardImageProps) {
   return (
     <div
@@ -53,10 +55,11 @@ export function CardImage({
           muted
           playsInline
           className={`w-full h-full object-cover ${className}`}
+          preload="none"
+          poster={posterImage}
         >
-          <source src={src} type="video/mp4" />
           <source src={src.replace(".mp4", ".webm")} type="video/webm" />
-          Your browser does not support the video tag.
+          <source src={src} type="video/mp4" />
         </video>
       ) : (
         <Image
