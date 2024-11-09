@@ -35,9 +35,7 @@ export const PROJECTS = [
       "Vitest",
       "Jest",
     ],
-    overview: `Wooster is a production-ready AI travel planner that turns hours of trip research into personalized itineraries
-      in minutes. Built with scalability in mind, it combines modern full-stack architecture with Google's Gemini API
-      to deliver intelligent travel recommendations.`,
+    overview: `Wooster is a full-featured, scalable AI travel planning application built with modern, robust architecture.     It combines cutting-edge technology like Google's Gemini API with a comprehensive set of features to deliver personalized itineraries in minutes.`,
     features: [
       "Custom AI itinerary generation using Gemini API and prompt engineering",
       "Production-grade authentication with Google and Github OAuth",
@@ -52,7 +50,7 @@ export const PROJECTS = [
         custom UI components.`,
       backend: `Node.js/Express REST API with PostgreSQL database managed through Supabase. Drizzle ORM for type-safe
         database queries and migrations. Custom middleware for request validation and error handling.`,
-      infrastructure: `Deployed on DigitalOcean using Docker containers with automated GitHub Actions CI/CD pipeline.
+      infrastructure: `Deployed on DigitalOcean with automated GitHub Actions CI/CD pipeline.
         Nginx reverse proxy with SSL/HTTPS encryption. Automated certificate management and regular security updates.`,
     },
     videoSrc: "/media/projects/videos/wooster.webm",
@@ -111,7 +109,7 @@ export const PROJECTS = [
     title: "Goss",
     slug: "goss",
     description:
-      "Architected real-time social platform featuring WebSocket notifications, social graph management, and seamless file handling. Built with Next.js, TypeScript, and Supabase.",
+      "Architected a robust real-time social platform featuring WebSocket notifications, social graph management, and file handling. Built with Next.js, TypeScript, and Supabase.",
     imageSrc: "/media/projects/goss.png",
     imageAlt: "Goss logo",
     links: [
@@ -128,19 +126,19 @@ export const PROJECTS = [
       "TanStack-Query",
       "TailwindCSS",
     ],
-    overview: `At Codeworks, I took on the technical challenge of building a voice-first social platform that
-      required real-time capabilities and complex data relationships. I led the development of key infrastructure
-      components, focusing on creating a robust and scalable backend while ensuring a smooth user experience.
+    overview: `I took on the technical challenge of building a voice-first social platform that
+required real-time capabilities and complex data relationships. I led the development of key infrastructure
+components, focusing on creating a scalable backend while ensuring a smooth user experience.
 
       The project showcases my ability to architect complex systems, from implementing real-time WebSocket
       notifications to designing efficient database schemas for social relationships. Working within a team
-      environment, I delivered production-ready features that formed the backbone of the platform.`,
+      environment, I delivered enterprise-grade features that formed the backbone of the platform.`,
     features: [
       "Real-time notification system using WebSockets and Supabase Realtime for instant updates",
       "Custom social graph implementation with bidirectional friend connections in PostgreSQL",
       "RESTful API layer with optimistic updates for responsive friend operations",
       "Secure file upload system integrated with Supabase storage",
-      "Production-grade authentication flow with multiple providers",
+      "Robust authentication flow with multiple providers",
       "WebSocket connection management with automatic reconnection handling",
     ],
     architecture: {
@@ -153,9 +151,9 @@ export const PROJECTS = [
         social graph schema in PostgreSQL, optimizing friend relationship queries and management. Built
         RESTful APIs with comprehensive validation and error handling.`,
 
-      infrastructure: `Implemented a production-ready auth flow using Supabase, supporting multiple providers
-        and secure session management. Built a scalable file upload system with proper access controls and
-        storage optimization. Set up WebSocket infrastructure with connection pooling and automatic recovery.`,
+      infrastructure: `Implemented a secure authentication flow using Supabase, supporting multiple providers
+  and session management. Built a scalable file upload system with proper access controls and
+  storage optimization. Set up WebSocket infrastructure with connection pooling and automatic recovery.`,
     },
     videoSrc: "/media/projects/videos/goss3.webm",
   },

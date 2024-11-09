@@ -39,10 +39,14 @@ export interface BlogFrontmatter {
 
 export interface BlogPost {
   slug: string;
-  frontmatter: BlogFrontmatter;
-  content: string; // We'll keep raw content as string for now
+  metadata: {
+    title: string;
+    date: string;
+    featured_image: string;
+    excerpt: string;
+    tags: string[];
+  };
 }
-
 export interface RenderedBlogPost extends Omit<BlogPost, "content"> {
   content: MDXRemoteSerializeResult;
 }
@@ -57,4 +61,17 @@ export interface ContactForm {
   email: string;
   message: string;
   honeypot?: string;
+}
+
+export interface NavLink {
+  href: string;
+  label: string;
+  id: string;
+}
+
+export interface SocialLink {
+  href: string;
+  icon: string;
+  label: string;
+  id: string;
 }

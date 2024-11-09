@@ -141,7 +141,7 @@ export default async function ProjectPage({
                   case "github":
                     return (
                       <a
-                        key={link.type}
+                        key={link.url}
                         href={link.url}
                         target="_blank"
                         rel="noopener noreferrer"
