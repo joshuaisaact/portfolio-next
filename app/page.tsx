@@ -1,50 +1,17 @@
-import { Metadata } from "next";
+import { Suspense } from "react";
 import { AboutMe } from "./components/sections/AboutMe";
 import { Skills } from "./components/sections/Skills";
 import { Projects } from "./components/sections/Projects";
 import Contact from "./components/sections/Contact";
 import { Blog } from "./components/sections/Blog";
 import { Section } from "./components/ui/Section";
+import { SectionSkeleton } from "./components/ui/SectionSkeleton";
+import { siteMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://joshuatuddenham.com"),
-  title: "Joshua Tuddenham | Full-Stack Engineer",
-  description:
-    "Full-stack engineer specializing in modern web technologies, with expertise in enterprise software and capital markets.",
-  openGraph: {
-    title: "Joshua Tuddenham | Full-Stack Engineer",
-    description:
-      "Full-stack engineer specializing in modern web technologies, with expertise in enterprise software and capital markets.",
-    url: "https://joshuatuddenham.com",
-    siteName: "Joshua Tuddenham",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Joshua Tuddenham Portfolio",
-      },
-    ],
-    locale: "en_US",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Joshua Tuddenham | Full-Stack Engineer",
-    description:
-      "Full-stack engineer specializing in modern web technologies, with expertise in enterprise software and capital markets.",
-    images: ["/og-image.jpg"],
-  },
-  keywords: [
-    "Full-Stack Engineer",
-    "Software Developer",
-    "React",
-    "TypeScript",
-    "Node.js",
-    "Enterprise Software",
-    "Capital Markets Technology",
-  ],
-};
+export const dynamic = "force-static";
+export const runtime = "edge";
+export const preferredRegion = "auto";
+export const metadata = siteMetadata;
 
 export default function Home() {
   return (
@@ -70,24 +37,32 @@ export default function Home() {
         </section>
 
         {/* Skills Section */}
-        <Section id="skills" title="Skills">
-          <Skills />
-        </Section>
+        <Suspense fallback={<SectionSkeleton height="md" />}>
+          <Section id="skills" title="Skills">
+            <Skills />
+          </Section>
+        </Suspense>
 
         {/* Projects Section */}
-        <Section id="projects" title="Projects">
-          <Projects />
-        </Section>
+        <Suspense fallback={<SectionSkeleton height="xl" />}>
+          <Section id="projects" title="Projects">
+            <Projects />
+          </Section>
+        </Suspense>
 
         {/* Blog Section */}
-        <Section id="blog" title="Blog">
-          <Blog />
-        </Section>
+        <Suspense fallback={<SectionSkeleton />}>
+          <Section id="blog" title="Blog">
+            <Blog />
+          </Section>
+        </Suspense>
 
         {/* Contact Section */}
-        <Section id="contact" title="Contact">
-          <Contact />
-        </Section>
+        <Suspense fallback={<SectionSkeleton height="sm" />}>
+          <Section id="contact" title="Contact">
+            <Contact />
+          </Section>
+        </Suspense>
       </main>
     </>
   );
