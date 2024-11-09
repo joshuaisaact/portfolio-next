@@ -106,7 +106,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ),
     h2: (props) => (
       <h2
-        className="relative z-10 bg-gradient-to-b from-gray-800 to-gray-600 bg-clip-text text-3xl font-semibold tracking-tight text-transparent dark:from-gray-200 dark:to-gray-400"
+        className="relative z-10 bg-gradient-to-b from-gray-800 to-gray-600 bg-clip-text text-3xl font-semibold tracking-tight text-transparent dark:text-gray-200 dark:from-gray-200 dark:to-gray-400"
         id={`heading-${props.children?.toString().toLowerCase().replace(/\s+/g, "-")}`}
       >
         {props.children}
