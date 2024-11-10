@@ -3,21 +3,13 @@ import { BlogHeader } from "@/app/components/mdx/BlogHeader";
 export const metadata = {
   title: "Teaching an AI Dog New Tricks (The Gemini Integration)",
   date: "2024-11-08",
-  featured_image: "/images/blog/wooster/wooster-server.png",
+  featured_image: "/images/blog/wooster/wooster-coding.webp",
   excerpt:
     "Integrating Google's Gemini API to give Wooster its personality: prompt engineering, response parsing, and teaching an AI to think like a golden retriever.",
   tags: ["Gemini API", "Express", "Supabase", "PostgreSQL", "TypeScript", "AI"],
 };
 
-## Teaching an AI Dog New Tricks (The Gemini Integration)
-
-After getting my database sorted, it was time for the fun part - making Wooster actually... work. This meant integrating Google's Gemini API, which is like ChatGPT's slightly more reasonable cousin who actually RSVPs to events. And by reasonable, I just mean it has a generous free API tier.
-
-<Figure
-  src="/images/blog/ai-trip/gemini-convo.jpg"
-  alt="A chat conversation with increasingly bizarre travel suggestions"
-  title="Early testing conversations with Wooster went... interestingly"
-/>
+<BlogHeader {...metadata} />
 
 ## The Art of Prompt Engineering (Or: How I Learned to Stop Worrying and Trust the AI)
 
@@ -43,31 +35,25 @@ type BasicTripRequest = {
 };
 
 const firstPrompt = `
-  Plan a ${tripRequest.duration} day trip to ${tripRequest.destination}
-  starting on ${tripRequest.startDate}.
+Plan a ${tripRequest.duration} day trip to ${tripRequest.destination}
+starting on ${tripRequest.startDate}.
 
-  Please include:
-  - Daily activities
-  - Locations
-  - Approximate costs
-  - Duration of activities
+Please include:
+
+- Daily activities
+- Locations
+- Approximate costs
+- Duration of activities
 `;
 ```
 
-Here's where things got interesting. I started seeing responses like:
+Result: <em>"Day 1 you could maybe explore downtown? Stay as long as you're having fun! Costs depend on how many treats you buy along the way. Some people spend a little, some spend a lot. Day 2 there's this AMAZING park the locals love..."</em>
 
-```json
-{
-  "category": "Vibing with the locals",
-  "duration": "until whenever",
-  "cost": "arm and leg",
-  "description": "Just hang out, you know?"
-}
-```
-
-Gemini was clearly channeling more "gap year backpacker" than "professional travel planner". While I appreciate the laid-back approach, "until whenever" isn't exactly what I'd call a structured duration format.
+Not quite the structured response I was hoping for. Time to try JSON.
 
 ## Adding More Structure (But Not Enough)
+
+Here was my first JSON attempt:
 
 ```typescript
 const secondPrompt = `
@@ -95,18 +81,27 @@ const secondPrompt = `
 `;
 ```
 
-This worked better, but the categorization was a mess.I got everything from "Fun stuff" to "Walking around looking at things" as categories. Not exactly what you'd call structured data.
+This worked better, but the categorization was a mess. I got everything from "Fun stuff" to "Walking around looking at things" as categories. It was like asking Wooster to sort his toys - everything ended up in the "things I can put in my mouth" category.
 
-## The Category Crisis
+Take this response for example:
 
-Here's where things got interesting. I started seeing responses like:
-
-```json
+```typescript
 {
-  "category": "Vibing with the locals",
-  "duration": "until whenever",
-  "cost": "arm and leg",
-  "description": "Just hang out, you know?"
+  "days": [
+    {
+      "dayNumber": 1,
+      "activities": [
+        {
+          "name": "Explore the city vibes",
+          "location": "wherever the wind takes us",
+          "description": "Just soak in the atmosphere, you know?",
+          "duration": "as long as we're having fun",
+          "category": "Places with good smells",
+          "cost": "whatever's in the wallet"
+        }
+      ]
+    }
+  ]
 }
 ```
 
@@ -156,18 +151,148 @@ export const destinationPromptTemplate = (destination: string) => `
 `;
 ```
 
+Finally, I was getting responses that looked like actual travel plans rather than Wooster's diary entries:
+
+```json
+{
+  "days": [
+    {
+      "dayNumber": 1,
+      "activities": [
+        {
+          "activityName": "Morning Market Tour",
+          "description": "Explore the historic Camden Market, featuring local artisans and food vendors. Perfect for gathering travel supplies (and snacks).",
+          "location": "Camden Lock Place, London",
+          "price": "$15",
+          "duration": "2.5 hours",
+          "difficulty": "Easy",
+          "category": "Food & Drink",
+          "bestTime": "Morning",
+          "bookingRequired": false
+        },
+        {
+          "activityName": "Regent's Park Walk",
+          "description": "A scenic stroll through one of London's most beautiful parks. Watch for squirrels (Wooster insisted this was important).",
+          "location": "Regent's Park, London",
+          "price": "$0",
+          "duration": "1.5 hours",
+          "difficulty": "Easy",
+          "category": "Nature",
+          "bestTime": "Afternoon",
+          "bookingRequired": false
+        }
+      ]
+    }
+  ]
+}
+```
+
+Still with a hint of Wooster's personality, but now in a format that wouldn't make TypeScript cry.
+
+## Handling the Responses
+
+Of course, getting the prompt right was only half the battle. Gemini's responses weren't always perfectly formatted JSON, so I needed some utility functions to clean things up:
+
+````typescript
+export const cleanLLMJsonResponse = (text: string): string => {
+  // Step 1: Remove markdown code blocks with any language specification
+  const withoutCodeBlocks = text.replace(
+    /```(?:json)?\s*([\s\S]*?)\s*```/g,
+    "$1",
+  );
+
+  // Step 2: Remove potential comments
+  const withoutComments = withoutCodeBlocks.replace(
+    /\/\*[\s\S]*?\*\/|\/\/.*/g,
+    "",
+  );
+
+  // Step 3: Detect and replace incomplete URLs with a placeholder
+  const withCompleteUrls = withoutComments.replace(
+    /"website":\s*"https:([^",}]*)/g,
+    `"website": "https://example.com"`,
+  );
+
+  // Step 4: Trim whitespace
+  return withCompleteUrls.trim();
+};
+
+// Validate the JSON structure
+export const validateJSON = (jsonString: string): void => {
+  try {
+    const parsed = JSON.parse(jsonString);
+    if (typeof parsed !== "object" || parsed === null) {
+      throw new Error("Response is not a valid JSON object or array");
+    }
+  } catch (error) {
+    console.error(
+      "JSON Validation failed. Invalid JSON string:",
+      jsonString.slice(0, 500),
+    );
+    throw new Error(
+      `Invalid JSON response: ${error instanceof Error ? error.message : "Unknown error"}`,
+    );
+  }
+};
+
+// Clean up any non-printable characters
+export const cleanJSON = (jsonString: string): string => {
+  // Remove control characters (ASCII 0 to 31)
+  const cleanedString = jsonString.replace(/[\x00-\x1F]/g, "");
+
+  // Remove non-printable characters
+  return cleanedString.replace(/[^\x20-\x7E]/g, "");
+};
+````
+
+Why did I need all this? Well, Gemini had some... interesting habits:
+
+1. Sometimes wrapping responses in markdown code blocks
+2. Occasionally including helpful comments (which broke the JSON)
+3. Returning incomplete URLs
+4. Adding mysterious control characters
+5. And my personal favorite: sneaking in emoji (those non-printable characters had to go)
+
+Using these utilities together:
+
+```typescript
+async function generateTripPlan(tripRequest: TripRequest) {
+  try {
+    const result = await model.generateContent(createPrompt(/* ... */));
+    const text = result.response.text();
+
+    // Clean up the response
+    const cleanedResponse = cleanLLMJsonResponse(text);
+    const sanitizedJSON = cleanJSON(cleanedResponse);
+
+    // Validate before parsing
+    validateJSON(sanitizedJSON);
+
+    return JSON.parse(sanitizedJSON);
+  } catch (error) {
+    console.error("Failed to generate valid trip plan:", error);
+    throw new Error("Failed to generate trip plan");
+  }
+}
+```
+
 ## What I Actually Learned
 
-1. Start with strict types from the beginning (future you will thank you)
-2. Be explicit about formats - "some time in the afternoon" is not a valid time format
-3. The more specific the prompt constraints, the better the results
-4. Always validate AI responses - even when they look valid, they might be... creative
+1. Start with strict types from the beginning
+2. Be explicit about formats
+3. The more specific the prompt constraints, the better
+4. Always sanitize and validate AI responses
 5. Geolocation data should have been there from the start
-6. Rate limiting is still important (Wooster did get overenthusiastic)
+6. Rate limiting is important
+7. Regex is your best friend when dealing with AI responses
+8. Never trust an AI to format URLs correctly
+
+Next up: the frontend implementation, or as I like to call it, "Making Wooster Look Presentable for Company" (and this time with proper TypeScript interfaces from day one).
 
 ---
 
 <em>
-  Next up: the Express endpoints saga, where middleware meets chaos and Wooster
-  learns that "fetch" means something entirely different in JavaScript.
+  Next up: wrestling with Express endpoints, where I discover that parsing AI
+  responses is like teaching Wooster that "sit" and "lay down" are different
+  commands.
 </em>
