@@ -1,0 +1,157 @@
+import { BlogHeader } from "@/app/components/mdx/BlogHeader";
+
+export const metadata = {
+  title: "Building a Scalable Express Backend for Wooster",
+  date: "2024-11-08",
+  featured_image: "/images/blog/wooster/wooster-plumbing.webp",
+  excerpt:
+    "From MVC architecture to endpoint design: Building a scalable Express backend that even a golden retriever could understand.",
+  tags: ["Express", "TypeScript", "MVC", "API Design", "Backend"],
+};
+
+<BlogHeader {...metadata} />
+
+# Planning the architecture
+
+After getting my database schema sorted and teaching Wooster to generate coherent travel plans, it was time to build the API. But before writing a single endpoint, I wanted to get the architecture right.
+
+## Starting with Structure
+
+While it's tempting to throw everything into a single `server.ts` file when prototyping (I've been burned by that before), I decided to be a responsible developer and set up a proper MVC structure from the start:
+
+```
+src/
+├── controllers/        # Request handlers by resource
+├── models/            # Database client and models
+├── services/          # Business logic and external services
+├── routes/            # Route definitions
+├── types/            # TypeScript interfaces and types
+├── utils/            # Shared utilities
+├── middleware/       # Express middleware
+└── config/           # Configuration and constants
+```
+
+This might seem like overkill for an MVP, but past-me has burned present-me too many times with "I'll restructure it later."
+
+<Figure
+  src="/images/blog/wooster/wooster-filing.webp"
+  alt="A golden retriever organizing folders"
+  title="Wooster helping me organize the codebase (artist's impression)"
+/>
+
+## The MVP Endpoints
+
+For the initial version, I kept it simple:
+
+```typescript
+import express from "express";
+const router = express.Router();
+
+// Destination routes
+router.get("/destinations", handleGetDestinations);
+router.get("/destination/:destinationName", handleGetDestinationByName);
+
+// Trip routes
+router.post("/trips", handleAddTrip);
+router.get("/trips/:id", handleGetTrip);
+
+export default router;
+```
+
+But the real magic wasn't in the routes - it was in how I handled them. Take adding a destination, for example:
+
+## Separation of Concerns in Action
+
+Instead of stuffing everything into route handlers, each piece had its place:
+
+```typescript
+// controllers/destinations/add-destination.ts
+export const handleAddDestination = async (req: Request, res: Response) => {
+  try {
+    const { destination } = req.body;
+
+    if (!destination?.trim()) {
+      return res.status(400).json({ error: "Destination is required" });
+    }
+
+    const existingDestination = await findDestinationByName(destination);
+
+    if (existingDestination) {
+      return res.status(200).json({ destination: existingDestination });
+    }
+
+    // Generate new destination data using AI
+    const destinationData = await generateNewDestination(destination);
+    const newDestination = await addDestination(destinationData);
+
+    return res.status(201).json({
+      message: "Destination created successfully",
+      destination: newDestination,
+    });
+  } catch (error) {
+    const { status, message } = handleControllerError(error);
+    return res.status(status).json({ error: message });
+  }
+};
+```
+
+The controller only handled the HTTP layer - all the business logic lived in services:
+
+```typescript
+// services/destination-service/destination-generator.ts
+export const generateNewDestination = async (
+  destinationName: string,
+): Promise<NewDestination> => {
+  try {
+    const prompt = destinationPromptTemplate(destinationName);
+    const generatedDestination = await generateAIData(prompt);
+
+    if (!generatedDestination) {
+      throw new ServiceError("Failed to generate destination data", 500);
+    }
+
+    const destinationData = JSON.parse(generatedDestination);
+    if (!destinationData?.destinationName) {
+      throw new ServiceError("Invalid destination data format", 500);
+    }
+
+    return destinationData;
+  } catch (error) {
+    if (error instanceof ServiceError) throw error;
+    throw new ServiceError("Failed to generate destination data", 500);
+  }
+};
+```
+
+## Evolution: Adding User Features
+
+Once I actually implemented auth (post-MVP) I realised in my testing that we would also need a separate saved destinations table. This meant adding new endpoints:
+
+```typescript
+// New routes for saved destinations
+router.get("/saved-destinations", requireAuth, handleGetSavedDestinations);
+router.post(
+  "/saved-destinations/:destinationId",
+  requireAuth,
+  handleAddSavedDestination,
+);
+```
+
+(The authentication story deserves its own article - let's just say Supabase made it much less painful than it could have been!)
+
+## What I Actually Learned
+
+1. Start with good architecture - moving files is harder than creating them
+2. Controllers should be thin - business logic belongs in services
+3. Type everything from the start - TypeScript is your friend
+4. Error handling deserves attention early - users don't appreciate raw error stacks
+5. Organize by feature, not function - keeps related code together
+6. CORS configuration is always trickier than you expect
+7. Log everything in development
+
+---
+
+<em>
+  Next up in Part 5: "Frontend Adventures: Making Wooster Look Presentable"
+  (spoiler: there will be Tailwind)
+</em>
