@@ -1,22 +1,22 @@
 export const posts = [
-  // {
-  //   slug: "wooster-part-3",
-  //   metadata: {
-  //     title: "Teaching an AI Dog New Tricks (The Gemini Integration)",
-  //     date: "2024-11-08",
-  //     featured_image: "/images/blog/wooster/wooster-server.png",
-  //     excerpt:
-  //       "Integrating Google's Gemini API to give Wooster its personality: prompt engineering, response parsing, and teaching an AI to think like a golden retriever.",
-  //     tags: [
-  //       "Gemini API",
-  //       "Express",
-  //       "Supabase",
-  //       "PostgreSQL",
-  //       "TypeScript",
-  //       "AI",
-  //     ],
-  //   },
-  // },
+  {
+    slug: "wooster-part-3",
+    metadata: {
+      title: "Teaching an AI Dog New Tricks (The Gemini Integration)",
+      date: "2024-11-08",
+      featured_image: "/images/blog/wooster/wooster-coding.webp",
+      excerpt:
+        "Integrating Google's Gemini API to give Wooster its personality: prompt engineering, response parsing, and teaching an AI to think like a golden retriever.",
+      tags: [
+        "Gemini API",
+        "Express",
+        "Supabase",
+        "PostgreSQL",
+        "TypeScript",
+        "AI",
+      ],
+    },
+  },
   {
     slug: "wooster-part-2",
     metadata: {
