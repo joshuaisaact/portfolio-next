@@ -50,8 +50,6 @@ Time to pick the tech stack. Given the one-week timeline, this had to be quick:
 
 ## The Features (Or: A List of Things I'll Probably Regret Promising)
 
-I fired up Excalidraw (other drawing tools are available, but are they this adorably basic?) and mapped out two lists:
-
 **Week One Must-Haves:**
 
 - Location querying (for when "somewhere hot" isn't specific enough)
@@ -64,11 +62,35 @@ I fired up Excalidraw (other drawing tools are available, but are they this ador
 - Activity-based search (find me places to scuba dive!)
 - Time machine (might be pushing it)
 
-<Figure
-  src="/images/blog/ai-trip/excalidraw-mess.png"
-  alt="My Excalidraw wireframes"
-  title="My wireframes. Leonardo da Vinci can rest easy."
-/>
+## User Journeys (Or: A Dog's Guide to User Experience)
+
+I mapped out the core user flows, trying to keep them as simple as a game of fetch:
+
+**Journey #1: The Quick Planner**
+
+```plantuml
+User arrives → Logs in → Fills basic form (location + dates) → Gets AI itinerary → Saves for later
+```
+
+"Like when Wooster sees a tennis ball and just goes for it - direct, no complications."
+
+**Journey #2: The Picky Traveler**
+
+```plantuml
+User arrives → Logs in → Fills detailed form (preferences, budget, pace) → Reviews AI suggestions → Tweaks activities → Saves final version
+```
+
+"More like Wooster inspecting his dinner bowl - needs everything just right."
+
+**Journey #3: The Return Visitor**
+
+```plantuml
+Returns → Views saved trips → Copies previous trip → Modifies dates/location → Gets new AI suggestions
+```
+
+"The equivalent of Wooster returning to his favorite park - knows what he likes, but always up for variations."
+
+Of course, what I actually built in week one was more like journey #1 - straight to the point, no fancy tricks. The rest would have to wait until Wooster learned some new commands.
 
 ## What Could Possibly Go Wrong?
 
