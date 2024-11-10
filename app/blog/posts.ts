@@ -1,5 +1,16 @@
 export const posts = [
   {
+    slug: "wooster-part-4",
+    metadata: {
+      title: "Building a Scalable Express Backend for Wooster",
+      date: "2024-11-08",
+      featured_image: "/images/blog/wooster/wooster-plumbing.webp",
+      excerpt:
+        "From MVC architecture to endpoint design: Building a scalable Express backend that even a golden retriever could understand.",
+      tags: ["Express", "TypeScript", "MVC", "API Design", "Backend"],
+    },
+  },
+  {
     slug: "wooster-part-3",
     metadata: {
       title: "Teaching an AI Dog New Tricks (The Gemini Integration)",
