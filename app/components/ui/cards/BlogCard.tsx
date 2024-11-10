@@ -16,7 +16,7 @@ interface BlogCardProps {
 
 export function BlogCard({ slug, metadata, role }: BlogCardProps) {
   return (
-    <Link href={`/blog/${slug}`} className="block h-full">
+    <Link href={`/blog/${slug}`} className="block h-full" role="list">
       <Card
         className="group hover:-translate-y-0.5 hover:shadow-md h-full flex flex-col"
         role={role}
