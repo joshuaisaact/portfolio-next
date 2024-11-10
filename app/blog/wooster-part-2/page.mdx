@@ -37,9 +37,9 @@ Before writing a single line of Express code, I needed to figure out what data W
 {" "}
 
 <Figure
-  src="/images/blog/ai-trip/database-design.png"
+  src="/images/blog/wooster/initial-wooster-db.png"
   alt="Database relationship diagram"
-  title="My database relationships. Entity Relationship Diagrams are like family trees, but nerdier."
+  title="Database diagrams are like family trees, but nerdier."
 />
 
 ## The Great Data Sharing Debate
@@ -130,18 +130,14 @@ It felt incredibly forward-thinking at the time, and I did feel a bit smug about
 
 Because here’s what I didn’t account for until I added user authentication: everyone now shares the same list of destinations. Brilliant. Every user logs in, and, lo and behold, they see exactly the same list of places, just as if we’re running a one-size-fits-all holiday agency.
 
-And so, the realization dawned that a “saved destinations” table is not only useful—it’s painfully necessary. Each user clearly needs their own list of favorite spots, not the global collection. So, another table to the rescue… just after I’ve finished congratulating myself on a “complete” schema. I can only assume future-me is already sighing at all the refactoring.
-
-Next up: building the Express endpoints. But that's a story for another post, probably written after I've recovered from all this database normalization.
-
-{" "}
-
 <Figure
-  src="/images/blog/wooster/endpoints.png"
-  alt="'But wait, there's more' meme with Express endpoints"
-  title="Coming soon to a codebase near you..."
+  src="/images/blog/wooster/surprised-pikachu.jpg"
+  alt="Surprised Pikachu reacting to shared destinations"
+  title="Me, realizing all users share the same destinations list"
 />
+
+And so, the realization dawned that a “saved destinations” table is not only useful—it’s painfully necessary. Each user clearly needs their own list of favorite spots, not the global collection. So, another table to the rescue… just after I’ve finished congratulating myself on a “complete” schema. I can only assume future-me is already sighing at all the refactoring.
 
 ---
 
-_Stay tuned for Part 3, where we'll dive into Express endpoints, middleware madness, and why I should have just taught the actual Wooster to use Postman._
+_[Join me in Part 3](/blog/wooster-part-3) where we dive into the world of prompt engineering, Gemini integration, and teaching an AI to think like a golden retriever._

@@ -29,7 +29,7 @@ const prompt = "Plan a nice trip";
 
 Result: _"Have you considered going somewhere? Perhaps doing things when you get there? Maybe eating food?"_
 
-Right. Maybe I need to be a bit more specific.
+Right. Maybe I need to be a bit more specific. Turns out "plan a nice trip" is to Gemini what "fetch" is to a golden retriever - technically understood, but interpreted rather loosely.
 
 ## Take Two: The First Real Attempt
 
@@ -54,7 +54,18 @@ const firstPrompt = `
 `;
 ```
 
-The results were... interesting. Sometimes I'd get a novel, sometimes a bullet list, and occasionally what appeared to be Wooster's stream of consciousness about squirrels. Time for attempt number two.
+Here's where things got interesting. I started seeing responses like:
+
+```json
+{
+  "category": "Vibing with the locals",
+  "duration": "until whenever",
+  "cost": "arm and leg",
+  "description": "Just hang out, you know?"
+}
+```
+
+Gemini was clearly channeling more "gap year backpacker" than "professional travel planner". While I appreciate the laid-back approach, "until whenever" isn't exactly what I'd call a structured duration format.
 
 ## Adding More Structure (But Not Enough)
 
@@ -156,4 +167,7 @@ export const destinationPromptTemplate = (destination: string) => `
 
 ---
 
-\_Next up: the frontend implementation, or as I like to call it, "Making Wooster Look Presentable for Company" (and this time with proper TypeScript interfaces from day one).
+<em>
+  Next up: the Express endpoints saga, where middleware meets chaos and Wooster
+  learns that "fetch" means something entirely different in JavaScript.
+</em>
