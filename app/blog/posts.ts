@@ -13,6 +13,7 @@ export const posts = [
         "TypeScript",
         "Custom Hooks",
         "Caching Strategies",
+        "Wooster",
       ],
     },
   },
@@ -31,6 +32,7 @@ export const posts = [
         "UI/UX",
         "Component Design",
         "Responsive Design",
+        "Wooster",
       ],
     },
   },
@@ -42,7 +44,14 @@ export const posts = [
       featured_image: "/images/blog/wooster/wooster-plumbing.webp",
       excerpt:
         "From MVC architecture to endpoint design: Building a scalable Express backend that even a golden retriever could understand.",
-      tags: ["Express", "TypeScript", "MVC", "API Design", "Backend"],
+      tags: [
+        "Express",
+        "TypeScript",
+        "MVC",
+        "API Design",
+        "Backend",
+        "Wooster",
+      ],
     },
   },
   {
@@ -60,6 +69,7 @@ export const posts = [
         "PostgreSQL",
         "TypeScript",
         "AI",
+        "Wooster",
       ],
     },
   },
@@ -71,7 +81,15 @@ export const posts = [
       featured_image: "/images/blog/wooster/wooster-server.png",
       excerpt:
         "Teaching an AI dog new tricks: database design, Express endpoints, and why I'm probably overthinking this.",
-      tags: ["React", "Typescript", "Express", "Supabase", "AI", "LLM"],
+      tags: [
+        "React",
+        "Typescript",
+        "Express",
+        "Supabase",
+        "AI",
+        "LLM",
+        "Wooster",
+      ],
     },
   },
   {
@@ -82,7 +100,15 @@ export const posts = [
       featured_image: "/images/blog/wooster/hero-image.png",
       excerpt:
         "Building a full-stack AI trip planner in one week - featuring a golden retriever named Wooster",
-      tags: ["React", "Typescript", "Express", "Supabase", "AI", "LLM"],
+      tags: [
+        "React",
+        "Typescript",
+        "Express",
+        "Supabase",
+        "AI",
+        "LLM",
+        "Wooster",
+      ],
     },
   },
   {
