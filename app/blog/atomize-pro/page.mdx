@@ -1,0 +1,388 @@
+import { BlogHeader } from "@/app/components/mdx/BlogHeader";
+import { StateDiagram } from "@/app/components/mdx/StateDiagram";
+
+export const metadata = {
+  title: "State Management Archaeology: Untangling a React Codebase",
+  date: "2024-11-08",
+  featured_image: "/images/blog/atomize/current-state.svg",
+  excerpt:
+    "From 30 state variables to 9: A deep dive into refactoring React state management, eliminating unnecessary effects, and building a maintainable architecture through testing.",
+  tags: [
+    "React",
+    "TypeScript",
+    "Testing",
+    "State Management",
+    "Code Quality",
+    "Refactoring",
+  ],
+};
+
+<BlogHeader {...metadata} />
+
+Sometimes the best way to understand React patterns is to see them emerge from fixing anti-patterns. When I took on the Atomize Pro refactor, I found a scenario that many React developers will recognize: a working app with increasingly fragile state management.
+
+## Understanding Atomize Pro
+
+Atomize Pro is a productivity app that elevates goal tracking beyond simple checkboxes. Users can track progress in four different ways:
+
+- Simple checklists for binary tasks
+- Progress bars for meeting specific numeric goals
+- Sets for tracking activity repetitions
+- Three-level blocks for measuring staged progress
+
+These different tracking methods feed into an XP system that gamifies progress, making goal achievement more engaging. Goals are organized into lists, which live under customizable tabs for easy navigation.
+
+## Mapping the Current State
+
+Before touching any code, I needed to understand how state was flowing through the application. I mapped out the current structure:
+
+<StateDiagram
+  src="/images/blog/atomize/current-state.svg"
+  alt="Initial state structure showing multiple useEffects and prop drilling"
+  title="A tangled web of state updates and side effects"
+/>
+
+This visualization revealed several critical issues:
+
+- State scattered across multiple components
+- useEffect hooks trying to keep everything synchronized
+- Derived state being stored unnecessarily
+- No clear data flow pattern
+
+The code confirmed these problems. Here's the main App component:
+
+```typescript
+function App() {
+  const [tabs, setTabs] = useState([]);
+  const [goals, setGoals] = useState([]);
+  const [goalXPBar, setGoalXPBar] = useState(0);
+  const [currentXP, setCurrentXP] = useState(0);
+
+  const calculateXPGoal = (goals) => {
+    goals.map((goal) =>
+      goal.type === "Simple List"
+        ? setGoalXPBar((prev) => prev + 1)
+        : goal.type === "Levels"
+          ? setGoalXPBar((prev) => prev + 3)
+          : goal.type === "Sets"
+            ? setGoalXPBar((prev) => prev + goal.sets)
+            : goal.type === "Progress Bar"
+              ? setGoalXPBar((prev) => prev + 10)
+              : null,
+    );
+
+    goals.map((goal) =>
+      goal.type === "Simple List" && goal.complete
+        ? setCurrentXP((prev) => prev + 1)
+        : goal.type === "Sets"
+          ? setCurrentXP((prev) => prev + goal.completed_sets)
+          : goal.type === "Levels"
+            ? setCurrentXP((prev) => prev + goal.level)
+            : goal.type === "Progress Bar"
+              ? setCurrentXP(
+                  (prev) =>
+                    prev + Math.round((goal.current / goal.goal_number) * 10),
+                )
+              : null,
+    );
+  };
+
+  useEffect(() => {
+    loadTabs();
+    loadGoals();
+  }, []);
+
+  useEffect(() => {
+    if (goals.length > 0) {
+      calculateXPGoal(goals);
+    }
+  }, [goals]);
+
+  // More effects...
+}
+```
+
+This pattern cascaded down to child components. Each Tab maintained its own derived state:
+
+```typescript
+function Tab({ tab, goals }) {
+  const [tabGoals, setTabGoals] = useState([]);
+  const [tabLists, setTabLists] = useState([]);
+
+  const sortData = () => {
+    const result = goals.filter((goal) => goal.tab === tab.name);
+    setTabGoals(result);
+    const uniqueLists = Array.from(new Set(result.map((goal) => goal.list)));
+    setTabLists(uniqueLists);
+  };
+
+  useEffect(() => {
+    sortData();
+  }, []);
+
+  // Render...
+}
+```
+
+Even individual goal types had their own state management:
+
+```typescript
+export default function AddSomeLevels({
+  listName,
+  finalizeGoals,
+  selectedTab,
+}) {
+  const [goals, setGoals] = useState([
+    {
+      name: "",
+      list: listName,
+      tab: selectedTab.name,
+      type: "Levels",
+      color: "purple",
+      order_no: 1,
+      active: true,
+      complete: false,
+      last_completed: null,
+      level: 0,
+    },
+  ]);
+
+  useEffect(() => {
+    finalizeGoals(goals);
+  }, [goals]);
+
+  // More state management...
+}
+```
+
+The result? Race conditions everywhere. Tab switches would show stale data, XP calculations would be incorrect, and users had to refresh to see updates.
+
+## Starting with Tests
+
+Before any refactoring, I needed to document the current behavior. I started with the Tab component, testing the core functionality:
+
+```typescript
+describe("Tab Component", () => {
+  const mockTab = {
+    id: 1,
+    name: "Work Tasks",
+  };
+
+  const mockGoals = [
+    {
+      id: 1,
+      name: "Complete Project",
+      tab: "Work Tasks",
+      list: "Current Sprint",
+      type: "Simple List",
+      complete: false
+    },
+    {
+      id: 2,
+      name: "Review Code",
+      tab: "Work Tasks",
+      list: "Team Tasks",
+      type: "Simple List",
+      complete: true
+    }
+  ];
+
+  it("shows goals for the correct tab", () => {
+    render(<Tab tab={mockTab} goals={mockGoals} />);
+    expect(screen.getByText("Complete Project")).toBeInTheDocument();
+    expect(screen.getByText("Review Code")).toBeInTheDocument();
+  });
+
+  it("separates goals into correct lists", () => {
+    render(<Tab tab={mockTab} goals={mockGoals} />);
+    const sprintList = screen.getByText("Current Sprint").closest('.list-container');
+    const teamList = screen.getByText("Team Tasks").closest('.list-container');
+
+    expect(within(sprintList).getByText("Complete Project")).toBeInTheDocument();
+    expect(within(teamList).getByText("Review Code")).toBeInTheDocument();
+  });
+});
+```
+
+These tests revealed that even basic functionality was fragile - goal filtering and list organization could break depending on the order of state updates.
+
+## Designing a Better Architecture
+
+With a clear understanding of the problems, I designed a new state structure:
+
+<StateDiagram
+  src="/images/blog/atomize/improved-state.svg"
+  alt="Simplified state structure using reducer and context"
+  title="The new state architecture - single source of truth"
+/>
+
+The key improvements:
+
+- Single source of truth for all state
+- Clear, predictable state updates through reducer
+- Derived state calculated at render time
+- Minimal use of effects
+
+Here's the implementation:
+
+```typescript
+export const initialState: State = {
+  tabs: [] as Tab[],
+  goals: [] as Goal[],
+  isLoading: false,
+  goalXPBar: 0,
+  currentXP: 0,
+};
+
+export function reducer(state: State = initialState, action: Action) {
+  let updatedGoals;
+  switch (action.type) {
+    case "SET_GOALS":
+      updatedGoals = action.payload;
+      return {
+        ...state,
+        goals: updatedGoals,
+      };
+    case "CREATE_GOAL":
+      updatedGoals = [...state.goals, action.payload];
+      return {
+        ...state,
+        goals: updatedGoals,
+      };
+    case "UPDATE_GOAL":
+      updatedGoals = state.goals.map((goal) =>
+        goal.id === action.payload.id
+          ? { ...goal, ...action.payload.updates }
+          : goal,
+      );
+      return {
+        ...state,
+        goals: updatedGoals,
+      };
+    case "DELETE_GOAL":
+      updatedGoals = state.goals.filter(
+        (goal) => goal.id !== action.payload.id,
+      );
+      return {
+        ...state,
+        goals: updatedGoals,
+      };
+    case "CALCULATE_GOAL_XP":
+      const { totalGoalXPBar, currentXP } = calculateGoalXP(state.goals);
+      return {
+        ...state,
+        goalXPBar: totalGoalXPBar,
+        currentXP: currentXP,
+      };
+    // Other cases...
+  }
+}
+```
+
+The Tab component became much simpler:
+
+```typescript
+export default function Tab() {
+  const { state } = useAppContext();
+  const { goals, tabs, isLoading } = state;
+  const { tabName } = useParams();
+
+  const tab = tabs.find((tab) => tab.name === tabName);
+  const tabGoals = tab ? goals.filter((goal) => goal.tab === tab.id) : [];
+
+  const goalsByList = tabGoals.reduce((acc: GoalsByList, goal: Goal) => {
+    if (!acc[goal.list_name]) {
+      acc[goal.list_name] = [];
+    }
+    acc[goal.list_name].push(goal);
+    return acc;
+  }, {});
+
+  if (!tab) {
+    return <p>Tab not found</p>;
+  }
+
+  return (
+    <>
+      {!isLoading && (
+        <>
+          <h2 className="tab-header">⸻ {tab.name} ⸻</h2>
+          {tabLists.map((list) => (
+            <List key={list} list={list} tabGoals={goalsByList[list]} />
+          ))}
+        </>
+      )}
+    </>
+  );
+}
+```
+
+The only remaining useEffect handles initial data loading:
+
+```typescript
+function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { goals, tabs, isLoading } = state;
+
+  const loadData = async () => {
+    try {
+      dispatch({ type: "SET_LOADING", payload: true });
+      const [tabsData, fetchedGoals] = await Promise.all([
+        fetchAllTabs(),
+        fetchAllGoals(),
+      ]);
+
+      dispatch({ type: "SET_TABS", payload: tabsData });
+
+      if (
+        fetchedGoals &&
+        Array.isArray(fetchedGoals.simpleLists) &&
+        Array.isArray(fetchedGoals.progressBars) &&
+        Array.isArray(fetchedGoals.levels) &&
+        Array.isArray(fetchedGoals.sets)
+      ) {
+        const allGoals = [
+          ...fetchedGoals.simpleLists,
+          ...fetchedGoals.progressBars,
+          ...fetchedGoals.levels,
+          ...fetchedGoals.sets,
+        ];
+        dispatch({ type: "SET_GOALS", payload: allGoals });
+        dispatch({ type: "CALCULATE_GOAL_XP", payload: allGoals });
+      }
+    } catch (error) {
+      console.error("Error loading data:", error);
+    } finally {
+      dispatch({ type: "SET_LOADING", payload: false });
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  // Render...
+}
+```
+
+## What I Actually Learned
+
+1. Map your state before changing it - visualization reveals patterns
+2. Tests document behavior and catch regressions
+3. Race conditions often indicate poor state management
+4. Derived state rarely belongs in useEffect
+5. A single source of truth eliminates entire categories of bugs
+6. Components are simpler when they focus on rendering
+
+---
+
+## Looking Forward
+
+While the refactor significantly improved the codebase, there's room for optimization. The next step would be implementing Tanstack Query for better:
+
+- Cache management
+- Background updates
+- Loading states
+- Error handling
+
+But more importantly, this project reinforced a crucial lesson: question every useEffect. Is it really needed? Could this be derived state? Could we handle this update differently? Often, the answer leads to simpler, more maintainable code.

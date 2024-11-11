@@ -1,0 +1,288 @@
+import { BlogHeader } from "@/app/components/mdx/BlogHeader";
+
+export const metadata = {
+  title: "State Management: Teaching Wooster to Remember Things",
+  date: "2024-11-08",
+  featured_image: "/images/blog/wooster/wooster-test.png",
+  excerpt:
+    "Building a clean, efficient state management system for Wooster using React, Supabase, and TypeScript: a look into reducer patterns, data fetching, caching strategies, and lessons learned from minimizing useEffect usage.",
+  tags: [
+    "State Management",
+    "React Context",
+    "Asynchronous State Management",
+    "TypeScript",
+    "Custom Hooks",
+    "Caching Strategies",
+  ],
+};
+
+<BlogHeader {...metadata} />
+
+## Frontend Adventures: Making Wooster Look Presentable
+
+Before diving into Wooster's state management, I should share a story about how I finally "got" React. It was during a project I took on where I refactored someone else's React app - called Atomize Pro. It was facing what many React apps accumulate over time: dozens of useState hooks, useEffects with complex dependency arrays, and state scattered across components. The app worked, but it was becoming increasingly difficult to maintain.
+
+Ultimately, to improve it I had to map out the entire app, and all the existing pieces of state, and that let me combine them into a single useReducer pattern. But the numbers tell the story:
+
+30 state variables consolidated into 9
+12 useEffect hooks eliminated
+Countless bugs from state synchronization fixed
+
+That experience taught me that fewer, well-structured state updates are better than many small ones, and that useEffect is often a sign that there might be a better way.
+
+## The Vision: A Single Source of Truth
+
+With those lessons fresh in mind, I approached Wooster's state management with clear principles:
+
+- Single source of truth
+- Minimize useEffect usage (that way be dragons - infinite loops and race conditions)
+- Predictable state updates
+- Type-safe state management
+
+The core state structure emerged from the user journey:
+
+```typescript
+export const initialState: State = {
+  isLoading: false,
+  trips: [],
+  allDestinations: [],
+  activities: {},
+};
+```
+
+Notice what's not here: no duplicate data, no derived state that could be calculated, no nested state that could get out of sync. Every piece of data has one home and one way to update it.
+
+## The Reducer: Predictable State Updates
+
+Every state change in Wooster goes through a single reducer:
+
+```typescript
+export function reducer(state: State = initialState, action: Action): State {
+  switch (action.type) {
+    case "SET_ALL_DESTINATIONS":
+      return { ...state, allDestinations: action.payload };
+    case "SET_TRIPS":
+      return {
+        ...state,
+        trips: action.payload,
+      };
+    case "SET_ACTIVITIES":
+      return {
+        ...state,
+        activities: {
+          ...state.activities,
+          [action.payload.destinationName]: action.payload.activities,
+        },
+      };
+    case "ADD_TRIP":
+      return {
+        ...state,
+        trips: [...state.trips, action.payload],
+      };
+    case "REMOVE_TRIP":
+      return {
+        ...state,
+        trips: state.trips.filter(
+          (trip: TripType) => trip.tripId !== action.payload,
+        ),
+      };
+    // ... other cases
+  }
+}
+```
+
+Each action represents an atomic update to the state. No side effects, no complex calculations, just pure state transitions. This made tracking down bugs much easier - if the state is wrong, I just had to check which action last modified it.
+
+## Context: Making State Accessible
+
+The context provider became the orchestrator for our state:
+
+```typescript
+export function AppProvider({ children }: AppProviderProps) {
+  const auth = useContext(AuthContext);
+  const [state, dispatch] = useReducer<React.Reducer<State, Action>>(reducer, initialState);
+
+  async function loadInitialData() {
+    try {
+      dispatch({ type: 'SET_LOADING', payload: true });
+
+      // Fetch all data in parallel - why make users wait?
+      const [tripsData, allDestinationsData] = await Promise.all([
+        fetchTrips(supabase),
+        fetchAllDestinations(supabase),
+      ]);
+
+      dispatch({ type: 'SET_TRIPS', payload: tripsData });
+      dispatch({ type: 'SET_ALL_DESTINATIONS', payload: allDestinationsData });
+    } catch (error) {
+      console.error('Error loading initial data:', error);
+    } finally {
+      dispatch({ type: 'SET_LOADING', payload: false });
+    }
+  }
+
+  // The one useEffect we couldn't avoid
+  useEffect(() => {
+    if (auth?.session) {
+      loadInitialData();
+    }
+  }, [auth?.session]);
+
+  return (
+    <AppContext.Provider value={{ state, dispatch, loadDestinationActivities }}>
+      {children}
+    </AppContext.Provider>
+  );
+}
+```
+
+That useEffect for initial data loading? It's the only one in our state management, and it's there for a good reason: we need to load data when authentication changes.
+
+## The Activities Cache
+
+One of the more interesting patterns emerged when handling destination activities. Instead of fetching them every time, I implemented a simple cache:
+
+```typescript
+const loadDestinationActivities = async (destinationName: string) => {
+  try {
+    // Check cache first
+    if (state.activities?.[destinationName]) {
+      return;
+    }
+
+    dispatch({ type: "SET_LOADING", payload: true });
+
+    const activities = await fetchDestinationActivities(
+      supabase,
+      destinationName,
+    );
+    dispatch({
+      type: "SET_ACTIVITIES",
+      payload: {
+        destinationName,
+        activities: activities,
+      },
+    });
+  } catch (error) {
+    console.error(`Error loading activities for ${destinationName}:`, error);
+  } finally {
+    dispatch({ type: "SET_LOADING", payload: false });
+  }
+};
+```
+
+## State in Action: Creating a Destination
+
+The real test of state management is how it feels in actual components. Let's look at the destination creation flow:
+
+First, the custom hook that encapsulates all the state logic:
+
+```typescript
+export function useCreateDestination(onClose?: () => void) {
+  const { dispatch } = useAppContext();
+
+  const handleCreateDestination = async (params: CreateDestinationParams) => {
+    dispatch({ type: "SET_LOADING", payload: true });
+
+    try {
+      const newDestination = await createDestination(
+        supabase,
+        params.destinationName,
+      );
+      dispatch({ type: "ADD_NEW_DESTINATION", payload: newDestination });
+      onClose?.();
+      return newDestination;
+    } catch (error) {
+      console.error("Error creating destination:", error);
+      throw error;
+    } finally {
+      dispatch({ type: "SET_LOADING", payload: false });
+    }
+  };
+
+  return { handleCreateDestination };
+}
+```
+
+And then the component that uses it:
+
+```typescript
+function CreateDestination({ onClose, className }: CreateDestinationProps) {
+  const { state } = useAppContext();
+  const { isLoading } = state;
+  const { handleCreateDestination } = useCreateDestination(onClose);
+
+  async function onSubmit(data: DestinationFormData) {
+    toast.promise(
+      handleCreateDestination({
+        destinationName: data.destination,
+      }),
+      {
+        loading: 'Fetching your destination...',
+        success: () => '🎉 Destination created successfully! Time to explore!',
+        error: (err) => `Failed to find your destination: ${
+          err instanceof Error ? err.message : 'please try again'
+        }`,
+      },
+    );
+  }
+
+  return (
+    <div className={cn('w-full', className)}>
+      {isLoading ? (
+        <div className="flex items-center justify-center py-4">
+          <span className="animate-pulse">Creating your destination...</span>
+        </div>
+      ) : (
+        <FormProvider {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            {/* Form fields */}
+          </form>
+        </FormProvider>
+      )}
+    </div>
+  );
+}
+```
+
+Notice how clean the component stays? All the complexity of state updates is hidden away in the custom hook, leaving the component to focus on what it does best: presenting the interface to the user.
+
+## What I Actually Learned
+
+1. useEffect is usually a code smell - there's often a better way
+2. Parallel data loading should be the default, not an optimization
+3. Cache invalidation is hard, but even simple caching (like my activities cache) can improve UX significantly
+4. Custom hooks are perfect for encapsulating complex operations (like my destination creation flow)
+5. Loading states deserve careful handling - users should always know what's happening
+6. Type safety in state management prevents entire categories of bugs
+7. Sometimes the simpler solution (useReducer + context) is the right one
+
+## The Elephant in the Room: Why Not Redux or Tanstack Query?
+
+While Redux remains powerful for complex applications, Wooster's needs were well-served by useReducer and context. The real decision point was around Tanstack Query - it would have provided better caching, background updates, and error handling out of the box. However, implementing these patterns manually helped me understand exactly what problems these tools solve. For asynchronous state management, something like Tanstack Query would definitely have been better, but I wanted to demonstrate my ability to use native React patterns first. The codebase is now perfectly positioned for a Tanstack Query refactor, with clear boundaries between data fetching, state management, and UI.
+
+## A Note on Testing
+
+While building Wooster, I focused initially on establishing solid architectural patterns and core functionality. This choice meant deferring testing to a later phase - a trade-off that taught me valuable lessons about real-world development priorities.
+
+Looking back, several aspects of the architecture would make testing straightforward to implement:
+
+- The reducer's pure functions would be perfect candidates for unit tests
+- Custom hooks like useCreateDestination could be tested in isolation
+- The clear separation between state management and UI would make integration tests more manageable
+
+For the next phase of development, I'd prioritize:
+
+- Unit tests for the reducer and custom hooks
+- Integration tests for key user flows like destination creation
+- Component tests for critical UI interactions
+
+My experience with the Atomize Pro refactor particularly highlighted the value of a good test suite when working with complex state management. The ability to refactor confidently relies heavily on comprehensive tests - a lesson I'm taking forward into future projects.
+
+---
+
+<em>
+  Next up: "Tailwind Patterns: Building a Consistent Design System" (where we'll
+  explore component styling, dark mode implementation, and responsive design -
+  along with a confession about why mobile-first would have been better)
+</em>

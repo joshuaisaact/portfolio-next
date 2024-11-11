@@ -4,6 +4,14 @@ import { BlogCard } from "../ui/cards/BlogCard";
 import { posts } from "@/app/blog/posts";
 
 export function Blog() {
+  const filteredPosts = posts
+    .filter(
+      (post) =>
+        // post.slug !== "hugo-with-the-flow" &&
+        post.slug !== "dancing-in-the-dark",
+    )
+    .slice(-8);
+
   return (
     <section aria-label="Blog" className="space-y-6 sm:space-y-8">
       <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
@@ -18,7 +26,7 @@ export function Blog() {
         role="list"
         aria-label="Article list"
       >
-        {posts.map((post) => (
+        {filteredPosts.map((post) => (
           <BlogCard
             key={post.slug}
             slug={post.slug}
@@ -26,6 +34,15 @@ export function Blog() {
             metadata={post.metadata}
           />
         ))}
+      </div>
+
+      <div className="text-center mt-8">
+        <a
+          href="/blog"
+          className="text-blue-600 dark:text-blue-400 hover:underline"
+        >
+          View All Posts
+        </a>
       </div>
     </section>
   );
