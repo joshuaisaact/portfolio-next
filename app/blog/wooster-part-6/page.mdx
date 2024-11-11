@@ -24,9 +24,9 @@ Before diving into Wooster's state management, I should share a story about how 
 
 Ultimately, to improve it I had to map out the entire app, and all the existing pieces of state, and that let me combine them into a single useReducer pattern. But the numbers tell the story:
 
-30 state variables consolidated into 9
-12 useEffect hooks eliminated
-Countless bugs from state synchronization fixed
+- 30 state variables consolidated into 9
+- 12 useEffect hooks eliminated
+- Countless bugs from state synchronization fixed
 
 That experience taught me that fewer, well-structured state updates are better than many small ones, and that useEffect is often a sign that there might be a better way.
 
