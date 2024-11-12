@@ -1,0 +1,133 @@
+import { BlogHeader } from "@/app/components/mdx/BlogHeader";
+
+export const metadata = {
+  title: "Refactoring Wooster's API Layer: A Simple Approach with Axios",
+  date: "2024-11-08",
+  featured_image: "/images/blog/wooster/axios.png",
+  excerpt:
+    "Moving from fetch to Axios: simplifying API calls, adding interceptors for authentication, and improving error handling - all while following the official documentation patterns.",
+  tags: [
+    "Axios",
+    "TypeScript",
+    "REST API",
+    "Refactoring",
+    "Authentication",
+    "Frontend Development",
+    "Wooster",
+  ],
+};
+
+<BlogHeader {...metadata} />
+
+## Why Move to Axios?
+
+After building Wooster's initial MVP with the fetch API, it was time for an upgrade. While fetch worked well, Axios offers some helpful features out of the box that would make my code cleaner and more maintainable.
+
+## Following the Docs
+
+Like any good developer, I first spent three hours looking for "the perfect way" to implement Axios, only to end up exactly where I should have started: the official documentation. Sometimes the simplest approach is the best one, even if it does make you feel a bit daft for not trying it first.
+
+## The Implementation
+
+# 1. Setting Up the Instance
+
+First, I created a configured Axios instance following the official pattern (after trying three "clever" approaches that all ended in tears):
+
+```typescript
+const api = axios.create({
+  baseURL: import.meta.env.VITE_BASE_URL || "http://localhost:4000",
+  timeout: 10000,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+```
+
+This gave me everything fetch did, plus some features I didn't know I needed until I had them:
+
+- A base URL for all requests
+- Automatic timeout handling
+- Default headers
+
+Rather like getting a dishwasher - you don't realize how much time you've been wasting until you stop doing it the hard way.
+
+# 2. Authentication
+
+I added a simple interceptor for authentication:
+
+```typescript
+export const setupAuth = (supabase: SupabaseClient) => {
+  api.interceptors.request.use(async (config) => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (session?.access_token) {
+      config.headers.Authorization = `Bearer ${session.access_token}`;
+    }
+    return config;
+  });
+};
+```
+
+# 3. API Endpoints
+
+Then I created simple functions for each endpoint:
+
+```typescript
+export const fetchDestinations = () => {
+  return api.get("/saved-destinations");
+};
+
+export const createTrip = (tripData: {
+  days: number;
+  location: string;
+  startDate: string | null;
+  selectedCategories?: string[];
+}) => {
+  return api.post("/trips", tripData);
+};
+```
+
+## Refactoring the Application
+
+The migration wasn't just about the API service - I needed to update several parts of my application.
+
+## Benefits I Got
+
+1. Automatic Transforms: Axios automatically transforms JSON data
+2. Request/Response Interceptors: Makes it easy to add auth headers
+3. Better Error Handling: Axios provides consistent error objects
+4. Request Timeouts: Built-in timeout handling
+5. Easy Configuration: One place to set common options
+
+## Using the API
+
+Here's how I use it in components, now with 100% less promise chaining and 50% more error catching:
+
+```typescript
+try {
+  const response = await fetchDestinations();
+  setDestinations(response.data);
+} catch (error) {
+  if (axios.isAxiosError(error)) {
+    console.error("API Error:", error.response?.data);
+    // At least now I know WHAT I broke
+  }
+}
+```
+
+## Key Lessons
+
+1. Keep It Simple: Following the official docs often leads to cleaner code
+2. Don't Overengineer: I resisted the urge to add complex abstraction layers
+3. Consistent Patterns: Using Axios's built-in features rather than creating my own
+
+## What's Next?
+
+With this foundation in place, I'm ready to add TanStack Query for state management. But that's a story for another post. First, I had to fix all those tests I broke... which led me down quite the rabbit hole with Mock Service Worker.
+
+---
+
+<em>
+  Next up: [From Fetch Mocks to MSW: A Testing Journey](/blog/wooster-msw)
+</em>

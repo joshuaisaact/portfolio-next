@@ -1,0 +1,183 @@
+import { BlogHeader } from "@/app/components/mdx/BlogHeader";
+
+export const metadata = {
+  title: "From Fetch Mocks to MSW: A Testing Journey",
+  featured_image: "/images/blog/wooster/mock-service-worker.png",
+  date: "2024-11-12",
+  excerpt:
+    "How a simple Axios refactor led me down the path of modernizing my test mocks with Mock Service Worker, and the valuable lessons learned along the way.",
+  tags: ["Testing", "MSW", "Axios", "TypeScript", "Vitest", "Wooster"],
+};
+
+<BlogHeader {...metadata} />
+
+## The Catalyst: An Innocent Axios Refactor
+
+It started innocently enough. "I'll just refactor these fetch calls to use Axios," I thought, "What could possibly go wrong?" As it turns out, quite a bit - specifically, all my carefully crafted fetch mocks suddenly becoming about as useful as a chocolate teapot.
+
+Rather than rebuilding all my mocks for Axios, I decided to take this opportunity to modernize my approach. Enter Mock Service Worker (MSW).
+
+## The Old Way: Jest Mocks and Fetch
+
+Previously, my tests looked something like this:
+
+```typescript
+const mockFetch = vi.fn();
+global.fetch = mockFetch;
+
+describe("API functions", () => {
+  beforeEach(() => {
+    mockFetch.mockReset();
+  });
+
+  test("fetchTrips - should fetch trips successfully", async () => {
+    const mockTrips = [{ id: 1, name: "Trip to Paris" }];
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockTrips,
+    });
+
+    const trips = await fetchTrips(mockSupabase);
+    expect(trips).toEqual(mockTrips);
+  });
+});
+```
+
+It worked, but it wasn't exactly elegant. Each test required manual mock setup, the mocks were brittle, and they didn't really represent how my API behaved in the real world. I was testing implementation details rather than actual behaviour.
+
+## Enter MSW: A Better Way to Mock
+
+Mock Service Worker (MSW) takes a fundamentally different approach to API mocking. Instead of mocking function calls, it intercepts actual network requests at the network level. This is huge for a few reasons:
+
+- Runtime Integration: MSW works by intercepting actual HTTP requests, meaning your code runs exactly as it would in production. No more mocking fetch or axios - your actual API calls run unchanged.
+- API-First Design: Instead of thinking about function mocks, you define mock API endpoints that mirror your real API. This pushes you toward better API design and keeps your tests aligned with your actual endpoints.
+- Request/Response Fidelity: You get to work with real HTTP concepts - status codes, headers, response bodies - instead of simplified mock objects. This means you can catch more realistic edge cases.
+
+Here's how those same tests look with MSW:
+
+```typescript
+// Your API handler definition
+http.get(`${BASE_URL}/trips`, () => {
+  return HttpResponse.json([
+    { id: "1", location: "Trip 1", days: 5, startDate: "2023-06-01" },
+    { id: "2", location: "Trip 2", days: 7, startDate: "2023-07-15" },
+  ]);
+});
+
+// Your test - notice how much cleaner it is
+test("fetchTrips - should fetch trips successfully", async () => {
+  const trips = await fetchTrips();
+  expect(trips).toEqual([
+    { id: "1", location: "Trip 1", days: 5, startDate: "2023-06-01" },
+    { id: "2", location: "Trip 2", days: 7, startDate: "2023-07-15" },
+  ]);
+});
+```
+
+No more manual mock setup for each test - the MSW handler takes care of it all. Plus, these handlers can be reused across many tests, reducing duplication and making your tests more maintainable.
+
+## The Setup
+
+Setting up MSW was surprisingly straightforward, which immediately made me suspicious. Nothing in testing is ever this easy...
+
+```typescript
+// vitest.setup.ts
+beforeAll(() => {
+  server.listen({ onUnhandledRequest: "bypass" });
+});
+
+afterEach(() => {
+  server.resetHandlers();
+  cleanup();
+});
+
+afterAll(() => {
+  server.close();
+});
+```
+
+Then creating handlers that actually looked like my API:
+
+```typescript
+export const handlers = [
+  http.get(`${BASE_URL}/trips`, () => {
+    return HttpResponse.json([
+      { id: "1", location: "Trip 1", days: 5, startDate: "2023-06-01" },
+      { id: "2", location: "Trip 2", days: 7, startDate: "2023-07-15" },
+    ]);
+  }),
+];
+```
+
+## The Error Handling Journey
+
+My first attempt at error handling was... well, let's say it was optimistic:
+
+```typescript
+export const errorHandlers = [
+  http.get(`${BASE_URL}/trips/999`, () => {
+    return new HttpResponse(null, { status: 404 });
+  }),
+];
+```
+
+The problem? The more general /trips/:id handler was catching everything first. It was like having a catch-all route in your Express app before your specific routes - rookie mistake.
+
+After some head-scratching and test failures, I realized the better approach was handling errors within the routes themselves:
+
+```typescript
+http.get(`${BASE_URL}/trips/:id`, ({ params }) => {
+  const { id } = params;
+
+  if (id === '999') {
+    return new HttpResponse(null, { status: 404 });
+  }
+
+  return HttpResponse.json({
+    id,
+    location: 'Trip 1',
+    days: 5,
+    startDate: '2023-06-01',
+  });
+}),
+```
+
+This pattern emerged: instead of separate error handlers, I could handle both success and error cases in the same place, just like a real API would. It was one of those "aha!" moments where testing actually pushes you toward better design.
+
+## Lessons Learned
+
+1. Mock at the right level: MSW lets you mock the network level rather than the function level, making tests more realistic and robust.
+2. Think in endpoints, not functions: Structuring mocks around API endpoints rather than individual function calls better represents the actual application behavior.
+3. Handle errors where they happen: Instead of separate error handlers, handle errors within the endpoint handlers themselves - just like a real API would.
+
+## The End Result
+
+The final setup is more maintainable, more realistic, and actually helpful in catching real issues. Gone are the days of:
+
+```typescript
+mockFetch.mockResolvedValueOnce({ ok: false });
+```
+
+Instead, I have proper API mocks that:
+
+- Handle both success and error cases
+- Use realistic response structures
+- Can be reused across tests
+- Actually catch integration issues
+
+## What's Next?
+
+Looking forward, I'm excited about:
+
+- Simulating network errors more realistically
+- Using MSW's browser integration for end-to-end testing
+- Adding response delays to test loading states
+
+Sometimes the best improvements come from being forced to change. What started as a simple Axios refactor ended up leading to a much better testing architecture. And isn't that what refactoring is all about?
+
+---
+
+<em>
+  Next up: Probably breaking something else while trying to improve it. Stay
+  tuned!
+</em>
