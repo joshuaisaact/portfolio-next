@@ -1,5 +1,35 @@
 export const posts = [
   {
+    slug: "wooster-msw",
+    metadata: {
+      title: "From Fetch Mocks to MSW: A Testing Journey",
+      featured_image: "/images/blog/wooster/mock-service-worker.png",
+      date: "2024-11-12",
+      excerpt:
+        "How a simple Axios refactor led me down the path of modernizing my test mocks with Mock Service Worker, and the valuable lessons learned along the way.",
+      tags: ["Testing", "MSW", "Axios", "TypeScript", "Vitest", "Wooster"],
+    },
+  },
+  {
+    slug: "wooster-axios-refactor",
+    metadata: {
+      title: "Refactoring Wooster's API Layer: A Simple Approach with Axios",
+      date: "2024-11-10",
+      featured_image: "/images/blog/wooster/axios.png",
+      excerpt:
+        "Moving from fetch to Axios: simplifying API calls, adding interceptors for authentication, and improving error handling - all while following the official documentation patterns.",
+      tags: [
+        "Axios",
+        "TypeScript",
+        "REST API",
+        "Refactoring",
+        "Authentication",
+        "Frontend Development",
+        "Wooster",
+      ],
+    },
+  },
+  {
     slug: "wooster-part-6",
     metadata: {
       title: "State Management: Teaching Wooster to Remember Things",
