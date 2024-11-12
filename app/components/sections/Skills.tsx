@@ -60,7 +60,7 @@ export function Skills() {
                   aria-hidden="true"
                 />
                 <span
-                  className={`absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-center
+                  className={`absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-center
                   opacity-0 group-hover:opacity-100 transition-opacity
                   text-xs font-medium whitespace-nowrap text-skill-${file.split(".")[0]} dark:text-gray-200`}
                 >
