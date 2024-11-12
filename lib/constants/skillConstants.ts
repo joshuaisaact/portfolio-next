@@ -6,19 +6,22 @@ export const SKILL_FILES = [
   "express.svg",
   "tailwindcss.svg",
   "supabase.svg",
+
+  "tanstack-query.svg",
+
+  "msw.svg",
+  "vitest.svg",
+  "jest.svg",
   "postgresql.svg",
   "drizzle.svg",
   "sequelize.svg",
-  "tanstack-query.svg",
+  "javascript.svg",
   "html5.svg",
   "css3.svg",
-  "javascript.svg",
-  "npm.svg",
-  "vitest.svg",
-  "jest.svg",
   "mongodb.svg",
   "hugo.svg",
   "github.svg",
+  "npm.svg",
   "git.svg",
 ] as const;
 
@@ -85,6 +88,11 @@ export const SKILL_INFO: Record<
     color: "#000000",
     textColorDark: "text-gray-200",
     url: "https://expressjs.com/",
+  },
+  "msw.svg": {
+    name: "Mock Service Worker",
+    color: "#FF6A33",
+    url: "https://mswjs.io/",
   },
   "vitest.svg": {
     name: "Vitest",
