@@ -1,0 +1,258 @@
+import { BlogHeader } from "@/app/components/mdx/BlogHeader";
+
+export const metadata = {
+  title: "Deploying Wooster: A Tale of Memory Limits and Nginx Configs",
+  featured_image: "/images/blog/wooster/deployment-reality.jpg",
+  date: "2024-11-18",
+  excerpt:
+    "Adventures in deploying an AI travel planner: memory limits, OAuth drama, and why Linux permissions are the real MVPs.",
+  tags: [
+    "DevOps",
+    "Digital Ocean",
+    "Nginx",
+    "GitHub Actions",
+    "Deployment",
+    "Wooster",
+  ],
+};
+
+<BlogHeader {...metadata} />
+
+## The Plan vs Reality
+
+When it came time to deploy Wooster, I had what I thought was a solid deployment strategy:
+
+1. Provision a $12/month Digital Ocean droplet (2GB RAM, seemed plenty)
+2. Clone the repo, npm install, build with Vite
+3. Configure Nginx as a reverse proxy
+4. Set up PM2 for process management
+
+Spoiler alert: I learned a lot about Linux memory management that day.
+
+## The Great Memory Crisis of 2024
+
+My first deployment attempt followed what seemed like a sensible pattern: clone the entire repo to my Linux droplet and build it there. After all, that's basically what I was doing in development, right?
+
+```bash
+git clone https://github.com/username/wooster.git
+cd wooster/frontend
+npm install
+npm run build
+```
+
+And then:
+
+```bash
+FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory
+```
+
+Turns out, Vite's build process is quite memory-intensive, and my 2GB droplet was not up to the task. After some research and a few failed attempts at increasing Node's memory limits, I realized I was approaching this wrong.
+
+The solution? GitHub Actions. Here's my actual workflow:
+
+```yaml
+deploy:
+  if: github.event.pull_request.merged == true # Only deploy on merged PRs
+  runs-on: ubuntu-latest
+
+  steps:
+    - uses: actions/checkout@v4
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20.x"
+        cache: "npm"
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build
+      env:
+        VITE_BASE_URL: "https://trywooster.live/api"
+        VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+        VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+      run: npm run build
+
+    - name: Prepare deploy directory
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        script: |
+          sudo rm -rf /home/wooster/frontend/dist
+          sudo mkdir -p /home/wooster/frontend/dist
+          sudo chown -R wooster:www-data /home/wooster/frontend/dist
+          sudo chmod -R 775 /home/wooster/frontend/dist
+
+    - name: Deploy to server
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        source: "dist/"
+        target: "/home/wooster/frontend"
+```
+
+The key improvements here:
+
+- Builds happen on GitHub's beefy runners, not my modest droplet
+- Only deploys on merged PRs, preventing accidental deployments
+- Properly handles environment variables and secrets
+- Sets up correct permissions before copying files
+
+## The OAuth Configuration Saga
+
+Implementing Supabase auth with Google OAuth looked straightforward in the docs:
+
+```jsx
+<Auth
+  supabaseClient={supabase}
+  appearance={{
+    theme: ThemeSupa,
+    extend: true,
+    variables: {
+      default: {
+        colors: {
+          brand: "#4A9F76",
+          brandAccent: "#3d8862",
+          defaultButtonBackground: "rgba(255, 255, 255, 0.15)",
+          defaultButtonBackgroundHover: "rgba(255, 255, 255, 0.25)",
+          defaultButtonText: "white",
+          dividerBackground: "rgba(255, 255, 255, 0.2)",
+        },
+      },
+    },
+    style: {
+      button: {
+        flex: "1",
+        flexDirection: "column",
+        gap: "8px",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "16px",
+        border: "1px solid rgba(255, 255, 255, 0.25)",
+      },
+    },
+  }}
+  providers={["google", "github"]}
+  onlyThirdPartyProviders
+/>
+```
+
+But Google OAuth had other plans. It required:
+
+1. A valid domain (thanks GitHub Education for the free .live domain)
+2. HTTPS configuration
+3. Correct OAuth redirect URIs
+
+## The Case-Sensitive Catastrophe
+
+Here's a fun one: everything worked perfectly in Windows development, but after deployment:
+
+```bash
+Error: Cannot find module './Components/Auth'
+```
+
+The culprit? Linux's case-sensitive filesystem versus Windows' case-insensitive one. A seemingly minor detail that cost an hour of debugging.
+
+## Nginx Configuration: The Final Piece
+
+After sorting out the build process and OAuth, here's my production Nginx configuration:
+
+```nginx
+server {
+    listen 80;
+    server_name 46.101.72.66;
+    root /home/wooster/frontend/dist;
+    index index.html;
+
+    # Force text/html for index.html specifically
+    location = / {
+        add_header Content-Type text/html always;
+        try_files /index.html =404;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Cache static assets
+    location /assets/ {
+        try_files $uri =404;
+        add_header Cache-Control "public, max-age=31536000";
+    }
+
+    # Proxy API requests
+    location /api {
+        proxy_pass http://localhost:4000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+```
+
+Key features:
+
+- Explicit content-type handling for index.html
+- Aggressive caching for static assets (31536000 seconds = 1 year)
+- Proper WebSocket support in the API proxy
+- SPA-friendly routing with fallback to index.html
+
+## Rate Limiting: Teaching Wooster Some Self-Control
+
+An AI-powered app without rate limits is like a golden retriever at an all-you-can-eat buffet - enthusiastic but potentially problematic. I added two tiers of rate limiting:
+
+```javascript
+import rateLimit from "express-rate-limit";
+
+// General rate limit for all routes
+export const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: { error: "Too many requests, please try again later" },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Stricter rate limit for LLM routes
+export const llmLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 20, // limit each IP to 20 LLM requests per hour
+  message: { error: "AI request limit exceeded, please try again later" },
+});
+```
+
+The two-tier approach means:
+
+- Regular API endpoints get a generous 100 requests per 15 minutes
+- AI-powered endpoints are limited to 20 requests per hour (because API credits aren't free!)
+
+This protects both the server and my wallet from unexpected traffic spikes.
+
+## Lessons Learned
+
+1. Build processes can be surprisingly resource-intensive - use CI/CD when possible
+2. Case sensitivity matters in cross-platform development
+3. OAuth providers have strict security requirements - plan accordingly
+4. Configuration details matter!
+5. A solid CI/CD pipeline saves time and prevents deployment headaches
+
+<Figure
+  src="/images/blog/wooster/buildgh.png"
+  alt="Before/After meme about deployment confidence"
+  title="My deployment confidence: before and after"
+/>
+
+---
+
+<em>
+  Next up: Adding monitoring and error tracking to Wooster, because even AI dogs
+  need a health check now and then!
+</em>

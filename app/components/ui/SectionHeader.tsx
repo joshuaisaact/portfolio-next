@@ -1,6 +1,6 @@
 interface SectionHeaderProps {
   title: string;
-  id: string; // Add ID prop
+  id: string;
 }
 
 export function SectionHeader({ title, id }: SectionHeaderProps) {
