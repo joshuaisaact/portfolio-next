@@ -1,5 +1,3 @@
-"use client";
-
 import { PROJECTS } from "@/lib/constants/projectConstants";
 import { ProjectCard } from "../ui/cards/ProjectCard";
 
