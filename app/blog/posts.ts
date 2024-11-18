@@ -30,11 +30,29 @@ export const posts = [
     },
   },
   {
+    slug: "wooster-deployment",
+    metadata: {
+      title: "Deploying Wooster: A Tale of Memory Limits and Nginx Configs",
+      featured_image: "/images/blog/wooster/nginx.png",
+      date: "2024-11-09",
+      excerpt:
+        "Adventures in deploying an AI travel planner: memory limits, OAuth drama, and rate limits.",
+      tags: [
+        "DevOps",
+        "Digital Ocean",
+        "Nginx",
+        "GitHub Actions",
+        "Deployment",
+        "Wooster",
+      ],
+    },
+  },
+  {
     slug: "wooster-part-6",
     metadata: {
       title: "State Management: Teaching Wooster to Remember Things",
       date: "2024-11-08",
-      featured_image: "/images/blog/wooster/wooster-test.png",
+      featured_image: "/images/blog/wooster/react.png",
       excerpt:
         "Building a clean, efficient state management system for Wooster using React, Supabase, and TypeScript: a look into reducer patterns, data fetching, caching strategies, and lessons learned from minimizing useEffect usage.",
       tags: [
@@ -52,7 +70,7 @@ export const posts = [
     metadata: {
       title: "Structuring the Front End: Building Wooster's User Interface",
       date: "2024-11-03",
-      featured_image: "/images/blog/wooster/wooster-plans.png",
+      featured_image: "/images/blog/wooster/typescript.png",
       excerpt:
         "Creating a well-structured front end for Wooster with a feature-driven component architecture, engaging UI, and a balance of simplicity and interactivity.",
       tags: [
@@ -71,7 +89,7 @@ export const posts = [
     metadata: {
       title: "Building a Scalable Express Backend for Wooster",
       date: "2024-11-01",
-      featured_image: "/images/blog/wooster/wooster-plumbing.webp",
+      featured_image: "/images/blog/wooster/express-node.webp",
       excerpt:
         "From MVC architecture to endpoint design: Building a scalable Express backend that even a golden retriever could understand.",
       tags: [
@@ -89,7 +107,7 @@ export const posts = [
     metadata: {
       title: "Teaching an AI Dog New Tricks (The Gemini Integration)",
       date: "2024-10-25",
-      featured_image: "/images/blog/wooster/wooster-coding.webp",
+      featured_image: "/images/blog/wooster/gemini.png",
       excerpt:
         "Integrating Google's Gemini API to give Wooster its personality: prompt engineering, response parsing, and teaching an AI to think like a golden retriever.",
       tags: [
