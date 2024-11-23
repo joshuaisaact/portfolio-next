@@ -1,0 +1,156 @@
+Express Error Handling
+
+Custom error types
+Global error middleware
+express-async-errors
+Before/after code examples
+Error response structure
+TypeScript type safety
+
+```typescript
+export const handleAddDestination = async (
+  req: Request<object, object, CreateDestinationRequestBody>,
+  res: Response,
+) => {
+  try {
+    const { destination } = req.body;
+    const userId = req.user!.id;
+
+    if (!destination?.trim()) {
+      throw createValidationError("Destination is required");
+    }
+
+    const destinationRecord = await getOrCreateDestination(destination);
+    const savedDestination = await saveDestinationForUser(
+      destinationRecord.destinationId,
+      userId,
+    );
+
+    return res.status(201).json({
+      message: "Destination saved successfully",
+      destination: {
+        ...destinationRecord,
+        saved: savedDestination,
+      },
+    });
+  } catch (error) {
+    if (isServiceError(error)) {
+      return res.status(error.status).json({
+        error: error.message,
+        code: error.code,
+        details: error.details,
+      });
+    }
+
+    logger.error({ error }, "Unexpected error in handleAddDestination");
+    return res.status(500).json({
+      error: "An unexpected error occurred",
+      code: "DB_QUERY_FAILED",
+    });
+  }
+};
+```
+
+to this:
+
+```typescript
+export const handleAddDestination = async (
+  req: Request<object, object, CreateDestinationRequestBody>,
+  res: Response,
+) => {
+  const { destination } = req.body;
+  const userId = req.user!.id;
+
+  if (!destination?.trim()) {
+    throw createValidationError("Destination is required");
+  }
+
+  const destinationRecord = await getOrCreateDestination(destination);
+  const savedDestination = await saveDestinationForUser(
+    destinationRecord.destinationId,
+    userId,
+  );
+
+  return res.status(201).json({
+    message: "Destination saved successfully",
+    destination: {
+      ...destinationRecord,
+      saved: savedDestination,
+    },
+  });
+};
+```
+
+one more:
+
+```typescript
+export const handleDeleteDestination = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  const { destinationId } = req.params;
+
+  const destinationIdNumber = Number(destinationId);
+
+  if (isNaN(destinationIdNumber)) {
+    const errorMessage = "Invalid destination ID";
+    logger.warn({ destinationId }, errorMessage);
+    return res.status(400).json({ error: errorMessage });
+  }
+
+  try {
+    const deletedDestination = await deleteDestinationById(destinationIdNumber);
+
+    logger.info(
+      { destinationId: destinationIdNumber },
+      "Destination deleted successfully",
+    );
+    return res.status(200).json({
+      message: "Destination deleted successfully:",
+      deletedDestination,
+    });
+  } catch (error) {
+    if (isServiceError(error) && error.code === "DB_NOT_FOUND") {
+      logger.warn(
+        { error, destinationId: destinationIdNumber },
+        "Destination not found",
+      );
+      return res.status(404).json({ error: error.message });
+    }
+
+    logger.error(
+      { error, destinationId: destinationIdNumber },
+      "Error deleting destination",
+    );
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+```
+
+to this:
+
+```typescript
+export const handleDeleteDestination = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
+  const { destinationId } = req.params;
+  const destinationIdNumber = Number(destinationId);
+
+  if (isNaN(destinationIdNumber)) {
+    throw createValidationError("Invalid destination ID");
+  }
+
+  const deletedDestination = await deleteDestinationById(destinationIdNumber);
+
+  logger.info(
+    { destinationId: destinationIdNumber },
+    "Destination deleted successfully",
+  );
+
+  return res.status(200).json({
+    message: "Destination deleted successfully:",
+    deletedDestination,
+  });
+};
+```

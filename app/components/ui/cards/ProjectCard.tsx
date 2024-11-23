@@ -23,7 +23,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
       <Link href={`/projects/${project.slug}`} className="block h-full">
         <Card className="group hover:-translate-y-0.5 hover:shadow-md">
           <CardImage
-            src={project.videoSrc || project.imageSrc}
+            src={project.videoPreviewSrc || project.imageSrc} // Use preview video if available
             alt={project.imageAlt}
             video={!!project.videoSrc}
             containerClassName="aspect-[3/2] sm:aspect-[4/3] bg-gray-100 dark:bg-gray-800"

@@ -7,6 +7,7 @@ export interface Project {
   imageSrc: string;
   imageAlt: string;
   videoSrc?: string;
+  videoPreviewSrc?: string;
   award?: string;
   skills: string[];
   overview: string;

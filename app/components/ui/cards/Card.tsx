@@ -32,6 +32,7 @@ interface CardImageProps {
   alt: string;
   video?: boolean;
   className?: string;
+  videoPreviewSrc?: string;
   containerClassName?: string;
   posterImage?: string;
 }
@@ -41,6 +42,7 @@ export function CardImage({
   alt,
   video,
   className = "",
+  videoPreviewSrc,
   containerClassName = "",
   posterImage,
 }: CardImageProps) {
@@ -58,15 +60,21 @@ export function CardImage({
           preload="none"
           poster={posterImage}
         >
-          <source src={src.replace(".mp4", ".webm")} type="video/webm" />
-          <source src={src} type="video/mp4" />
+          <source
+            src={videoPreviewSrc || src.replace(/\.(mp4)$/, ".webm")}
+            type="video/webm"
+          />
+          <source
+            src={videoPreviewSrc?.replace(/\.webm$/, ".mp4") || src}
+            type="video/mp4"
+          />
         </video>
       ) : (
         <Image
           src={src}
           alt={alt}
           fill
-          className={` transition-transform duration-300 group-hover:scale-105 ${className}`}
+          className={`transition-transform duration-300 group-hover:scale-105 ${className}`}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
       )}
