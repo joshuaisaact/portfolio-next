@@ -1,0 +1,358 @@
+import { BlogHeader } from "@/app/components/mdx/BlogHeader";
+
+export const metadata = {
+  title: "Making Wooster Talk: A Deep Dive into Structured Logging",
+  date: "2024-11-15",
+  featured_image: "/images/blog/wooster/pino-banner.png",
+  excerpt:
+    "From chaotic console.logs to structured logging: How Wooster learned to communicate clearly using Pino, environment-aware configuration, and proper log levels.",
+  tags: [
+    "Pino",
+    "NodeJS",
+    "Backend",
+    "Logging",
+    "TypeScript",
+    "Express",
+    "Wooster",
+  ],
+};
+
+<BlogHeader {...metadata} />
+
+## The Problem with console.log
+
+Let's be honest - we've all been there. Your Express backend starts misbehaving, so you do what any self-respecting developer would do:
+
+```typescript
+console.log("HERE1!!!");
+console.log("Data:", someData);
+console.log("WHY IS THIS UNDEFINED??");
+```
+
+Three months later, you're staring at production logs filled with "HERE1!!!" and wondering what past-you was thinking. It's like leaving passive-aggressive post-it notes for yourself, except less helpful.
+
+## Enter Pino: Structured Logging for Grown-ups
+
+After the third time searching through logs for a "HERE!!!" that could have been anywhere, I decided it was time to be a responsible developer and implement proper logging. Enter Pino, because even Wooster needs to keep track of what he's been up to.
+
+## Environment-Aware Logging
+
+First revelation: different environments need different logging approaches. Here's how I set up Wooster's logger:
+
+```typescript
+import pino from "pino";
+
+export const logger = pino({
+  level:
+    process.env.NODE_ENV === "test" ? "error" : process.env.LOG_LEVEL || "info",
+  ...(process.env.NODE_ENV === "development"
+    ? {
+        transport: {
+          target: "pino-pretty",
+          options: {
+            colorize: true,
+            translateTime: true,
+          },
+        },
+      }
+    : {}),
+});
+```
+
+Let's break this down:
+
+1. **Test Environment**: Only log errors. Jest output is noisy enough without debug logs.
+2. **Development**: Pretty, colorized logs that are actually readable by humans.
+3. **Production**: Raw JSON logs - perfect for log aggregation tools.
+4. **Configurable Level**: Can be overridden with LOG_LEVEL environment variable.
+
+## The Art of Log Levels
+
+Pino gives us proper log levels, and choosing the right one is more art than science:
+
+```typescript
+// Debug: For when you're being extra nosey
+logger.debug(
+  {
+    userId,
+    searchParams: req.query,
+    timestamp: new Date().toISOString(),
+  },
+  "User searching for destinations",
+);
+
+// Info: The good stuff you actually want to know about
+logger.info(
+  {
+    tripId,
+    destination,
+    duration,
+    userId,
+  },
+  "Trip created successfully",
+);
+
+// Warn: Something's not quite right...
+logger.warn(
+  {
+    userId,
+    attemptCount,
+    lastAttemptTime: new Date().toISOString(),
+  },
+  "Multiple failed login attempts detected",
+);
+
+// Error: Time to wake up the on-call engineer
+logger.error(
+  {
+    error: {
+      message: err.message,
+      stack: err.stack,
+      code: err.code,
+    },
+    requestId,
+    userId,
+  },
+  "Failed to generate AI travel plan",
+);
+```
+
+## Request Context: The Missing Piece
+
+The real power of structured logging comes with context. Here's the middleware I use to track requests:
+
+```typescript
+import { v4 as uuidv4 } from "uuid";
+import { performance } from "perf_hooks";
+
+export const requestLogger = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const requestId = uuidv4();
+  const startTime = performance.now();
+
+  // Attach to request for use in other middlewares
+  req.requestId = requestId;
+
+  logger.info(
+    {
+      requestId,
+      method: req.method,
+      url: req.url,
+      query: req.query,
+      userAgent: req.get("user-agent"),
+      ip: req.ip,
+      // If you have user context from auth
+      userId: req.user?.id,
+    },
+    "Request started",
+  );
+
+  // Log when request completes
+  res.on("finish", () => {
+    const duration = Math.round(performance.now() - startTime);
+
+    logger.info(
+      {
+        requestId,
+        statusCode: res.statusCode,
+        duration,
+        // Only log response size for successful requests
+        ...(res.statusCode < 400 && {
+          responseSize: res.get("Content-Length"),
+        }),
+      },
+      "Request completed",
+    );
+  });
+
+  next();
+};
+```
+
+## Practical Examples: Real Logs from Wooster
+
+Here's what my logs actually look like in different scenarios:
+
+### Development (using pino-pretty):
+
+```typescript
+[2024-11-15 14:23:45.678] INFO: Request started
+requestId: 123e4567-e89b-12d3-a456-426614174000
+method: POST
+url: /api/trips
+userId: auth0|123456
+ip: 127.0.0.1
+
+[2024-11-15 14:23:45.890] DEBUG: Generating AI travel plan
+requestId: 123e4567-e89b-12d3-a456-426614174000
+destination: "Paris"
+duration: 7
+preferences: ["culture", "food"]
+
+[2024-11-15 14:23:46.123] INFO: Request completed
+requestId: 123e4567-e89b-12d3-a456-426614174000
+statusCode: 201
+duration: 445
+responseSize: 1234
+```
+
+### Production (JSON format):
+
+```json
+{
+  "level": 30,
+  "time": 1673876625678,
+  "pid": 1234,
+  "requestId": "123e4567-e89b-12d3-a456-426614174000",
+  "method": "POST",
+  "url": "/api/trips",
+  "userId": "auth0|123456",
+  "msg": "Request started"
+}
+
+{
+  "level": 30,
+  "time": 1673876626123,
+  "pid": 1234,
+  "requestId": "123e4567-e89b-12d3-a456-426614174000",
+  "statusCode": 201,
+  "duration": 445,
+  "responseSize": 1234,
+  "msg": "Request completed"
+}
+```
+
+## Real-World Example: Database Service Logging
+
+When I started building Wooster's destination service, I realized logging needs to tell a story. Here's how I approached it:
+
+```typescript
+export const getOrCreateDestination = async (location: string) => {
+  try {
+    try {
+      const existingDestination = await fetchDestinationDetailsByName(location);
+      logger.info({ location }, "Found existing destination");
+      return existingDestination;
+    } catch (error) {
+      // I'll talk about error handling in the next post. I believe that's called 'creating tension'...
+      if (!isServiceError(error) || error.code !== "DB_NOT_FOUND") {
+        throw error;
+      }
+    }
+
+    logger.info({ location }, "Creating new destination");
+    const destinationData = await generateDestinationData(location);
+    return await addDestination(destinationData);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const addDestination = (destinationData: NewDestination) =>
+  executeDbOperation(
+    async () => {
+      const [insertedDestination] = await db
+        .insert(destinations)
+        .values({
+          ...destinationData,
+          normalizedName: normalizeDestinationName(
+            destinationData.destinationName,
+          ),
+        })
+        .returning();
+
+      logger.info({ destinationData }, "Inserted destination successfully");
+      return insertedDestination;
+    },
+    "Failed to insert destination",
+    { context: { destinationData } },
+  );
+```
+
+This creates a breadcrumb trail through the application:
+
+```typescript
+[14:23:45.678] INFO: Incoming request
+method: POST
+url: /api/destinations
+location: "Paris"
+
+[14:23:45.789] INFO: Creating new destination
+location: "Paris"
+
+[14:23:46.012] INFO: Inserted destination successfully
+destinationData: {
+destinationName: "Paris",
+country: "France",
+// ... other fields
+}
+
+[14:23:46.123] INFO: Request completed
+statusCode: 201
+duration: 445ms
+```
+
+Key patterns here:
+
+1. Log at service boundaries (entering/exiting key functions)
+2. Include relevant business context (location, destination data)
+3. Use consistent message formats
+4. Track operation progress through the stack
+
+The result? When something goes wrong (and it will), you can trace the exact path through your application. Trust me, at 3 AM when your app is failing, you'll thank yourself for these breadcrumbs.
+
+## Logging Best Practices I've Learned
+
+1. **Be Consistent with Context**
+
+   - Always include requestId
+   - Add userId when available
+   - Include relevant business context (tripId, destinationId, etc.)
+
+2. **Log Level Selection**
+
+   - Error: Something is broken and needs immediate attention
+   - Warn: Something unexpected that might need investigation
+   - Info: Normal business events you want to track
+   - Debug: Detailed information for development/troubleshooting
+
+3. **Security Considerations**
+
+   - Never log sensitive data (passwords, tokens, etc.)
+   - Be careful with PII (personally identifiable information)
+   - Consider GDPR implications of what you're logging
+
+4. **Performance Impact**
+   - Use appropriate log levels to control output
+   - Consider log rotation in production
+   - Be mindful of log size (especially with stack traces)
+
+<Figure
+  src="/images/blog/wooster/galaxy-logging.png"
+  alt="Galaxy brain meme showing the evolution of logging practices"
+  title="The stages of logging enlightenment"
+/>
+
+## What I Actually Learned
+
+1. Structured logging isn't just about pretty output - it's about being able to trace issues across requests
+2. Environment-specific configuration is crucial
+3. Context is king - the more relevant context you add, the easier debugging becomes
+4. Good logging practices save hours of debugging time
+5. Your future self will thank you (mine already has)
+
+## What's Next?
+
+Now that I can properly track what's happening in my application, it's time to handle what happens when things go wrong. But that's a story for another post about error handling...
+
+And once we've got error handling sorted, we'll look at how to get these lovely structured logs into a proper monitoring system - because as nice as JSON logs are, they're even better when you can query and visualize them. But one thing at a time...
+
+---
+
+<em>
+  Next up: [Express Error Handling: Because Things Will Go
+  Wrong](/blog/wooster-error-handling)
+</em>

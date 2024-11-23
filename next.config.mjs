@@ -1,15 +1,14 @@
 import createMDX from '@next/mdx'
 import rehypePrettyCode from 'rehype-pretty-code';
 
-
-
 /** @type {import('rehype-pretty-code').Options} */
 const options = {
-  // See Options section below.
+
+  showLineNumbers: false,
 };
 
 const withMDX = createMDX({
-  // Add markdown plugins here, as desired
+
   extension: /\.mdx?$/,
   options: {
     remarkPlugins: [],

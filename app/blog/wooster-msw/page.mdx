@@ -81,7 +81,6 @@ No more manual mock setup for each test - the MSW handler takes care of it all. 
 Setting up MSW was surprisingly straightforward, which immediately made me suspicious. Nothing in testing is ever this easy...
 
 ```typescript
-// vitest.setup.ts
 beforeAll(() => {
   server.listen({ onUnhandledRequest: "bypass" });
 });
