@@ -2,8 +2,7 @@ import type { MDXComponents } from "mdx/types";
 import { Figure } from "./app/components/mdx/Figure";
 import { BlogHeader } from "./app/components/mdx/BlogHeader";
 import Image from "next/image";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
+import { CodeBlock } from "./app/components/mdx/CodeBlock";
 
 interface BlogMetadata {
   title: string;
@@ -37,22 +36,8 @@ function BlogLayout({
 
       <main
         id="main-content"
-        className="relative z-10 mx-auto max-w-7xl px-2 sm:px-4 lg:px-8 py-10"
+        className="relative z-10 mx-auto max-w-7xl px-2  lg:px-8 lg:py-10"
       >
-        {/* <nav aria-label="Back to blog">
-          <Link
-            href="/blog"
-            className="group mb-8 inline-flex items-center text-sm text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
-            aria-label="Return to blog listing"
-          >
-            <ArrowLeft
-              className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1"
-              aria-hidden="true"
-            />
-            Back to blog
-          </Link>
-        </nav> */}
-
         <article
           className="prose-quoteless prose prose-gray mx-auto max-w-none dark:prose-invert"
           aria-labelledby="article-title"
@@ -166,15 +151,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       </blockquote>
     ),
 
-    pre: (props) => (
-      <pre
-        className="rounded-lg bg-gray-50/50 p-4 shadow-sm ring-1 ring-gray-900/5 backdrop-blur-sm dark:bg-gray-800/50 dark:ring-white/5"
-        role="region"
-        aria-label="Code example"
-      >
-        {props.children}
-      </pre>
-    ),
+    pre: CodeBlock,
     code: (props) => (
       <code className="rounded bg-gray-100/70 px-1.5 py-0.5 text-sm font-mono text-gray-800 dark:bg-gray-800/70 dark:text-gray-200">
         {props.children}

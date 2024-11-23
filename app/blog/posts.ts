@@ -1,5 +1,24 @@
 export const posts = [
   {
+    slug: "wooster-logging",
+    metadata: {
+      title: "Making Wooster Talk: A Deep Dive into Structured Logging",
+      featured_image: "/images/blog/wooster/pino-banner.png",
+      date: "2024-11-23",
+      excerpt:
+        "From chaotic console.logs to structured logging: How Wooster learned to communicate clearly using Pino, environment-aware configuration, and proper log levels.",
+      tags: [
+        "Pino",
+        "NodeJS",
+        "Backend",
+        "Logging",
+        "TypeScript",
+        "Express",
+        "Wooster",
+      ],
+    },
+  },
+  {
     slug: "wooster-msw",
     metadata: {
       title: "From Fetch Mocks to MSW: A Testing Journey",
