@@ -54,6 +54,8 @@ export const PROJECTS = [
         Nginx reverse proxy with SSL/HTTPS encryption. Automated certificate management and regular security updates.`,
     },
     videoSrc: "/media/projects/videos/wooster.webm",
+    videoPreviewSrc: "/media/projects/videos/wooster-preview.webm",
+    posterImage: "/media/projects/wooster.png",
   },
   {
     title: "Foundations",
@@ -156,6 +158,7 @@ components, focusing on creating a scalable backend while ensuring a smooth user
   storage optimization. Set up WebSocket infrastructure with connection pooling and automatic recovery.`,
     },
     videoSrc: "/media/projects/videos/goss3.webm",
+    videoPreviewSrc: "/media/projects/videos/goss-preview.webm",
   },
   {
     title: "Atomize Pro",
