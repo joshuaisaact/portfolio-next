@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "../styles/globals.css";
 import { SITE_CONFIG } from "@/lib/constants/siteConfig";
 import { jakarta } from "@/lib/fonts";
@@ -23,6 +23,17 @@ export const metadata: Metadata = {
     type: "website",
   },
   icons: SITE_CONFIG.icons,
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
+  ],
 };
 
 export default function RootLayout({

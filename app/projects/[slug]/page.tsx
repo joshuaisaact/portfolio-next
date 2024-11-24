@@ -5,6 +5,9 @@ import { Metadata } from "next";
 import { BackToProjects } from "@/app/components/navigation/BackToProjects";
 import dynamic from "next/dynamic";
 import { Trophy } from "lucide-react";
+import ProjectLinks from "@/app/components/ui/Projects/ProjectLinks";
+import ProjectFeatures from "@/app/components/ui/Projects/ProjectFeatures";
+import ProjectArchitecture from "@/app/components/ui/Projects/ProjectArchitecture";
 
 const LazyVideoComponent = dynamic(
   () => import("../../components/VideoComponent"),
@@ -135,77 +138,7 @@ export default async function ProjectPage({
               )}
             </div>
 
-            <div
-              className="flex flex-wrap justify-center gap-4"
-              role="navigation"
-              aria-label="Project links"
-            >
-              {project.links.map((link) => {
-                switch (link.type) {
-                  case "github":
-                    return (
-                      <a
-                        key={link.url}
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-900 dark:text-white transition-all"
-                      >
-                        <Image
-                          src="/media/skills/github.svg"
-                          alt=""
-                          width={20}
-                          height={20}
-                          className="mr-2 dark:invert"
-                          aria-hidden="true"
-                        />
-                        {link.label}
-                      </a>
-                    );
-                  case "live":
-                    return (
-                      <a
-                        key={link.type}
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white transition-all shadow-sm hover:shadow"
-                      >
-                        <svg
-                          className="w-5 h-5 mr-2"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          aria-hidden="true"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                          />
-                        </svg>
-                        {link.label}
-                      </a>
-                    );
-                  case "submission":
-                    return (
-                      <a
-                        key={link.type}
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center px-4 py-2 rounded-lg bg-amber-100 hover:bg-amber-200 dark:bg-amber-500/20 dark:hover:bg-amber-500/30 text-amber-600 dark:text-amber-400 transition-all"
-                      >
-                        <Trophy className="w-5 h-5 mr-2" aria-hidden="true" />
-                        {link.label}
-                      </a>
-                    );
-                  default:
-                    return null;
-                }
-              })}
-            </div>
+            <ProjectLinks project={project} />
           </div>
 
           {/* Project content */}
@@ -219,63 +152,10 @@ export default async function ProjectPage({
             </div>
 
             {/* Key Features */}
-            <section className="my-12" aria-labelledby="features-heading">
-              <h2 id="features-heading" className="text-xl font-semibold mb-6">
-                Key Features
-              </h2>
-              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-8">
-                <ul className="space-y-4" role="list">
-                  {project.features.map((feature, index) => (
-                    <li
-                      key={index}
-                      className="flex items-baseline gap-3 text-gray-700 dark:text-gray-300" // Changed from items-start to items-baseline
-                    >
-                      <span className="text-blue-500" aria-hidden="true">
-                        •
-                      </span>
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </section>
+            <ProjectFeatures features={project.features} />
 
             {/* Technical Architecture */}
-            <section className="my-12" aria-labelledby="architecture-heading">
-              <h2
-                id="architecture-heading"
-                className="text-xl font-semibold mb-6"
-              >
-                Technical Architecture
-              </h2>
-              <div className="space-y-8">
-                <div className="space-y-8">
-                  {[
-                    {
-                      title: "Frontend",
-                      content: project.architecture.frontend,
-                    },
-                    { title: "Backend", content: project.architecture.backend },
-                    {
-                      title: "Infrastructure",
-                      content: project.architecture.infrastructure,
-                    },
-                  ].map(({ title, content }) => (
-                    <div
-                      key={title}
-                      className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-8"
-                    >
-                      <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-3">
-                        {title}
-                      </h3>
-                      <p className="text-gray-700 dark:text-gray-300">
-                        {content}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
+            <ProjectArchitecture architecture={project.architecture} />
           </div>
         </article>
       </main>

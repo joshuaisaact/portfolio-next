@@ -1,26 +1,33 @@
-export const PROJECTS = [
+import { Project, LinkType } from "@/types"; // Import your types
+
+export const PROJECTS: Project[] = [
   {
     title: "Wooster",
     slug: "wooster",
     description:
       "Full-stack AI travel planner built with React/TypeScript and Node.js. Features custom itinerary generation, production-grade auth, and automated CI/CD. Live at trywooster.live",
-    imageSrc: "/media/projects/wooster.png",
+    imageSrc: "/media/projects/wooster-poster.png",
     imageAlt: "Wooster logo",
     links: [
       {
         type: "github",
         url: "https://github.com/joshuaisaact/Wooster",
-        label: "View Front-End Code",
+        label: "Front-End GitHub",
       },
       {
         type: "github",
         url: "https://github.com/joshuaisaact/wooster-server",
-        label: "View Back-End Code",
+        label: "Back-End GitHub",
       },
       {
         type: "live",
         url: "https://trywooster.live",
-        label: "Try Wooster",
+        label: "Deployed Site",
+      },
+      {
+        type: "blog",
+        url: "https://joshtuddenham.tech/blog/wooster-series",
+        label: "Technical blog",
       },
     ],
     skills: [
@@ -35,27 +42,43 @@ export const PROJECTS = [
       "Vitest",
       "Jest",
     ],
-    overview: `Wooster is a full-featured, scalable AI travel planning application built with modern, robust architecture.     It combines cutting-edge technology like Google's Gemini API with a comprehensive set of features to deliver personalized itineraries in minutes.`,
+    overview: `Wooster is a sophisticated AI travel planning platform built with reliability and scalability at its core.
+It combines LLM technology with robust distributed architecture, comprehensive monitoring, and thorough testing infrastructure to deliver personalized travel experiences.`,
     features: [
-      "Custom AI itinerary generation using Gemini API and prompt engineering",
-      "Production-grade authentication with Google and Github OAuth",
-      "Interactive map visualization for trip planning",
-      "Real-time trip sharing and collaboration",
-      "Mobile-responsive interface for planning on the go",
-      "Secure data storage with role-based access control",
+      "AI-powered itinerary generation with type-safe prompt system",
+      "Token-based rate limiting with configurable time windows",
+      "Structured logging system with request correlation",
+      "Comprehensive error handling with sanitized production traces",
+      "Dockerized test environment with transaction rollbacks",
+      "Service layer abstraction with dependency injection",
+      "Custom middleware chain for auth and validation",
     ],
     architecture: {
-      frontend: `React application with TypeScript for type safety and Next.js for server-side rendering. State management
-        using React Query for server state and React Context for local state. Tailwind CSS for responsive design with
-        custom UI components.`,
-      backend: `Node.js/Express REST API with PostgreSQL database managed through Supabase. Drizzle ORM for type-safe
-        database queries and migrations. Custom middleware for request validation and error handling.`,
-      infrastructure: `Deployed on DigitalOcean with automated GitHub Actions CI/CD pipeline.
-        Nginx reverse proxy with SSL/HTTPS encryption. Automated certificate management and regular security updates.`,
+      frontend: `Built type-safe React application with TanStack Query for state management.
+        Implemented accessible component system with ARIA compliance.
+    Developed error boundaries with fallback UI for graceful degradation.
+    Created modular prompt engineering interface with validation schemas.`,
+
+      backend: `Designed service layer abstraction with dependency injection patterns.
+    Implemented PostgreSQL database with versioned migrations and rollback support.
+    Built custom middleware chain for auth, request validation, and response caching.
+    Developed regex-based JSON sanitization for malformed LLM responses.
+        Created token-based rate limiting with configurable time windows.`,
+
+      testing: `Implemented dockerized PostgreSQL environment with transaction rollbacks.
+        Built mock LLM client with typed responses and configurable failure scenarios.
+        Designed retry mechanism for flaky integration tests with custom matchers.
+        Created reusable test fixtures with factory patterns for complex data scenarios.`,
+
+      infrastructure: `Deployed distributed system on DigitalOcean with GitHub Actions.
+        Implemented structured logging with request correlation and context propagation.
+        Built custom error hierarchy with environment-aware error responses.
+        Created fallback mechanisms for AI service degradation.
+        Set up Nginx reverse proxy with SSL/HTTPS and response caching.`,
     },
     videoSrc: "/media/projects/videos/wooster.webm",
     videoPreviewSrc: "/media/projects/videos/wooster-preview.webm",
-    posterImage: "/media/projects/wooster.png",
+    posterImage: "/media/projects/wooster-poster.png",
   },
   {
     title: "Foundations",
@@ -99,12 +122,18 @@ export const PROJECTS = [
       "Data visualization pipeline for complex statistical analysis",
     ],
     architecture: {
-      frontend:
-        "Built with Next.js and TypeScript for type safety and improved developer experience. Implemented responsive UI using Tailwind CSS and shadcn/ui components. Used React Query for efficient data fetching and caching. Implemented custom hooks for shared business logic.",
-      backend:
-        "Serverless architecture using Next.js API routes. Implemented data transformation pipeline to process and normalize raw pay gap statistics. Built type-safe API endpoints with proper error handling and validation.",
-      infrastructure:
-        "Deployed on Vercel with automated CI/CD pipeline. Implemented comprehensive error monitoring and logging. Set up automatic preview deployments for pull requests.",
+      frontend: `Built with Next.js and TypeScript for type safety and improved developer experience. Implemented responsive UI using Tailwind CSS and shadcn/ui components.
+      React Query for efficient data fetching and caching.
+        Implemented custom hooks for shared business logic.`,
+
+      backend: `Serverless architecture using Next.js API routes.
+        Implemented data transformation pipeline to process and normalize raw pay gap statistics.
+        Built type-safe API endpoints with proper error handling and validation.`,
+
+      infrastructure: `Deployed on Vercel with automated CI/CD pipeline.
+        Implemented comprehensive error monitoring and logging.
+        Set up automatic preview deployments for pull requests.
+        Optimized for handling large datasets with 11,000+ companies.`,
     },
   },
   {
@@ -112,7 +141,7 @@ export const PROJECTS = [
     slug: "goss",
     description:
       "Architected a robust real-time social platform featuring WebSocket notifications, social graph management, and file handling. Built with Next.js, TypeScript, and Supabase.",
-    imageSrc: "/media/projects/goss.png",
+    imageSrc: "/media/projects/goss-poster.png",
     imageAlt: "Goss logo",
     links: [
       {
@@ -144,21 +173,22 @@ components, focusing on creating a scalable backend while ensuring a smooth user
       "WebSocket connection management with automatic reconnection handling",
     ],
     architecture: {
-      frontend: `Integrated the backend services with the team's Next.js/React frontend. Implemented Tanstack
-        Query for efficient state management and optimistic updates, significantly improving perceived
-        performance. Built reusable hooks for WebSocket management and real-time data synchronization.`,
+      frontend: `Integrated the backend services with the team's Next.js/React frontend.
+      Implemented Tanstack Query for efficient state management and optimistic updates, significantly improving perceived performance.
+        Built reusable hooks for WebSocket management and real-time data synchronization.`,
 
       backend: `Architected and implemented a real-time notification system using WebSockets and Supabase
-        Realtime, ensuring reliable message delivery across multiple client sessions. Designed an efficient
-        social graph schema in PostgreSQL, optimizing friend relationship queries and management. Built
-        RESTful APIs with comprehensive validation and error handling.`,
+        Realtime, ensuring reliable message delivery across multiple client sessions.
+        Designed an efficient social graph schema in PostgreSQL, optimizing friend relationship queries and management.
+        Built RESTful APIs with comprehensive validation and error handling.`,
 
-      infrastructure: `Implemented a secure authentication flow using Supabase, supporting multiple providers
-  and session management. Built a scalable file upload system with proper access controls and
-  storage optimization. Set up WebSocket infrastructure with connection pooling and automatic recovery.`,
+      infrastructure: `Implemented a secure authentication flow using Supabase, supporting multiple providers and session management.
+      Built a scalable file upload system with proper access controls and storage optimization.
+  Set up WebSocket infrastructure with connection pooling and automatic recovery.`,
     },
     videoSrc: "/media/projects/videos/goss3.webm",
     videoPreviewSrc: "/media/projects/videos/goss-preview.webm",
+    posterImage: "/media/projects/goss-poster.png",
   },
   {
     title: "Atomize Pro",
@@ -172,6 +202,11 @@ components, focusing on creating a scalable backend while ensuring a smooth user
         type: "github",
         url: "https://github.com/joshuaisaact/Atomize-refactor",
         label: "View Code",
+      },
+      {
+        type: "blog",
+        url: "https://joshtuddenham.tech/blog/atomize-pro",
+        label: "Technical blog",
       },
     ],
     skills: [
@@ -201,17 +236,12 @@ components, focusing on creating a scalable backend while ensuring a smooth user
     ],
     architecture: {
       frontend: `Redesigned state architecture using useReducer pattern for predictable state updates.
-        Implemented optimistic updates to improve perceived performance, replacing effect-based state
-        updates with presumptive rendering. Led TypeScript migration, establishing proper type definitions
-        and interfaces across the application.`,
+        Implemented optimistic updates to improve perceived performance, replacing effect-based state updates with presumptive rendering. Led TypeScript migration, establishing proper type definitions and interfaces across the application.`,
 
-      backend: `Optimized API endpoints to support optimistic updates, ensuring data consistency with
-        proper error handling and rollback mechanisms. Added TypeScript support to API layer for
-        end-to-end type safety.`,
+      backend: `Optimized API endpoints to support optimistic updates, ensuring data consistency with proper error handling and rollback mechanisms.
+        Added TypeScript support to API layer for end-to-end type safety.`,
 
-      infrastructure: `Established comprehensive testing infrastructure using Vitest, focusing on state
-        management and critical user flows. Implemented continuous integration to ensure code quality
-        and prevent regressions.`,
+      infrastructure: `Established comprehensive testing infrastructure using Vitest, focusing on state management and critical user flows. Implemented continuous integration to ensure code quality and prevent regressions.`,
     },
   },
   {
@@ -249,15 +279,15 @@ components, focusing on creating a scalable backend while ensuring a smooth user
       "SEO optimization with Next.js metadata API",
     ],
     architecture: {
-      frontend: `Built with Next.js 14's App Router for optimal static generation. Implemented
-        responsive design patterns using Tailwind CSS with custom configurations. Created reusable
-        components with TypeScript for type safety.`,
+      frontend: `Built with Next.js 14's App Router for optimal static generation.
+        Implemented WCAG-compliant accessible design patterns.
+         Created reusable components with TypeScript for type safety.`,
 
-      backend: `Leveraged Next.js API routes for static generation. Implemented efficient asset
-        optimization and delivery.`,
+      backend: `Leveraged Next.js API routes for static generation.
+      Implemented efficient asset optimization and delivery.`,
 
-      infrastructure: `Deployed on Vercel with automatic previews for all changes. Set up proper
-        meta tags and SEO optimization for all pages.`,
+      infrastructure: `Deployed on Vercel with automatic previews for all changes.
+      Set up proper meta tags and SEO optimization for all pages.`,
     },
   },
   {
@@ -295,14 +325,14 @@ components, focusing on creating a scalable backend while ensuring a smooth user
     ],
     architecture: {
       frontend: `Built with React and TypeScript, focusing on clean component architecture.
-        Implemented custom hooks for quiz state management. Created reusable animation components
-        for consistent transitions.`,
+        Implemented custom hooks for quiz state management.
+        Created reusable animation components for consistent transitions.`,
 
-      backend: `Static deployment with quiz data stored in TypeScript interfaces. Implemented
-        local storage integration for progress saving.`,
+      backend: `Static deployment with quiz data stored in TypeScript interfaces.
+      Implemented local storage integration for progress saving.`,
 
-      infrastructure: `Deployed on GitHub Pages with automatic deployments. Set up development
-        environment with proper TypeScript configurations.`,
+      infrastructure: `Deployed on GitHub Pages with automatic deployments.
+      Set up development environment with proper TypeScript configurations.`,
     },
   },
   // {

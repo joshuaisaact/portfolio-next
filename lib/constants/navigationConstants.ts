@@ -19,4 +19,10 @@ export const socialLinks = [
     label: "GitHub",
     id: "github",
   },
+  {
+    href: "https://bsky.app/profile/joshtuddenham.tech",
+    icon: "/media/nav/bluesky.svg",
+    label: "Bluesky",
+    id: "bluesky",
+  },
 ];
