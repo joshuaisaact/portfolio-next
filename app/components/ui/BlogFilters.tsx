@@ -22,7 +22,7 @@ export function BlogFilters({ allTags, onFiltersChange }: BlogFiltersProps) {
   };
 
   return (
-    <div className="flex flex-wrap gap-4 mb-8">
+    <div className="flex-wrap gap-4 mb-8 hidden md:block">
       <div className="flex items-center gap-4">
         <span className="text-sm text-gray-600 dark:text-gray-400">
           Filter by tag:

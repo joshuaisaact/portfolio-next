@@ -36,7 +36,7 @@ function BlogLayout({
 
       <main
         id="main-content"
-        className="relative z-10 mx-auto max-w-7xl px-2  lg:px-8 lg:py-10"
+        className="relative z-10 mx-auto max-w-7xl px-2 sm:px-4 lg:px-8 lg:py-10"
       >
         <article
           className="prose-quoteless prose prose-gray mx-auto max-w-none dark:prose-invert"
@@ -51,7 +51,7 @@ function BlogLayout({
             />
           )}
           <div className="mt-8 rounded-lg bg-white/80 p-8 shadow-lg backdrop-blur-sm ring-1 ring-gray-900/5 dark:bg-gray-900/80 dark:ring-white/5">
-            {children}
+            <div className="p-4 sm:p-6 md:p-8">{children}</div>
           </div>
         </article>
       </main>
