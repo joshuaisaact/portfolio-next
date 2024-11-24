@@ -1,11 +1,12 @@
 import { BlogHeader } from "@/app/components/mdx/BlogHeader";
 
 export const metadata = {
-  title: "Refactoring Wooster's API Layer: A Simple Approach with Axios",
+  title:
+    "Refactoring Wooster's API Layer: A Clean Service-Based Approach with Axios",
   date: "2024-11-08",
   featured_image: "/images/blog/wooster/axios.png",
   excerpt:
-    "Moving from fetch to Axios: simplifying API calls, adding interceptors for authentication, and improving error handling - all while following the official documentation patterns.",
+    "Moving from fetch to Axios: implementing a clean service-based pattern, adding interceptors for authentication, and improving error handling - all while maintaining simplicity and type safety.",
   tags: [
     "Axios",
     "TypeScript",
@@ -21,7 +22,7 @@ export const metadata = {
 
 ## Why Move to Axios?
 
-After building Wooster's initial MVP with the fetch API, it was time for an upgrade. While fetch worked well, Axios offers some helpful features out of the box that would make my code cleaner and more maintainable.
+After building Wooster's initial MVP with the fetch API, it was time for an upgrade. While fetch worked well, Axios offers some helpful features out of the box that would make my code cleaner and more maintainable. More importantly, I wanted to establish a pattern that would scale as the application grows.
 
 ## Following the Docs
 
@@ -29,7 +30,7 @@ Like any good developer, I first spent three hours looking for "the perfect way"
 
 ## The Implementation
 
-# 1. Setting Up the Instance
+## 1. Setting Up the Instance
 
 First, I created a configured Axios instance following the official pattern (after trying three "clever" approaches that all ended in tears):
 
@@ -51,7 +52,7 @@ This gave me everything fetch did, plus some features I didn't know I needed unt
 
 Rather like getting a dishwasher - you don't realize how much time you've been wasting until you stop doing it the hard way.
 
-# 2. Authentication
+## 2. Authentication
 
 I added a simple interceptor for authentication:
 
@@ -69,62 +70,129 @@ export const setupAuth = (supabase: SupabaseClient) => {
 };
 ```
 
-# 3. API Endpoints
+## 3. Type Definitions
 
-Then I created simple functions for each endpoint:
+Before implementing the services, I defined clear interfaces for our API types:
 
 ```typescript
-export const fetchDestinations = () => {
-  return api.get("/saved-destinations");
-};
+// types/api/trips.ts
+export interface Trip {
+  tripId: string;
+  destination: Destination;
+  numDays: number;
+  startDate: string;
+  itinerary: ItineraryItem[];
+}
 
-export const createTrip = (tripData: {
+export interface CreateTripData {
   days: number;
   location: string;
-  startDate: string | null;
+  startDate: Date | null;
   selectedCategories?: string[];
-}) => {
-  return api.post("/trips", tripData);
+}
+
+export interface TripResponse {
+  message: string;
+  trip: Trip;
+}
+
+// types/api/destinations.ts
+export interface Destination {
+  destinationId: number;
+  destinationName: string;
+  // ... other properties
+}
+
+export interface CreateDestinationResponse {
+  message: string;
+  destination: Destination;
+}
+```
+
+# 4. Service-Based API Organization
+
+Instead of having all API calls in one file, I organized them into domain-specific services:
+
+```typescript
+// services/destinations.ts
+export const destinationService = {
+  getSaved: () =>
+    api.get("/saved-destinations").then((response) => response.data),
+
+  getAll: () => api.get("/destinations").then((response) => response.data),
+
+  save: (destinationId: number) =>
+    api.post(`/saved-destinations/${destinationId}`),
+
+  unsave: (destinationId: number) =>
+    api.delete(`/saved-destinations/${destinationId}`),
+};
+
+// services/trips.ts
+export const tripService = {
+  getAll: () => api.get("/trips").then((response) => response.data),
+
+  create: (tripData: CreateTripData) =>
+    api.post("/trips", tripData).then((response) => response.data),
 };
 ```
 
-## Refactoring the Application
+This approach provides several benefits:
 
-The migration wasn't just about the API service - I needed to update several parts of my application.
+1. Domain separation - related API calls are grouped together
+2. Type safety throughout the entire request/response cycle
+3. Consistent error handling
+4. Easier testing and mocking
+5. Better IDE autocompletion
 
-## Benefits I Got
+## Using the Services
 
-1. Automatic Transforms: Axios automatically transforms JSON data
-2. Request/Response Interceptors: Makes it easy to add auth headers
-3. Better Error Handling: Axios provides consistent error objects
-4. Request Timeouts: Built-in timeout handling
-5. Easy Configuration: One place to set common options
-
-## Using the API
-
-Here's how I use it in components, now with 100% less promise chaining and 50% more error catching:
+Here's how these services simplify our API calls:
 
 ```typescript
+// Before: Direct API calls with fetch
 try {
-  const response = await fetchDestinations();
-  setDestinations(response.data);
+  const response = await fetch("/saved-destinations");
+  const data = await response.json();
+  // Handle the response...
+} catch (error) {
+  console.error("Error:", error);
+  // What kind of error? 🤷‍♂️
+}
+
+// After: Clean service-based calls with type safety
+try {
+  const { destinations } = await destinationService.getSaved();
+  // TypeScript knows exactly what's in destinations!
 } catch (error) {
   if (axios.isAxiosError(error)) {
     console.error("API Error:", error.response?.data);
-    // At least now I know WHAT I broke
+    // We know exactly what went wrong
   }
 }
 ```
 
+The service pattern gives us cleaner API calls with built-in type safety and better error handling, regardless of how we manage state.
+
+## Benefits of This Approach
+
+1. **Type Safety**: Full TypeScript coverage from request to response
+2. **Domain Organization**: API calls are grouped by feature
+3. **Consistent Patterns**: Each service follows the same structure
+4. **Better Maintainability**: Easy to find and modify related endpoints
+5. **Scalability**: New features can easily follow the established pattern
+6. **Improved Developer Experience**: Better autocomplete and type inference
+
 ## Key Lessons
 
-1. Keep It Simple: Following the official docs often leads to cleaner code
-2. Don't Overengineer: I resisted the urge to add complex abstraction layers
-3. Consistent Patterns: Using Axios's built-in features rather than creating my own
+1. **Keep It Simple**: Following documentation patterns often leads to cleaner code
+2. **Think in Domains**: Organizing by feature makes code more maintainable
+3. **Type Everything**: Strong typing catches errors before they reach production
+4. **Consistent Patterns**: Using consistent naming and structure makes the codebase more predictable
 
 ## What's Next?
 
-With this foundation in place, I'm ready to add TanStack Query for state management. But that's a story for another post. First, I had to fix all those tests I broke... which led me down quite the rabbit hole with Mock Service Worker.
+With this foundation in place, I have a clean, type-safe API layer that's ready to grow with my application. But first, I had to fix all those tests I broke... which led me down quite the rabbit hole with Mock Service Worker.
 
 ---
 
