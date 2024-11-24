@@ -1,5 +1,16 @@
-import { Metadata } from "next";
+import { Metadata, Viewport } from "next";
 import { siteInfo } from "./site-info";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
+  ],
+};
 
 export const siteMetadata: Metadata = {
   // Base metadata
@@ -24,16 +35,6 @@ export const siteMetadata: Metadata = {
     "Next.js",
   ],
   referrer: "origin-when-cross-origin",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
-  ],
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-  },
 
   // Icons and manifest
   icons: {

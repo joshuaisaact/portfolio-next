@@ -1,28 +1,36 @@
 export const SKILL_FILES = [
+  // Core Stack
   "typescript.svg",
-  "nextjs.svg",
   "react.svg",
+  "nextjs.svg",
   "nodejs.svg",
   "express.svg",
+
+  // Frontend
   "tailwindcss.svg",
-  "supabase.svg",
-
   "tanstack-query.svg",
+  "graphql.svg",
+  "apollo.svg",
 
-  "msw.svg",
+  // Backend/Data
+  "postgresql.svg",
+  "supabase.svg",
+  "drizzle.svg",
+
+  // Testing
+  "playwright.svg",
   "vitest.svg",
   "jest.svg",
-  "postgresql.svg",
-  "drizzle.svg",
-  "sequelize.svg",
-  "javascript.svg",
-  "html5.svg",
-  "css3.svg",
-  "mongodb.svg",
-  "hugo.svg",
-  "github.svg",
-  "npm.svg",
+  "msw.svg",
+
+  // DevOps/Infrastructure
+  "docker.svg",
+  "github-actions.svg",
+  "digitalocean.svg",
+
+  // Version Control
   "git.svg",
+  "github.svg",
 ] as const;
 
 export type SkillFile = (typeof SKILL_FILES)[number];
@@ -36,47 +44,22 @@ export const SKILL_INFO: Record<
     url: string;
   }
 > = {
+  // Core Stack
   "typescript.svg": {
     name: "TypeScript",
     color: "#3178C6",
     url: "https://www.typescriptlang.org/",
-  },
-  "nextjs.svg": {
-    name: "Next.js",
-    color: "#000000",
-    textColorDark: "text-gray-200",
-    url: "https://nextjs.org/",
   },
   "react.svg": {
     name: "React",
     color: "#61DAFB",
     url: "https://react.dev/",
   },
-  "html5.svg": {
-    name: "HTML5",
-    color: "#E34F26",
-    url: "https://developer.mozilla.org/en-US/docs/Web/HTML",
-  },
-  "css3.svg": {
-    name: "CSS3",
-    color: "#1572B6",
-    url: "https://developer.mozilla.org/en-US/docs/Web/CSS",
-  },
-  "javascript.svg": {
-    name: "JavaScript",
-    color: "#F7DF1E",
-    url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
-  },
-  "tailwindcss.svg": {
-    name: "Tailwind",
-    color: "#06B6D4",
-    url: "https://tailwindcss.com/",
-  },
-  "tanstack-query.svg": {
-    // TanStack Query entry
-    name: "React Query",
-    color: "#FF4154", // TanStack Query brand color
-    url: "https://tanstack.com/query",
+  "nextjs.svg": {
+    name: "Next.js",
+    color: "#000000",
+    textColorDark: "text-gray-200",
+    url: "https://nextjs.org/",
   },
   "nodejs.svg": {
     name: "Node.js",
@@ -89,10 +72,51 @@ export const SKILL_INFO: Record<
     textColorDark: "text-gray-200",
     url: "https://expressjs.com/",
   },
-  "msw.svg": {
-    name: "Mock Service Worker",
-    color: "#FF6A33",
-    url: "https://mswjs.io/",
+
+  // Frontend
+  "tailwindcss.svg": {
+    name: "Tailwind",
+    color: "#06B6D4",
+    url: "https://tailwindcss.com/",
+  },
+  "tanstack-query.svg": {
+    name: "React Query",
+    color: "#FF4154",
+    url: "https://tanstack.com/query",
+  },
+  "graphql.svg": {
+    name: "GraphQL",
+    color: "#E10098",
+    url: "https://graphql.org/",
+  },
+  "apollo.svg": {
+    name: "Apollo",
+    color: "#311C87",
+    url: "https://www.apollographql.com/",
+  },
+
+  // Backend/Data
+  "postgresql.svg": {
+    name: "PostgreSQL",
+    color: "#4169E1",
+    url: "https://www.postgresql.org/",
+  },
+  "supabase.svg": {
+    name: "Supabase",
+    color: "#3FCF8E",
+    url: "https://supabase.com/",
+  },
+  "drizzle.svg": {
+    name: "Drizzle",
+    color: "#C5F74F",
+    url: "https://orm.drizzle.team/",
+  },
+
+  // Testing
+  "playwright.svg": {
+    name: "Playwright",
+    color: "#2EAD33",
+    url: "https://playwright.dev/",
   },
   "vitest.svg": {
     name: "Vitest",
@@ -104,50 +128,39 @@ export const SKILL_INFO: Record<
     color: "#C21325",
     url: "https://jestjs.io/",
   },
-  "npm.svg": {
-    name: "NPM",
-    color: "#CB3837",
-    url: "https://www.npmjs.com/",
+  "msw.svg": {
+    name: "Mock Service Worker",
+    color: "#FF6A33",
+    url: "https://mswjs.io/",
   },
-  "mongodb.svg": {
-    name: "MongoDB",
-    color: "#47A248",
-    url: "https://www.mongodb.com/",
+
+  // DevOps/Infrastructure
+  "docker.svg": {
+    name: "Docker",
+    color: "#2496ED",
+    url: "https://www.docker.com/",
   },
-  "postgresql.svg": {
-    name: "PostgreSQL",
-    color: "#4169E1",
-    url: "https://www.postgresql.org/",
+  "github-actions.svg": {
+    name: "GitHub Actions",
+    color: "#2088FF",
+    url: "https://github.com/features/actions",
   },
-  "sequelize.svg": {
-    name: "Sequelize",
-    color: "#52B0E6",
-    url: "https://sequelize.org/",
+  "digitalocean.svg": {
+    name: "DigitalOcean",
+    color: "#0080FF",
+    url: "https://www.digitalocean.com/",
   },
-  "supabase.svg": {
-    name: "Supabase",
-    color: "#3FCF8E", // Supabase's brand green
-    url: "https://supabase.com/",
-  },
-  "drizzle.svg": {
-    name: "Drizzle",
-    color: "#C5F74F", // Drizzle's lime green color
-    url: "https://orm.drizzle.team/",
-  },
-  "hugo.svg": {
-    name: "Hugo",
-    color: "#FF4088",
-    url: "https://gohugo.io/",
+
+  // Version Control
+  "git.svg": {
+    name: "Git",
+    color: "#F05032",
+    url: "https://git-scm.com/",
   },
   "github.svg": {
     name: "GitHub",
     color: "#181717",
     textColorDark: "text-gray-200",
     url: "https://github.com/",
-  },
-  "git.svg": {
-    name: "Git",
-    color: "#F05032",
-    url: "https://git-scm.com/",
   },
 } as const;

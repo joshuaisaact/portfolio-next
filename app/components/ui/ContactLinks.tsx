@@ -22,6 +22,13 @@ const contactLinks = [
     text: "joshuatuddenham",
     darkInvert: false,
   },
+  {
+    href: "https://bsky.app/profile/joshtuddenham.tech",
+    icon: "/media/nav/bluesky.svg",
+    label: "Bluesky Profile: joshuaisaac.bsky.social",
+    text: "@joshtuddenham.tech",
+    darkInvert: false,
+  },
 ] as const;
 
 export function ContactLinks() {
@@ -29,7 +36,7 @@ export function ContactLinks() {
     <section aria-label="Contact Links">
       <div className="flex flex-col space-y-6">
         <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
-          Connect With Me
+          Let&apos;s Connect
         </h3>
         <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 lg:flex-col">
           {contactLinks.map((link) => (

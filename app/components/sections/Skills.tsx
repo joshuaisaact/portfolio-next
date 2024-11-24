@@ -6,29 +6,29 @@ export function Skills() {
     {
       name: "Capital Markets",
       description:
-        "5 years delivering analytics solutions to hedge funds and asset managers",
+        "Deep understanding of fintech and analytics, building solutions that drive investment decisions",
     },
     {
       name: "Complex Systems",
       description:
-        "Translated complex quantitative trading requirements into actionable technical specifications",
+        "Experience architecting solutions for complex trading and business requirements",
     },
     {
       name: "Enterprise Solutions",
       description:
-        "Architected tailored enterprise solutions for financial institutions while collaborating closely with engineering teams",
+        "Building robust, scalable applications that solve real business challenges",
     },
   ];
 
   return (
     <section aria-label="Skills" className="space-y-6 sm:space-y-8">
       <div>
-        <p className="text-lg text-gray-700 dark:text-gray-300">
-          Beyond the tech stack, my background includes five years at an
-          early-stage behavioral analytics fintech, working closely with
-          engineering teams to deliver solutions to hedge funds. More recently,
-          I helped drive enterprise feature development at a fast-growing
-          expense management platform.
+        <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300">
+          My journey spans from an early-stage fintech, where I collaborated
+          with engineers to build behavioural analytics tools for hedge funds,
+          to helping shape enterprise features at a rapidly growing expense
+          management platform. This mix of startup and enterprise experience
+          influences how I approach technical challenges today.
         </p>
       </div>
 

@@ -23,7 +23,7 @@ export function ColorCycler() {
       height={400}
       className="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-[400px] lg:h-[400px] rounded-full border-4 border-[var(--theme-1)] cursor-pointer dark:brightness-90"
       onClick={cycleColor}
-      priority
+      priority={false}
     />
   );
 }
