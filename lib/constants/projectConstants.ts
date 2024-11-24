@@ -1,4 +1,4 @@
-import { Project, LinkType } from "@/types"; // Import your types
+import { Project } from "@/types"; // Import your types
 
 export const PROJECTS: Project[] = [
   {

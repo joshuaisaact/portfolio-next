@@ -36,7 +36,7 @@ export function ContactLinks() {
     <section aria-label="Contact Links">
       <div className="flex flex-col space-y-6">
         <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
-          Let's Connect
+          Let&apos;s Connect
         </h3>
         <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 lg:flex-col">
           {contactLinks.map((link) => (
