@@ -1,5 +1,24 @@
 export const posts = [
   {
+    slug: "wooster-errors",
+    metadata: {
+      title: "Express Error Handling: Because Things Will Go Wrong",
+      featured_image: "/images/blog/wooster/thisisfine.webp",
+      date: "2024-12-09",
+      excerpt:
+        "From try-catch hell to elegant error handling: A deep dive into implementing robust error handling in Express with TypeScript, custom error types, and global middleware.",
+      tags: [
+        "Express",
+        "NodeJS",
+        "Backend",
+        "Error Handling",
+        "TypeScript",
+        "Pino",
+        "Wooster",
+      ],
+    },
+  },
+  {
     slug: "wooster-logging",
     metadata: {
       title: "Making Wooster Talk: A Deep Dive into Structured Logging",
