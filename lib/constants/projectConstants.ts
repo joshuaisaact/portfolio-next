@@ -135,6 +135,8 @@ It combines LLM technology with robust distributed architecture, comprehensive m
         Set up automatic preview deployments for pull requests.
         Optimized for handling large datasets with 11,000+ companies.`,
     },
+    videoSrc: "/media/projects/videos/foundations.webm",
+    videoPreviewSrc: "/media/projects/videos/foundations.webm",
   },
   {
     title: "Goss",
