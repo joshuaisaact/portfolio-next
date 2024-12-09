@@ -1,87 +1,214 @@
-Express Error Handling
+import { BlogHeader } from "@/app/components/mdx/BlogHeader";
 
-Custom error types
-Global error middleware
-express-async-errors
-Before/after code examples
-Error response structure
-TypeScript type safety
+export const metadata = {
+  title: "Express Error Handling: Because Things Will Go Wrong",
+  date: "2024-11-16",
+  featured_image: "/images/blog/wooster/thisisfine.webp",
+  excerpt:
+    "From try-catch hell to elegant error handling: A deep dive into implementing robust error handling in Express with TypeScript, custom error types, and global middleware.",
+  tags: [
+    "Express",
+    "TypeScript",
+    "Error Handling",
+    "Backend",
+    "Middleware",
+    "Wooster",
+  ],
+};
+
+<BlogHeader {...metadata} />
+
+## The Evolution of Error Handling
+
+Let's start with a confession: my first attempt at error handling in Express was... well, let's just show it:
 
 ```typescript
-export const handleAddDestination = async (
-  req: Request<object, object, CreateDestinationRequestBody>,
-  res: Response,
-) => {
+if (error) {
+  console.log(error);
+  return res.status(500).json({ error: "Something went wrong" });
+}
+```
+
+Yes, really. We've all been there. Then it evolved into something slightly more structured, but still not perfect:
+
+```typescript
+try {
+  // Do the thing
+} catch (error) {
+  console.error("Error:", error);
+  return res.status(500).json({
+    message: "Internal server error",
+  });
+}
+```
+
+This approach had several problems:
+
+1. No error typing - every error was treated the same
+2. Inconsistent error responses across endpoints
+3. Duplicate try-catch blocks everywhere
+4. No proper logging (console.log doesn't count!)
+5. No way to handle async errors properly
+6. No context about what actually went wrong
+
+## Enter express-async-errors: The First Step
+
+Before we dive into custom error types and middleware, we need to talk about `express-async-errors`. This tiny but powerful package is crucial for proper Express error handling:
+
+```typescript
+import "express-async-errors";
+```
+
+Why is this important? By default, Express can't handle errors in async functions - they just disappear into the ether. This package ensures that async errors are properly caught and passed to your error handler. It's like giving Express a safety net for all those Promise rejections.
+
+Without it, you'd need to wrap every async route handler in try-catch blocks or use `.catch(next)`. With it, you can write clean, async code and let errors bubble up naturally:
+
+```typescript
+// Without express-async-errors - error is lost!
+app.get("/risky", async (req, res) => {
+  const data = await riskyOperation(); // If this fails, Express never knows
+  res.json(data);
+});
+
+// Without express-async-errors - handled but verbose
+app.get("/risky", async (req, res, next) => {
   try {
-    const { destination } = req.body;
-    const userId = req.user!.id;
-
-    if (!destination?.trim()) {
-      throw createValidationError("Destination is required");
-    }
-
-    const destinationRecord = await getOrCreateDestination(destination);
-    const savedDestination = await saveDestinationForUser(
-      destinationRecord.destinationId,
-      userId,
-    );
-
-    return res.status(201).json({
-      message: "Destination saved successfully",
-      destination: {
-        ...destinationRecord,
-        saved: savedDestination,
-      },
-    });
+    const data = await riskyOperation();
+    res.json(data);
   } catch (error) {
-    if (isServiceError(error)) {
-      return res.status(error.status).json({
-        error: error.message,
-        code: error.code,
-        details: error.details,
-      });
-    }
-
-    logger.error({ error }, "Unexpected error in handleAddDestination");
-    return res.status(500).json({
-      error: "An unexpected error occurred",
-      code: "DB_QUERY_FAILED",
-    });
+    next(error);
   }
+});
+
+// With express-async-errors - clean and safe
+app.get("/risky", async (req, res) => {
+  const data = await riskyOperation(); // Errors properly propagate to handler
+  res.json(data);
+});
+```
+
+## Custom Error Types: Making Sense of Chaos
+
+First, I needed to define what errors could actually occur. This meant creating a proper type system for errors:
+
+```typescript
+export type ErrorCode =
+  | "AUTHENTICATION_ERROR"
+  | "DATABASE_CONNECTION_ERROR"
+  | "DESTINATION_GENERATION_FAILED"
+  | "TRIP_GENERATION_FAILED"
+  | "PARSING_ERROR"
+  | "AI_SERVICE_ERROR"
+  | "VALIDATION_ERROR"
+  | "DB_QUERY_FAILED"
+  | "DB_NOT_FOUND";
+
+export interface ServiceError {
+  message: string;
+  status: number;
+  code: ErrorCode;
+  details?: unknown;
+}
+```
+
+Then I created a suite of error creators - functions that would generate consistently structured errors:
+
+```typescript
+export const createServiceError = (
+  message: string,
+  status: number,
+  code: ErrorCode,
+  details?: unknown,
+): ServiceError => ({
+  message,
+  status,
+  code,
+  details,
+});
+
+export const createValidationError = (
+  message: string = "Validation failed",
+  details?: unknown,
+): ServiceError =>
+  createServiceError(message, 422, "VALIDATION_ERROR", details);
+
+export const createDBNotFoundError = (
+  message: string = "Database record not found",
+  details?: unknown,
+): ServiceError => createDatabaseError(message, 404, "DB_NOT_FOUND", details);
+```
+
+## Type Guards: Making TypeScript Happy
+
+To safely handle these errors, I needed type guards:
+
+```typescript
+export const isServiceError = (error: unknown): error is ServiceError => {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    "status" in error &&
+    "message" in error
+  );
+};
+
+export const isAIServiceError = (error: unknown): error is ServiceError => {
+  return isServiceError(error) && error.code === "AI_SERVICE_ERROR";
 };
 ```
 
-to this:
+## The Global Error Handler
+
+The real magic happens in the global error middleware. Instead of handling errors in each controller, we can let them bubble up to a single handler:
 
 ```typescript
-export const handleAddDestination = async (
-  req: Request<object, object, CreateDestinationRequestBody>,
+export const errorHandler: ErrorRequestHandler = (
+  err: Error,
+  req: Request,
   res: Response,
+  next: NextFunction,
 ) => {
-  const { destination } = req.body;
-  const userId = req.user!.id;
-
-  if (!destination?.trim()) {
-    throw createValidationError("Destination is required");
-  }
-
-  const destinationRecord = await getOrCreateDestination(destination);
-  const savedDestination = await saveDestinationForUser(
-    destinationRecord.destinationId,
-    userId,
-  );
-
-  return res.status(201).json({
-    message: "Destination saved successfully",
-    destination: {
-      ...destinationRecord,
-      saved: savedDestination,
+  // Log all errors with request context
+  logger.error({
+    error: {
+      message: err.message,
+      stack: err.stack,
+      name: err.name,
+    },
+    request: {
+      method: req.method,
+      url: req.url,
+      headers: req.headers,
     },
   });
+
+  // Handle known ServiceErrors
+  if (isServiceError(err)) {
+    return res.status(err.status).json({
+      error: err.message,
+      code: err.code,
+      details: process.env.NODE_ENV !== "production" ? err.details : undefined,
+    });
+  }
+
+  // Handle unknown errors
+  res.status(500).json({
+    error:
+      process.env.NODE_ENV === "production"
+        ? "Internal Server Error"
+        : err.message,
+    code: "DB_QUERY_FAILED",
+    details: process.env.NODE_ENV !== "production" ? err.stack : undefined,
+  });
+
+  return next(err);
 };
 ```
 
-one more:
+## Before and After: The Beauty of Clean Error Handling
+
+Let's look at how this improved my controller code. Here's the before:
 
 ```typescript
 export const handleDeleteDestination = async (
@@ -127,7 +254,7 @@ export const handleDeleteDestination = async (
 };
 ```
 
-to this:
+And here's the after:
 
 ```typescript
 export const handleDeleteDestination = async (
@@ -154,3 +281,68 @@ export const handleDeleteDestination = async (
   });
 };
 ```
+
+The difference is striking. The new version:
+
+- Is significantly shorter
+- Focuses on the happy path
+- Has consistent error handling
+- Maintains type safety
+- Still logs everything we need
+
+## Putting It All Together
+
+To make this work, I needed a few pieces:
+
+1. Install `express-async-errors` to handle async errors:
+
+```typescript
+import "express-async-errors";
+```
+
+2. Register the error handler after all routes:
+
+```typescript
+app.use(errorHandler);
+```
+
+3. Update my services to use the error creators:
+
+```typescript
+export const deleteDestinationById = async (id: number) => {
+  const destination = await db
+    .delete(destinations)
+    .where(eq(destinations.id, id))
+    .returning();
+
+  if (!destination.length) {
+    throw createDBNotFoundError("Destination not found");
+  }
+
+  return destination[0];
+};
+```
+
+## What I Actually Learned
+
+1. Centralized error handling is worth the initial setup time
+2. Type safety in error handling prevents entire categories of bugs
+3. Clean error handling makes code more readable and maintainable
+4. Consistent error structures make API responses more predictable
+5. Environment-aware error details improve security
+6. Good error handling and good logging go hand in hand
+
+## Looking Forward
+
+While this system works well, there's always room for improvement:
+
+1. Adding error boundaries for the React frontend
+2. Implementing retry logic for transient failures
+3. Adding error tracking (probably Sentry)
+4. Building better error reporting dashboards
+
+But for now, I have a clean, type-safe error handling system that makes debugging easier and keeps my controllers focused on their primary responsibilities.
+
+---
+
+_Next up: Refactoring the entire backend test suite using supertest!_
