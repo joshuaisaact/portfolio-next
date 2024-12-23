@@ -1,6 +1,7 @@
 import { BlogHeader } from "@/app/components/mdx/BlogHeader";
+import { generateMetadataFromPost } from "../../../lib/generate-post-metadata";
 
-export const metadata = {
+export const postMetadata = {
   title:
     "Refactoring Wooster's API Layer: A Clean Service-Based Approach with Axios",
   date: "2024-11-08",
@@ -18,7 +19,9 @@ export const metadata = {
   ],
 };
 
-<BlogHeader {...metadata} />
+export const metadata = generateMetadataFromPost(postMetadata);
+
+<BlogHeader {...postMetadata} />
 
 ## Why Move to Axios?
 

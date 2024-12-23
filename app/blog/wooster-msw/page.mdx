@@ -1,6 +1,7 @@
 import { BlogHeader } from "@/app/components/mdx/BlogHeader";
+import { generateMetadataFromPost } from "../../../lib/generate-post-metadata";
 
-export const metadata = {
+export const postMetadata = {
   title: "From Fetch Mocks to MSW: A Testing Journey",
   featured_image: "/images/blog/wooster/mock-service-worker.png",
   date: "2024-11-12",
@@ -9,7 +10,9 @@ export const metadata = {
   tags: ["Testing", "MSW", "Axios", "TypeScript", "Vitest", "Wooster"],
 };
 
-<BlogHeader {...metadata} />
+export const metadata = generateMetadataFromPost(postMetadata);
+
+<BlogHeader {...postMetadata} />
 
 ## The Catalyst: An Innocent Axios Refactor
 

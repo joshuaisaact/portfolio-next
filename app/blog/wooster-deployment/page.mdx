@@ -1,6 +1,7 @@
 import { BlogHeader } from "@/app/components/mdx/BlogHeader";
+import { generateMetadataFromPost } from "../../../lib/generate-post-metadata";
 
-export const metadata = {
+export const postMetadata = {
   title: "Deploying Wooster: A Tale of Memory Limits and Nginx Configs",
   featured_image: "/images/blog/wooster/deployment-reality.jpg",
   date: "2024-11-18",
@@ -16,7 +17,9 @@ export const metadata = {
   ],
 };
 
-<BlogHeader {...metadata} />
+export const metadata = generateMetadataFromPost(postMetadata);
+
+<BlogHeader {...postMetadata} />
 
 ## The Plan vs Reality
 
