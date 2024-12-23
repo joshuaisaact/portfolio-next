@@ -30,12 +30,10 @@ const blogInfo = {
 } as const;
 
 export const generateBlogMetadata = (posts: BlogPost[]): Metadata => {
-  // Extract all unique keywords from blog posts
   const postKeywords = Array.from(
     new Set(posts.flatMap((post) => post.metadata.tags)),
   );
 
-  // Combine with base keywords, removing duplicates
   const allKeywords = Array.from(
     new Set([
       ...postKeywords,
@@ -105,5 +103,40 @@ export const generateBlogMetadata = (posts: BlogPost[]): Metadata => {
       },
     },
     category: "blog",
+  };
+};
+
+export const generatePostMetadata = (post: BlogPost): Metadata => {
+  return {
+    title: `${post.metadata.title} | Josh Tuddenham`,
+    description: post.metadata.excerpt,
+    metadataBase: new URL(siteInfo.url),
+    applicationName: siteInfo.name,
+    authors: [{ name: "Josh Tuddenham" }],
+    keywords: post.metadata.tags,
+    openGraph: {
+      title: post.metadata.title,
+      description: post.metadata.excerpt,
+      url: `${siteInfo.url}/blog/${post.slug}`,
+      siteName: siteInfo.name,
+      images: [
+        {
+          url: post.metadata.featured_image,
+          width: 1200,
+          height: 630,
+          alt: post.metadata.title,
+        },
+      ],
+      type: "article",
+      publishedTime: new Date(post.metadata.date).toISOString(),
+      authors: ["Josh Tuddenham"],
+      tags: post.metadata.tags,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.metadata.title,
+      description: post.metadata.excerpt,
+      images: [post.metadata.featured_image],
+    },
   };
 };

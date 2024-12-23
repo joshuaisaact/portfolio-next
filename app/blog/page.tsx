@@ -1,8 +1,9 @@
-import { generateBlogMetadata } from "@/lib/metadata-blog";
+
 import { posts } from "./posts";
 import { Section } from "../components/ui/Section";
 import { FilteredBlogList } from "../components/ui/FilteredBlogPostList";
 import { Metadata } from "next";
+import { generateBlogMetadata } from "@/lib/metadata-blog";
 
 export const generateMetadata = (): Metadata => {
   return generateBlogMetadata(posts);
