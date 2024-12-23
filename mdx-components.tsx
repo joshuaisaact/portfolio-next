@@ -3,6 +3,7 @@ import { Figure } from "./app/components/mdx/Figure";
 import { BlogHeader } from "./app/components/mdx/BlogHeader";
 import Image from "next/image";
 import { CodeBlock } from "./app/components/mdx/CodeBlock";
+import { ReactNode } from "react";
 
 interface BlogMetadata {
   title: string;
@@ -16,12 +17,11 @@ function BlogLayout({
   children,
   metadata,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   metadata?: BlogMetadata;
 }) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50/80 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
-      {/* Skip to main content */}
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white dark:focus:bg-gray-900 focus:text-blue-600"

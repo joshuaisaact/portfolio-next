@@ -1,11 +1,12 @@
 import { BlogHeader } from "@/app/components/mdx/BlogHeader";
+import { generateMetadataFromPost } from "../../../lib/generate-post-metadata";
 
-export const metadata = {
+
+export const postMetadata = {
   title: "Express Error Handling: Because Things Will Go Wrong",
   date: "2024-12-09",
   featured_image: "/images/blog/wooster/thisisfine.webp",
-  excerpt:
-    "From try-catch hell to elegant error handling: A deep dive into implementing robust error handling in Express with TypeScript, custom error types, and global middleware.",
+  excerpt: "From try-catch hell to elegant error handling...",
   tags: [
     "Express",
     "TypeScript",
@@ -16,7 +17,9 @@ export const metadata = {
   ],
 };
 
-<BlogHeader {...metadata} />
+export const metadata = generateMetadataFromPost(postMetadata);
+
+<BlogHeader {...postMetadata} />
 
 ## The Evolution of Error Handling
 
