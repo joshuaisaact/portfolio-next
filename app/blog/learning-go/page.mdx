@@ -14,6 +14,8 @@ export const metadata = generateMetadataFromPost(postMetadata);
 
 <BlogHeader {...postMetadata} />
 
+Building real-time systems is challenging enough in familiar languages. Building one while learning Go from scratch? That's either brave or foolish - probably both. Here's how I went from zero Go knowledge to a functioning London Underground tracker in a few days.
+
 ## The Origin Story
 
 Let's start with a confession: before Christmas 2024, I'd never written or read a line of anything other than Javascript (minus the odd bit of Python here or there). I wanted to learn a second language, something more backend-focused, and after looking around, I figured that Go was the most appealing.
@@ -441,4 +443,13 @@ The three endpoints serve different purposes:
 
 ## Looking Forward
 
-I'm continuing to improve my Go knowledge, ahead of further refining this MVP. It needs a proper frontend, and also I need to improve the train position interpolation, ahead of implementing multiple other lines.
+The next big challenge is making this data actually useful. Right now I'm basically just reporting what TfL tells me, but there's a lot more that could be done:
+
+- Building a proper frontend visualization of the line
+- Adding a live map view of train positions
+- Improving the position calculations (real trains don't teleport between stations!)
+- Making it actually useful for commuters beyond "hey look, trains!"
+
+But most importantly, this project taught me that jumping into the deep end with a new language - while occasionally frustrating - is an incredibly effective way to learn. Documentation and tutorials are great, but nothing beats the experience of debugging your first concurrent map panic at 12AM.
+
+_Coming up next: Building a proper frontend for TfL Pulse, because raw JSON isn't exactly commuter-friendly..._
