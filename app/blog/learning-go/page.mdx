@@ -163,7 +163,9 @@ The TfL API provides incredibly detailed prediction data. Here's a single predic
 }
 ```
 
-For the MVP, I needed to strip this down to just the essential fields. In Go, this meant defining a clean struct to receive just what I needed:
+For the MVP, I needed to strip this down to just the essential fields. In Go, this meant defining a clean struct to receive just what I needed. Luckily, there are online tools that'll automatically convert raw JSON to Go structs - this one being my favourite: [convert JSON to Go struct](https://mholt.github.io/json-to-go/).
+
+I ended up with a struct that looked like this:
 
 ```go
 type Prediction struct {
@@ -194,6 +196,8 @@ type Location struct {
 }
 ```
 
+## 99 Problems and Enums Are One
+
 The Location struct includes a TrainState, which was one of my first encounters with Go's take on enums and string serialization:
 
 ```go
@@ -210,7 +214,9 @@ const (
 )
 ```
 
-TfL provides train locations as text descriptions like "At Victoria" or "Between Kings Cross and Euston". I needed to map these to something more structured. Go's iota gave me a clean way to define enumerated states, but I also need to handle JSON serialization:
+This pattern using `iota` and constants sort of looks like an enum, but it lacks many features you might expect out of the box. Want to automatically convert to and from strings? You'll need to write that yourself. Want to ensure a function only accepts valid states? Well, any integer will do! Want to iterate over all possible values? You can, but you'll need to either maintain a slice of all values manually or use reflection - neither of which is as straightforward as a native enum would provide.
+
+This means you end up writing boilerplate code that other languages handle automatically:
 
 ```go
 var stateStrings = map[TrainState]string{
@@ -231,12 +237,15 @@ func (s TrainState) String() string {
 }
 ```
 
-This taught me about:
+The tradeoff is simplicity - Go's creators argue that this approach is more straightforward and requires less compiler magic. But coming from TypeScript where enums are proper types with built-in validation and utilities, this feels like unnecessary manual work.
 
-- Go's iota for enumeration
-- Custom type String() methods
-- Map usage for lookups
-- Error handling patterns
+<Figure
+  src="/images/blog/tfl-pulse/drake-enum.png"
+  alt="Drake meme showing rejection of proper enums in favor of Go's verbose iota approach"
+  title="The Go way of doing enums™"
+/>
+
+## Tracking Train States
 
 The real magic happens in DetectState, which parses TfL's text descriptions:
 
