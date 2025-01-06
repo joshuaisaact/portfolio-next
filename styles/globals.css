@@ -200,6 +200,10 @@ code {
   white-space: pre-wrap;
 }
 
+code[data-line-numbers] {
+  counter-reset: line;
+}
+
 @media (max-width: 640px) {
   code > [data-line]::before {
     display: none !important;
@@ -211,7 +215,7 @@ code {
 }
 
 @media (min-width: 641px) {
-  code > [data-line]::before {
+  code[data-line-numbers] > [data-line]::before {
     counter-increment: line;
     content: counter(line);
     display: inline-block;
@@ -221,11 +225,13 @@ code {
     color: gray;
   }
 
-  code[data-line-numbers-max-digits="2"] > [data-line]::before {
+  code[data-line-numbers][data-line-numbers-max-digits="2"]
+    > [data-line]::before {
     width: 2rem;
   }
 
-  code[data-line-numbers-max-digits="3"] > [data-line]::before {
+  code[data-line-numbers][data-line-numbers-max-digits="3"]
+    > [data-line]::before {
     width: 3rem;
   }
 }

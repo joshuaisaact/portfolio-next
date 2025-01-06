@@ -2,9 +2,9 @@ import { BlogHeader } from "@/app/components/mdx/BlogHeader";
 import { generateMetadataFromPost } from "../../../lib/generate-post-metadata";
 
 export const postMetadata = {
-  title: "Building a Live London Underground Tracker: Learning Go",
-  date: "2024-01-15",
-  featured_image: "/images/blog/tfl-pulse-mvp.webp",
+  title: "Building a Live London Underground Tracker: Learning Go From Scratch",
+  date: "2025-01-06",
+  featured_image: "/images/blog/gopher.webp",
   excerpt:
     "How I learned Go by building a real-time London Underground tracker, featuring concurrent polling, WebSockets, and lots of debugging.",
   tags: ["Go", "Backend", "APIs", "WebSockets", "Concurrency", "Learning"],
@@ -14,13 +14,15 @@ export const metadata = generateMetadataFromPost(postMetadata);
 
 <BlogHeader {...postMetadata} />
 
+Building real-time systems is challenging enough in familiar languages. Building one while learning Go from scratch? That's either brave or foolish - probably both. Here's how I went from zero Go knowledge to a functioning London Underground tracker in a few days.
+
 ## The Origin Story
 
 Let's start with a confession: before Christmas 2024, I'd never written or read a line of anything other than Javascript (minus the odd bit of Python here or there). I wanted to learn a second language, something more backend-focused, and after looking around, I figured that Go was the most appealing.
 
 I started with Maximiliano Firtman's brilliant 8 hour course on Frontend Masters ["The Basics Of Go"](https://frontendmasters.com/courses/go-basics/).
 
-This introduced me to the fundamentals of the language at a pretty rapid clip. But as a kinesthetic learner, I next needed an actual project to sink my metaphorical teeth into, to solidify this learning and build on it. No more tutorials, no more watching videos - just pick something interesting and figure it out.
+This introduced me to the fundamentals of the language at a pretty rapid clip. But as a kinesthetic learner, I needed an actual project to sink my metaphorical teeth into, to solidify this learning and build on it. No more tutorials, no more watching videos - just pick something interesting and figure it out.
 
 I needed a project that would:
 
@@ -29,7 +31,7 @@ I needed a project that would:
 3. Be complicated enough to be interesting
 4. Maybe even be useful to someone (big maybe)
 
-I'd originally thought about making yet another finance dashboard. No offence to finance dashboard makers, but every single portfolio seems to have one, and it's neither interesting or original. Plus, realistically I'd probably get paid to do that, so a personal project should be something I'd almost certainly not get paid to do.
+I'd originally thought about making yet another finance dashboard. No offence to finance dashboard makers (you're doing the lord's work), but every single portfolio seems to have one, and it's neither interesting or original. Plus, realistically I'd probably get paid to do that, so a personal project should be something I'd almost certainly not get paid to do.
 
 But I did want something with real-time updates, where I could feed transformed data to a frontend using websockets.
 
@@ -161,7 +163,7 @@ The TfL API provides incredibly detailed prediction data. Here's a single predic
 }
 ```
 
-For the MVP, I needed to strip this down to just the essential fields. In Go, this meant defining a clean struct to receive just what we need:
+For the MVP, I needed to strip this down to just the essential fields. In Go, this meant defining a clean struct to receive just what I needed:
 
 ```go
 type Prediction struct {
@@ -208,7 +210,7 @@ const (
 )
 ```
 
-TfL provides train locations as text descriptions like "At Victoria" or "Between Kings Cross and Euston". I needed to map these to something more structured. Go's iota gives us a clean way to define enumerated states, but we also need to handle JSON serialization:
+TfL provides train locations as text descriptions like "At Victoria" or "Between Kings Cross and Euston". I needed to map these to something more structured. Go's iota gave me a clean way to define enumerated states, but I also need to handle JSON serialization:
 
 ```go
 var stateStrings = map[TrainState]string{
@@ -278,7 +280,7 @@ This transformation taught me several Go concepts:
 - Go's time.Time handling
 - The power of selective data modeling
 
-Most importantly, it showed how Go's type system can help transform complex API responses into clean, usable data structures perfect for our needs.
+Most importantly, it showed how Go's type system can help transform complex API responses into clean, usable data structures perfect for my needs.
 
 Each endpoint taught me something new:
 
@@ -316,29 +318,96 @@ This little piece of code taught me about:
 - Timers
 - Graceful shutdown
 
-## WebSocket Broadcasting
+## WebSocket Broadcasting: A Tale of Concurrency
+
+My first attempt at the WebSocket hub was delightfully naive:
 
 ```go
 type Hub struct {
-clients map[*Client]bool
-mu sync.RWMutex
-poller \*Poller
+    clients map[*Client]bool
+    poller *Poller
 }
 
-func (h \*Hub) broadcastTrains() {
-trains := h.poller.GetTrains()
-data, err := json.Marshal(trains)
-if err != nil {
-log.Printf("Error marshaling trains: %v", err)
-return
+func (h *Hub) broadcastTrains() {
+    trains := h.poller.GetTrains()
+    data, err := json.Marshal(trains)
+    if err != nil {
+        log.Printf("Error marshaling trains: %v", err)
+        return
+    }
+
+    for client := range h.clients {
+        // Send updates to each client
+        client.send <- data
+    }
+}
+```
+
+This worked perfectly... until it didn't. Even with just the Victoria line, the first time two browsers connected simultaneously, I got the dreaded:
+
+```go
+panic: concurrent map iteration and map write
+```
+
+What happened? While my broadcastTrains function was iterating over the clients map, another goroutine tried to add or remove a client. Maps in Go aren't thread-safe, and I had concurrent access from:
+
+1. The broadcast loop reading from the map
+2. The connection handler adding new clients
+3. The disconnect handler removing clients
+
+This was my first introduction to the concept of [Mutexes](https://gobyexample.com/mutexes), a common approach to handling the [readers-writers problem](https://en.wikipedia.org/wiki/Readers%E2%80%93writers_problem). As Javascript is a single-threaded language with an event loop, I'd never encountered this problem before!
+
+Go also comes with the concept of both reader and writer mutexes (sync.RWMutex). This is perfect for my use case because:
+
+- Many goroutines can read the clients map simultaneously (broadcasting to clients)
+- Only one goroutine should write to it at a time (adding/removing clients)
+
+Here's what the actual solution looks like:
+
+```go
+type Hub struct {
+    clients map[*Client]bool
+    mu      sync.RWMutex    // Protects clients map
+    poller  *Poller
 }
 
+func (h *Hub) registerClient(client *Client) {
+    h.mu.Lock()
+    h.clients[client] = true
+    h.mu.Unlock()
+}
+
+func (h *Hub) unregisterClient(client *Client) {
+    h.mu.Lock()
+    if _, ok := h.clients[client]; ok {
+        delete(h.clients, client)
+        close(client.send)
+    }
+    h.mu.Unlock()
+}
+
+func (h *Hub) broadcastTrains() {
+    trains := h.poller.GetTrains()
+    data, err := json.Marshal(trains)
+    if err != nil {
+        log.Printf("Error marshaling trains: %v", err)
+        return
+    }
+
+    // Use RLock() for reads since multiple goroutines can read simultaneously
     h.mu.RLock()
     for client := range h.clients {
-        // Send updates to connected clients
+        select {
+        case client.send <- data:
+            // Message sent successfully
+        default:
+            // Client's send buffer is full, remove them
+            h.mu.RUnlock()            // Release read lock before acquiring write lock
+            h.unregisterClient(client)
+            h.mu.RLock()              // Reacquire read lock to continue iteration
+        }
     }
     h.mu.RUnlock()
-
 }
 ```
 
@@ -384,13 +453,13 @@ The three endpoints serve different purposes:
 
 ## Looking Forward
 
-The next big challenge is proper position interpolation. Right now I'm basically just reporting what TfL tells me, but real trains don't teleport between stations. I'm looking at:
+The next big challenge is making this data actually useful. Right now I'm basically just reporting what TfL tells me, but there's a lot more that could be done:
 
-- Building a proper line graph
-- Interpolating positions between stations
-- Adding historical data storage (probably TimescaleDB)
-- Making the visualization actually useful
+- Building a proper frontend visualization of the line
+- Adding a live map view of train positions
+- Improving the position calculations (real trains don't teleport between stations!)
+- Making it actually useful for commuters beyond "hey look, trains!"
 
-But the biggest lesson? The best way to learn a new language is to build something real. Videos and tutorials are great, but nothing beats struggling through actual problems and writing actual code.
+But most importantly, this project taught me that jumping into the deep end with a new language - while occasionally frustrating - is an incredibly effective way to learn. Documentation and tutorials are great, but nothing beats the experience of debugging your first concurrent map panic at 12AM.
 
-\_Next up: Building a proper graph representation of the Victoria Line, because trains should probably follow the tracks...
+_Coming up next: Building a proper frontend for TfL Pulse, because raw JSON isn't exactly commuter-friendly..._

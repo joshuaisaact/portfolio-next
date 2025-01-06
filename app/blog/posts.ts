@@ -1,5 +1,17 @@
 export const posts = [
   {
+    slug: "learning-go",
+    metadata: {
+      title:
+        "Building a Live London Underground Tracker: Learning Go From Scratch",
+      date: "2025-01-06",
+      featured_image: "/images/blog/gopher.webp",
+      excerpt:
+        "How I learned Go by building a real-time London Underground tracker, featuring concurrent polling, WebSockets, and lots of debugging.",
+      tags: ["Go", "Backend", "APIs", "WebSockets", "Concurrency", "Learning"],
+    },
+  },
+  {
     slug: "wooster-errors",
     metadata: {
       title: "Express Error Handling: Because Things Will Go Wrong",

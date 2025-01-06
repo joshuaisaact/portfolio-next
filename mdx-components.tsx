@@ -123,7 +123,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ul: (props) => (
       <ul
         role="list"
-        className="list-disc list-outside ml-6 space-y-2 text-gray-700 dark:text-gray-300"
+        className="text-lg list-disc list-outside ml-6 space-y-2 text-gray-700 dark:text-gray-300"
       >
         {props.children}
       </ul>
@@ -131,13 +131,13 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ol: (props) => (
       <ol
         role="list"
-        className="list-decimal list-outside ml-6 space-y-2 text-gray-700 dark:text-gray-300"
+        className="text-lg list-decimal list-outside ml-6 space-y-2 text-gray-700 dark:text-gray-300"
       >
         {props.children}
       </ol>
     ),
     li: (props) => (
-      <li role="listitem" className="pl-2 leading-relaxed">
+      <li role="listitem" className="text-lg pl-2 leading-relaxed">
         {props.children}
       </li>
     ),
