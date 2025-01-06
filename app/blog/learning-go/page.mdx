@@ -2,9 +2,9 @@ import { BlogHeader } from "@/app/components/mdx/BlogHeader";
 import { generateMetadataFromPost } from "../../../lib/generate-post-metadata";
 
 export const postMetadata = {
-  title: "Building a Live London Underground Tracker: Learning Go From Scratch",
+  title: "Building a Live London Underground Tracker: Learning Go",
   date: "2024-01-15",
-  featured_image: "/images/blog/tube-tracker/header.png",
+  featured_image: "/images/blog/tfl-pulse-mvp.webp",
   excerpt:
     "How I learned Go by building a real-time London Underground tracker, featuring concurrent polling, WebSockets, and lots of debugging.",
   tags: ["Go", "Backend", "APIs", "WebSockets", "Concurrency", "Learning"],
@@ -357,6 +357,16 @@ Currently, the system:
 - Processes raw prediction data into usable train locations
 - Maintains WebSocket connections with all clients
 - Broadcasts real-time updates
+
+I then quickly scaffolded a single page frontend in Next just to display this polling data, connecting to the backend via Websocket.
+
+Here's the MMVP up and running:
+
+<Figure
+  src="/images/blog/tfl-pulse-mvp.webp"
+  alt="TfL Pulse MVP showing the Victoria Line with live train positions"
+  title="The current MVP: Live train positions on the Victoria Line. Not pretty, but functional!"
+/>
 
 The three endpoints serve different purposes:
 
