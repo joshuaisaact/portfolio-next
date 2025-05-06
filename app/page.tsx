@@ -7,10 +7,17 @@ import { Blog } from "./components/sections/Blog";
 import { Section } from "./components/ui/Section";
 import { SectionSkeleton } from "./components/ui/SectionSkeleton";
 import { siteMetadata } from "@/lib/metadata";
+import { PROJECTS } from "@/lib/constants/projectConstants";
 
 export const dynamic = "force-static";
 export const preferredRegion = "auto";
 export const metadata = siteMetadata;
+
+const applicationProjects = PROJECTS.filter(p => !p.projectType || p.projectType === 'application');
+const utilityProjects = PROJECTS.filter(p => ['tool', 'library', 'starter'].includes(p.projectType || ''));
+
+const featuredApplicationsIntro = "I'm passionate about building and continuously exploring new technologies. This section highlights some of my recent user-facing applications, from AI-powered platforms to award-winning hackathon entries.";
+const devToolsIntro = "Beyond full applications, I also enjoy creating tools and starter kits that streamline development and explore specific technologies. Here are some of my contributions to the developer ecosystem.";
 
 export default function Home() {
   return (
@@ -44,10 +51,19 @@ export default function Home() {
 
         {/* Projects Section */}
         <Suspense fallback={<SectionSkeleton height="xl" />}>
-          <Section id="projects" title="Projects">
-            <Projects />
+          <Section id="projects" title="Featured Applications">
+            <Projects projects={applicationProjects} introText={featuredApplicationsIntro} />
           </Section>
         </Suspense>
+
+
+        {utilityProjects.length > 0 && (
+          <Suspense fallback={<SectionSkeleton height="md" />}>
+            <Section id="dev-tools" title="Developer Tools & Utilities">
+              <Projects projects={utilityProjects} introText={devToolsIntro} cardType="minimal" />
+            </Section>
+          </Suspense>
+        )}
 
         {/* Blog Section */}
         <Suspense fallback={<SectionSkeleton />}>

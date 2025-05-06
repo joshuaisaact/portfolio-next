@@ -4,8 +4,8 @@ export interface Project {
   title: string;
   slug: string;
   description: string;
-  imageSrc: string;
-  imageAlt: string;
+  imageSrc?: string;
+  imageAlt?: string;
   links: ProjectLink[];
   videoSrc?: string;
   videoPreviewSrc?: string;
@@ -14,12 +14,13 @@ export interface Project {
   skills: string[];
   overview: string;
   features: string[];
-  architecture: {
-    frontend: string;
-    backend: string;
-    infrastructure: string;
+  architecture?: {
+    frontend?: string;
+    backend?: string;
+    infrastructure?: string;
     testing?: string;
   };
+  projectType?: 'application' | 'tool' | 'library' | 'starter';
 }
 
 export const LinkTypes = {

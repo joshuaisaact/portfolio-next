@@ -1,8 +1,8 @@
 interface ProjectArchitectureProps {
   architecture: {
-    frontend: string;
-    backend: string;
-    infrastructure: string;
+    frontend?: string;
+    backend?: string;
+    infrastructure?: string;
     testing?: string;
   };
 }

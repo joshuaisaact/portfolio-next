@@ -6,17 +6,17 @@ export function Skills() {
     {
       name: "Capital Markets",
       description:
-        "Deep understanding of fintech and analytics, building solutions that drive investment decisions",
+        "Deep understanding of fintech and capital markets, with experience in developing analytical tools to support investment strategies.",
     },
     {
       name: "Complex Systems",
       description:
-        "Experience architecting solutions for complex trading and business requirements",
+        "Proven ability to architect and implement solutions for intricate trading systems and multifaceted business requirements.",
     },
     {
       name: "Enterprise Solutions",
       description:
-        "Building robust, scalable applications that solve real business challenges",
+        "Delivering robust, scalable applications for enterprise clients, focusing on performance, security, and integration.",
     },
   ];
 
@@ -24,12 +24,7 @@ export function Skills() {
     <section aria-label="Skills" className="space-y-6 sm:space-y-8">
       <div>
         <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300">
-          My journey spans from an early-stage fintech, where I collaborated
-          with engineers to build behavioural analytics tools for hedge funds,
-          to helping shape enterprise features at a rapidly growing expense
-          management platform. This mix of startup and enterprise experience
-          influences how I approach technical challenges today.
-        </p>
+          My approach to technical challenges is shaped by a diverse background in both early-stage fintech (building behavioural analytics for hedge funds) and rapidly growing enterprise platforms. This blend of experiences gives me a unique perspective on building robust and scalable solutions.        </p>
       </div>
 
       {/* Technical Skills */}

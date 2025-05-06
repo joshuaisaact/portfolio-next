@@ -11,9 +11,7 @@ export default function Contact() {
       <div className="space-y-8">
         <div>
           <p className="text-lg text-gray-700 dark:text-gray-300">
-            Looking to build something interesting? I&apos;m always open to
-            discussing new opportunities, technical challenges, or the perfect
-            state management pattern.
+            Looking to build something interesting, tackle a tricky technical challenge, or just want to chat about tech? I'm always open to exploring collaborations, discussing emerging technologies (especially in AI and Go!), or debating the finer points of system design.
           </p>
         </div>
 

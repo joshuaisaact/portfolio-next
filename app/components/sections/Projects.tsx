@@ -1,26 +1,36 @@
-import { PROJECTS } from "@/lib/constants/projectConstants";
+
+import { Project } from "@/types";
 import { ProjectCard } from "../ui/cards/ProjectCard";
 
-export function Projects() {
+
+interface ProjectsProps {
+  projects: Project[];
+  introText: string;
+  cardType?: 'full' | 'minimal';
+}
+
+export function Projects({ projects, introText, cardType }: ProjectsProps) {
+  if (!projects || projects.length === 0) {
+    return null;
+  }
+
   return (
-    <section aria-label="Projects" className="space-y-6 sm:space-y-8">
-      <div>
-        <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-          Drawing on my enterprise software background, I build applications
-          that solve real problems at scale. From a DEI transparency platform
-          that won at JumpStart, to a full-stack AI travel planner, these
-          projects showcase my transition from working with engineering teams to
-          building production-ready solutions myself.
-        </p>
-      </div>
+    <section aria-label="Projects Section" className="space-y-6 sm:space-y-8">
+      {introText && (
+        <div>
+          <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+            {introText}
+          </p>
+        </div>
+      )}
       <div
         className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 md:px-2 sm:px-0"
         role="list"
         aria-label="Project list"
       >
-        {PROJECTS.map((project) => (
-          <div key={project.title} role="listitem" className="w-full">
-            <ProjectCard project={project} />
+        {projects.map((project) => (
+          <div key={project.slug} role="listitem" className="w-full">
+            <ProjectCard project={project} variant={cardType} />
           </div>
         ))}
       </div>

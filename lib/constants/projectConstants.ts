@@ -2,6 +2,59 @@ import { Project } from "@/types"; // Import your types
 
 export const PROJECTS: Project[] = [
   {
+    title: "AIgument",
+    slug: "aigument",
+    description:
+      "Watch AI models debate! AIgument pits LLMs (GPT-4o, Claude, Gemini) against each other with unique personalities. Built with Next.js, Vercel AI SDK, and Neon DB.",
+    imageSrc: "/media/projects/aigument-preview.png",
+    imageAlt: "AIgument application interface showing two AIs debating",
+    links: [
+      {
+        type: "live",
+        url: "https://aigument.vercel.app/",
+        label: "Live Demo",
+      },
+      {
+        type: "github",
+        url: "https://github.com/joshuaisaact/AIgument",
+        label: "GitHub Repository",
+      },
+    ],
+    skills: [
+      "Nextjs",
+      "TypeScript",
+      "TailwindCSS",
+      "Vercel AI SDK",
+      "Neon DB",
+      "OpenAI API",
+      "Anthropic API",
+      "Gemini API",
+    ],
+    overview: `AIgument offers a novel and engaging way to experience the capabilities of Large Language Models. Instead of static benchmarks, users can stage dynamic debates between different AIs like GPT-4o, Claude 3 Sonnet, and Gemini 1.5 Flash. The platform allows for customization of debater personalities (e.g., Detective Noir, Drag Queen) and debate intensity ("spiciness"), providing both entertainment and insight into AI interaction styles. Debates can be saved and browsed, creating a library of AI-generated arguments.`,
+    features: [
+      "Multi-LLM debate platform (OpenAI, Anthropic, Google Gemini, xAI).",
+      "Customizable debater personalities and 'spiciness' levels.",
+      "Interactive debate progression with user voting.",
+      "Persistent storage of debates using Neon Serverless DB.",
+      "Responsive interface built with Next.js and Tailwind CSS.",
+      "Streamed responses for real-time debate feel using Vercel AI SDK.",
+    ],
+    architecture: {
+      frontend: `Next.js 15 (App Router) with TypeScript for a type-safe, performant user interface.
+        Tailwind CSS for styling.
+        Vercel AI SDK for seamless streaming of LLM responses and UI helpers.`,
+      backend: `Leverages Next.js API Routes for backend logic.
+        Integrates multiple LLM APIs (OpenAI, Anthropic, Google, xAI).
+        Uses Neon Serverless DB (PostgreSQL) for storing debate topics, rounds, votes, and user data.`,
+      infrastructure: `Deployed on Vercel with CI/CD via GitHub.
+        Edge functions for API routes where applicable.
+        Scalable serverless database (Neon).`,
+    },
+    videoSrc: "/media/projects/videos/aigument.webm",
+    videoPreviewSrc: "/media/projects/videos/aigument-preview.webm",
+    posterImage: "/media/projects/aigument-preview.png",
+  },
+  {
     title: "Wooster",
     slug: "wooster",
     description:
@@ -250,7 +303,7 @@ components, focusing on creating a scalable backend while ensuring a smooth user
     title: "Portfolio Website",
     slug: "portfolio-website",
     description:
-      "A modern, accessible portfolio built with Next.js 14, featuring responsive design and smooth animations.",
+      "A modern, accessible portfolio built with Next.js 15, featuring responsive design and smooth animations.",
     imageSrc: "/media/projects/portfoliowebsite.png",
     imageAlt: "Portfolio Website",
     links: [
@@ -273,7 +326,7 @@ components, focusing on creating a scalable backend while ensuring a smooth user
       While it might be a simpler project than some others in my portfolio, it represents my approach to
       development: clean, efficient, and focused on the user experience.`,
     features: [
-      "Server-side rendering with Next.js 14 for optimal performance",
+      "Server-side rendering with Next.js 15 for optimal performance",
       "Responsive design with fluid typography and layouts",
       "Carefully crafted animations using CSS transitions",
       "Dark mode with system preference detection",
@@ -281,7 +334,7 @@ components, focusing on creating a scalable backend while ensuring a smooth user
       "SEO optimization with Next.js metadata API",
     ],
     architecture: {
-      frontend: `Built with Next.js 14's App Router for optimal static generation.
+      frontend: `Built with Next.js 15's App Router for optimal static generation.
         Implemented WCAG-compliant accessible design patterns.
          Created reusable components with TypeScript for type safety.`,
 
@@ -293,49 +346,62 @@ components, focusing on creating a scalable backend while ensuring a smooth user
     },
   },
   {
-    title: "Brat Quiz",
-    slug: "brat-quiz",
-    description:
-      "A playful React quiz app inspired by Charli XCX's aesthetic, built to explore TypeScript and testing practices.",
-    imageSrc: "/media/projects/bratquiz.png",
-    imageAlt: "brat image",
+    title: "Bun Server Starter",
+    slug: "bun-server-starter",
+    projectType: 'starter', // or 'tool'
+    description: "A production-ready Bun HTTP server template with TypeScript, structured logging, and proper error handling.",
+    // No imageSrc or videoSrc needed if your 'tool' card doesn't use them
     links: [
       {
         type: "github",
-        url: "https://github.com/joshuaisaact/bratQuiz",
-        label: "View Code",
-      },
-      {
-        type: "live",
-        url: "https://joshuaisaact.github.io/brat-quiz/",
-        label: "Take the Quiz",
-      },
+        url: "https://github.com/joshuaisaact/bun-server-starter",
+        label: "View on GitHub",
+      }
     ],
-    skills: ["Typescript", "React", "CSS3", "HTML5"],
-    overview: `Not every project needs to change the world! Built as a fun way to explore React and TypeScript,
-      this personality quiz is inspired by Charli XCX's 'BRAT' aesthetic. What started as a learning exercise
-      turned into an entertaining way to practice TypeScript, state management, and testing in React.
-
-      It's a reminder that learning new technologies can (and should!) be fun.`,
+    skills: ["Bun", "TypeScript"],
+    overview: "This starter provides a solid foundation for building robust HTTP APIs with Bun, focusing on best practices like structured logging, comprehensive error handling, and a clear project structure for scalability.",
     features: [
-      "Interactive quiz flow with binary choice mechanism",
-      "Custom animations and transitions for question changes",
-      "Result calculation and sharing functionality",
-      "Responsive design for mobile and desktop",
-      "TypeScript implementation for type safety",
-      "Local storage for saving progress",
+      "TypeScript with strict typing",
+      "Structured logging with Pino",
+      "Comprehensive error handling",
+      "Environment configuration",
+      "Testing setup with Bun's test runner"
+    ],
+  },
+  {
+    title: "Go AI Agent Foundation",
+    slug: "go-ai-agent-foundation",
+    projectType: 'tool', // or 'library'
+    description: "A foundational Go project for building AI agents that interact with users and utilize tools, defaulting to the Anthropic (Claude) API.",
+    imageSrc: "/media/skills/go.svg", // Path to your Go Gopher SVG or similar
+    imageAlt: "Go Language Logo",
+    links: [
+      {
+        type: "github",
+        url: "https://github.com/joshuaisaact/Go-AI-Agent", // Ensure this is the correct repo name
+        label: "View on GitHub",
+      }
+    ],
+    skills: ["Go"],
+    overview: `This project provides a flexible and extensible foundation for creating AI agents in Go. It handles core agent logic, inference with LLMs (Anthropic's Claude by default), and a system for defining and integrating custom tools. The goal is to accelerate the development of sophisticated AI agents capable of complex task execution directly from the command line.`,
+    features: [
+      "Core agent interaction loop for user input and agent responses.",
+      "Inference engine for LLM communication (Anthropic API integrated).",
+      "Extensible tool system with clear schema definitions.",
+      "Example tools: file system operations (read_file, list_files, edit_file).",
+      "ripgrep_search tool for powerful regex searches within files/directories.",
+      "Designed for building command-line interface (CLI) based agents.",
+      "Modular structure (cmd/agent, pkg/agent, pkg/tools) for easy customization."
     ],
     architecture: {
-      frontend: `Built with React and TypeScript, focusing on clean component architecture.
-        Implemented custom hooks for quiz state management.
-        Created reusable animation components for consistent transitions.`,
-
-      backend: `Static deployment with quiz data stored in TypeScript interfaces.
-      Implemented local storage integration for progress saving.`,
-
-      infrastructure: `Deployed on GitHub Pages with automatic deployments.
-      Set up development environment with proper TypeScript configurations.`,
-    },
+      backend: `Written entirely in Go (Golang).
+        Handles API calls to the Anthropic (Claude) API for inference.
+        Manages tool registration, invocation based on LLM output, and response parsing.
+        Main application entry point in cmd/agent/main.go.
+        Core agent logic resides in pkg/agent/.
+        Tool definitions and implementations in pkg/tools/.`,
+    }
+    // No videoSrc, videoPreviewSrc, posterImage needed for this type
   },
   // {
   //   imageSrc: "/media/projects/TapMap.png",

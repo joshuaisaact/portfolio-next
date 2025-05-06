@@ -9,6 +9,9 @@ import ProjectLinks from "@/app/components/ui/Projects/ProjectLinks";
 import ProjectFeatures from "@/app/components/ui/Projects/ProjectFeatures";
 import ProjectArchitecture from "@/app/components/ui/Projects/ProjectArchitecture";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.joshtuddenham.tech"; // Ensure this is set in your .env
+
+
 const LazyVideoComponent = dynamic(
   () => import("../../components/VideoComponent"),
   {
@@ -27,42 +30,64 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug } = params;
   const item = PROJECTS.find((p) => p.slug === slug);
 
   if (!item) {
     return {
-      title: "Not Found",
+      title: "Project Not Found | Joshua Tuddenham Portfolio",
+      description: "The project you are looking for could not be found.",
+      robots: { index: false, follow: false },
     };
   }
 
+  const title = item.title || "Untitled Project";
+  const description = item.description || "A project by Joshua Tuddenham.";
+  const skills = item.skills || [];
+
+  const ogImages = [];
+  const twitterImages = [];
+
+  if (item.imageSrc) {
+    const fullImageUrl = item.imageSrc.startsWith("http")
+      ? item.imageSrc
+      : `${SITE_URL}${item.imageSrc.startsWith("/") ? "" : "/"}${item.imageSrc}`;
+
+    ogImages.push({
+      url: fullImageUrl,
+      width: 1200,
+      height: 630,
+      alt: item.imageAlt || title,
+    });
+    twitterImages.push(fullImageUrl);
+  } else {
+    console.log("No image found for project:", item.title);
+  }
+
+
   return {
-    title: `${item.title} | Joshua Tuddenham Portfolio`,
-    description: item.description,
+    title: `${title} | Joshua Tuddenham Portfolio`,
+    description: description,
+    keywords: [...skills, "portfolio", "project", "development", title].filter(Boolean),
     openGraph: {
-      title: item.title,
-      description: item.description,
+      title: title,
+      description: description,
+      url: `${SITE_URL}/projects/${item.slug}`,
+      siteName: "Joshua Tuddenham Portfolio",
       type: "article",
-      images: [
-        {
-          url: item.imageSrc,
-          width: 1200,
-          height: 630,
-          alt: item.imageAlt,
-        },
-      ],
+      images: ogImages.length > 0 ? ogImages : undefined,
     },
     twitter: {
-      card: "summary_large_image",
-      title: item.title,
-      description: item.description,
-      images: [item.imageSrc],
+      card: ogImages.length > 0 ? "summary_large_image" : "summary",
+      title: title,
+      description: description,
+      images: twitterImages.length > 0 ? twitterImages : undefined,
     },
-    keywords: [...item.skills, "portfolio", "project", "development"],
   };
 }
+
 
 export default async function ProjectPage({
   params,
@@ -72,6 +97,10 @@ export default async function ProjectPage({
   const { slug } = await params;
   const project = PROJECTS.find((p) => p.slug === slug);
   if (!project) notFound();
+
+  const projectTitle = project.title || "Untitled Project";
+  const projectOverview = project.overview || "";
+  const projectImageAlt = project.imageAlt || projectTitle;
 
   return (
     <>
@@ -95,23 +124,25 @@ export default async function ProjectPage({
           aria-labelledby="project-title"
         >
           {/* Project media */}
-          <div
-            className="relative aspect-video rounded-xl overflow-hidden shadow-lg mb-8"
-            aria-label="Project preview"
-          >
-            {project.videoSrc ? (
-              <LazyVideoComponent videoSrc={project.videoSrc} />
-            ) : (
-              <Image
-                src={project.imageSrc}
-                alt={project.imageAlt}
-                className="object-cover"
-                priority
-                fill
-                sizes="(min-width: 1280px) 896px, (min-width: 1040px) calc(85.71vw - 48px), (min-width: 780px) calc(100vw - 48px), calc(100vw - 32px)"
-              />
-            )}
-          </div>
+          {(project.videoSrc || project.imageSrc) && (
+            <div
+              className="relative aspect-video rounded-xl overflow-hidden shadow-lg mb-8"
+              aria-label="Project preview"
+            >
+              {project.videoSrc ? (
+                <LazyVideoComponent videoSrc={project.videoSrc} />
+              ) : project.imageSrc ? ( // Check again ensures imageSrc is defined here
+                <Image
+                  src={project.imageSrc}
+                  alt={projectImageAlt}
+                  className="object-cover"
+                  priority // Consider if priority is needed if it's not the LCP for all project types
+                  fill
+                  sizes="(min-width: 1280px) 896px, (min-width: 1040px) calc(85.71vw - 48px), (min-width: 780px) calc(100vw - 48px), calc(100vw - 32px)"
+                />
+              ) : null}
+            </div>
+          )}
 
           {/* Project header */}
           <div className="text-center mb-12">
@@ -142,20 +173,28 @@ export default async function ProjectPage({
           </div>
 
           {/* Project content */}
-          <div className="prose dark:prose-invert max-w-none">
-            {/* Overview */}
-            <div
-              className="text-lg leading-relaxed text-gray-700 dark:text-gray-300"
-              aria-label="Project overview"
-            >
-              {project.overview}
-            </div>
+          <div className="prose dark:prose-invert max-w-none space-y-8"> {/* Added space-y-8 for consistent spacing */}
+            {/* Overview: Render only if overview has content */}
+            {projectOverview && (
+              <div
+                className="text-lg leading-relaxed text-gray-700 dark:text-gray-300"
+                aria-label="Project overview"
+              >
+                {/* If project.overview can contain HTML, use dangerouslySetInnerHTML with caution
+                    or parse markdown to HTML. Assuming plain text for now. */}
+                <p>{projectOverview}</p>
+              </div>
+            )}
 
-            {/* Key Features */}
-            <ProjectFeatures features={project.features} />
+            {/* Key Features: Conditionally render ProjectFeatures */}
+            {project.features && project.features.length > 0 && (
+              <ProjectFeatures features={project.features} />
+            )}
 
-            {/* Technical Architecture */}
-            <ProjectArchitecture architecture={project.architecture} />
+            {/* Technical Architecture: Conditionally render ProjectArchitecture */}
+            {project.architecture && (
+              <ProjectArchitecture architecture={project.architecture} />
+            )}
           </div>
         </article>
       </main>

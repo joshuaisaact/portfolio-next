@@ -15,15 +15,11 @@ export function AboutMe() {
 
         <div className="prose dark:prose-invert max-w-none space-y-4">
           <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300">
-            I build reliable applications that tackle real business challenges.
-            My enterprise SaaS background shapes how I approach solutions, from
-            award-winning hackathon projects to AI-powered platforms.
+            I'm passionate about building robust and scalable software, particularly with <strong>TypeScript</strong> and <strong>Go</strong>. My background in enterprise SaaS informs my approach to crafting solutions, whether it's developing AI-powered platforms or award-winning hackathon projects.
           </p>
 
           <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300">
-            I work with React, TypeScript, and Node.js, focusing on testing and
-            production reliability. Currently exploring AI applications and
-            writing about tech.
+            My focus is on delivering reliable, well-tested applications. I'm currently diving deep into the AI landscape—building agents, experimenting with LLMs—and enjoy sharing my learnings through my <Link href="/blog" className="text-[var(--theme-1)] hover:underline">blog</Link>.
           </p>
 
           <div className="flex flex-wrap gap-3 pt-4">
