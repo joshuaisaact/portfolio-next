@@ -1,0 +1,329 @@
+---
+title: "From AI Dreams to Database Reality: Building a Smarter Yoga Session Generator"
+date: "2025-05-10"
+featured_image: "/images/blog/yoga-ai-refactor.webp"
+excerpt: "How I refactored an AI-powered yoga app, teaching Gemini to use a real pose database with function calling, overcoming schema mismatches, tool configuration hurdles, and data filtering challenges."
+tags: ["AI", "LLM", "Gemini", "Function Calling", "FullStack", "JavaScript", "TypeScript", "ElysiaJS", "DrizzleORM", "React", "Backend", "Refactoring", "API Design"]
+---
+
+<BlogHeader
+  title="From AI Dreams to Database Reality: Building a Smarter Yoga Session Generator"
+  date="2025-05-10"
+  featured_image="/images/blog/yoga-ai-refactor.webp"
+  excerpt="How I refactored an AI-powered yoga app, teaching Gemini to use a real pose database with function calling, overcoming schema mismatches, tool configuration hurdles, and data filtering challenges."
+  tags={["AI", "LLM", "Gemini", "Function Calling", "FullStack", "JavaScript", "TypeScript", "ElysiaJS", "DrizzleORM", "React", "Backend", "Refactoring", "API Design"]}
+/>
+
+Building AI-powered applications is a thrilling ride. My initial yoga session generator felt like magic: type in your preferences, and out popped a unique yoga sequence, seemingly conjured from the digital ether by Google's Gemini model. But like any good magic trick, the illusion started to fray at the edges. The AI, while clever, was inventing poses or describing them in ways that didn't quite align with a structured, consistent yoga practice. It was time to ground the AI in reality – the reality of a well-curated database of actual yoga poses. This is the story of that refactor, a journey from pure AI generation to a sophisticated, data-driven system, and the many lessons learned along the way.
+
+## The Genesis: An AI That Dreamed of Yoga
+
+My first iteration of the yoga app was a pure conversation with Gemini. I'd send a prompt: "Create a 30-minute intermediate Vinyasa flow for hip opening," and the AI would return a complete session, including pose names, descriptions, and timings. It was impressive, a testament to the power of modern LLMs.
+
+The schema for this initial, AI-generated pose looked something like this (simplified):
+```javascript
+// Initial AI-generated pose schema (conceptual)
+{
+  poseName: "Downward-Facing Dog",
+  poseSanskritName: "Adho Mukha Svanasana",
+  durationSeconds: 60,
+  instructions: "Start on hands and knees...",
+  type: "inversion" // Category like warmup, peak, cooldown
+}
+```
+
+This worked, but with a few caveats:
+1. **Consistency & Accuracy**: The AI might describe "Downward Dog" slightly differently each time, and instructions or categorizations could be a bit off.
+2. **Data Integrity**: There was no single source of truth for poses; they existed only as concepts in the AI's output.
+3. **Limited Richness**: I couldn't easily associate poses with images, detailed anatomical focus, or crucial sequencing hints without asking the AI to generate those too, adding to potential inconsistency.
+
+I needed a structured database of yoga poses. The AI's role needed to shift from inventor to intelligent orchestrator.
+
+## The Refactor: Grounding AI with a Database and Tools
+
+The core idea was to:
+1. **Build a Pose Database**: Curate a comprehensive list of yoga poses using Drizzle ORM and SQLite, each with a unique nameEn, displayName, sanskritName, detailed instructions, imageUrl, poseType (e.g., "seated"), difficulty, specific focusAreas (e.g., "deep_hip_opener_outer"), and importantly, aiSequencingHints.
+2. **Introduce Gemini Function Calling**: Equip Gemini with a "tool" – a function it could "call" named getAvailableYogaPoses. This tool allows the AI to query my new pose database.
+3. **Shift AI's Role**: The AI now understands the user's request, strategically calls getAvailableYogaPoses to fetch real poses, selects and sequences them from the tool's response, and augments these database poses with session-specific details like durationSeconds, roleInSequence, and contextual notes.
+
+This was a fundamental shift from "AI, make me a yoga session" to "AI, here's a user request and a database of poses; use the database to build a session according to these rules.
+
+
+## Defining the Contracts: Schemas for AI Tools
+
+A critical first step was defining the "contract" with the AI. This involved creating schema for the function calling tool using Google GenAI's Type system. The getAvailableYogaPoses tool needed schema for its input parameters and, crucially, for the structure of the data it would return to the AI.
+
+```javascript
+// Simplified tool parameter schema for the AI
+const GetYogaPosesToolParamsSchema = {
+  type: Type.OBJECT,
+  properties: {
+    difficulty: { type: Type.STRING, nullable: true, description: "Optional. Filter by difficulty..." },
+    poseType: { type: Type.STRING, nullable: true, description: "Optional. Filter by type..." },
+    focusArea: { type: Type.STRING, nullable: true, description: "Optional. Filter by focus area tag..." },
+    limit: { type: Type.NUMBER, nullable: true, description: "Optional. Max poses to return..." }
+  }
+};
+
+// Schema for a single pose item returned by the tool
+const ToolPoseResponseItemSchema = {
+  type: Type.OBJECT,
+  properties: {
+    nameEn: { type: Type.STRING, description: "Unique English name from DB (AI MUST use this)." },
+    displayName: { type: Type.STRING },
+    sanskritName: { type: Type.STRING, nullable: true },
+    imageUrl: { type: Type.STRING, nullable: true },
+    poseType: { type: Type.ARRAY, items: { type: Type.STRING } }, // DB categories
+    difficulty: { type: Type.STRING }, // DB difficulty
+    focusAreas: { type: Type.ARRAY, items: { type: Type.STRING } }, // DB focus tags
+    aiSequencingHints: { type: Type.ARRAY, items: { type: Type.STRING }, nullable: true },
+    description: { type: Type.STRING, nullable: true } // Brief DB description
+  },
+  required: ["nameEn", "displayName", "poseType", "difficulty", "focusAreas"]
+};
+
+// Schema for the overall tool response provided TO the AI
+const GetYogaPosesToolResponseSchema = {
+  type: Type.OBJECT,
+  properties: {
+    poses: { type: Type.ARRAY, items: ToolPoseResponseItemSchema },
+    posesFound: { type: Type.NUMBER },
+    message: { type: Type.STRING, nullable: true }
+  },
+  required: ["poses", "posesFound"]
+};
+
+// The full tool declaration passed to Gemini
+const getYogaPosesTool = {
+  name: "getAvailableYogaPoses",
+  description: "Retrieves poses from the database...",
+  parameters: GetYogaPosesToolParamsSchema,
+  response: GetYogaPosesToolResponseSchema // Telling AI what structure to expect back
+};
+```
+
+The description fields within these schema are vital; they guide the AI on how to use the tool and interpret its results. My database's aiSequencingHints could now directly advise the AI.
+
+## The Multi-Turn Conversation: AI Calls, Backend Responds
+
+With the tool defined, the interaction flow in my GeminiService (built with ElysiaJS) became a more sophisticated dance:
+1. **Initial Prompt to AI**: My application sends the user's preferences wrapped in a detailed instructional prompt. This prompt explicitly tells the AI it must use the getAvailableYogaPoses tool.
+2. **AI Responds with a Function Call**: Gemini, instead of just generating text, responds with a functionCall object, like name: "getAvailableYogaPoses", args: { difficulty: "beginner", limit: 50 }.
+3. **Backend Executes the Tool**: My GeminiService intercepts this. It parses the args, calls my internal poseService.findPoses(filters) (which queries the database), formats the results according to ToolPoseResponseItemSchema, and constructs the full tool response.
+4. **Tool Response Back to AI**: The backend sends this tool response back to Gemini, adding to the conversation history:
+- User: "Create a session..."
+- Model: functionCall("getAvailableYogaPoses", ...)
+- User (as tool): functionResponse(name: "getAvailableYogaPoses", response: { poses: [...beginner poses...], ...})
+5. **AI Generates Final Session**: Gemini processes this pose data. It selects, sequences, and augments them with durationSeconds, roleInSequence, and notes. It also generates overall session metadata. This second call to Gemini is configured to expect a final JSON output matching my FinalSessionOutputSchema.
+
+This back-and-forth allows the AI to leverage external, reliable data while still applying its sequencing and creative text generation capabilities.
+
+## Navigating the Labyrinth: Hurdles, Head-Scratchers, and "Aha!" Moments
+
+This transition wasn't without its challenges. Here’s a peek into the debugging trenches:
+
+### 1. The "AI, Please Use JSON!" Dance (Initial Output Formatting)
+
+Even before full function calling, getting the AI to consistently output JSON in the exact schema I needed required effort.
+- **Pitfall**: The AI occasionally added conversational fluff or markdown backticks (```json ... ```) around the JSON, or missed required fields, despite responseMimeType: "application/json" and responseSchema being set.
+- **Solution**: Stronger prompting ("Your entire response MUST be a single, valid JSON object... No markdown...") and adding backend logic to strip potential markdown before parsing.
+
+### 2. Teaching an AI to Use Its New Tools (Function Calling Configuration)
+
+The Gemini API has specific expectations for function calling.
+
+- **Pitfall 1**: Conflicting Configurations (responseSchema vs. toolConfig)
+- A 400 Bad Request error message from Gemini was key: "For controlled generation of only function calls...please set 'tool_config.function_calling_config.mode' field to ANY instead of populating 'response_mime_type' and 'response_schema' fields." I was incorrectly trying to do both on the AI's first turn.
+- **Solution**: Two-Step Configuration:
+1. **First API Call (Tool Invocation)**: Configure with tools and toolConfig: { functionCallingConfig: { mode: "ANY" } }. No responseMimeType or responseSchema here.
+2. **Second API Call (Final JSON Generation)**: After my backend executes the tool, this call is configured with generationConfig: { responseMimeType: "application/json", responseSchema: FinalSessionOutputSchema }.
+
+- **Pitfall 2**: AI Hallucinating Instead of Using the Tool
+An early, less explicit prompt led the AI to invent poses resembling my schema, bypassing the tool.
+- **Solution**: The toolConfig.functionCallingConfig.mode = "ANY" was crucial, along with reinforcing in the prompt: "You MUST use the getAvailableYogaPoses tool. This is your ONLY source for pose data."
+
+### 3. The "Chicken and Egg" of Dynamic Filters
+
+My frontend form for user preferences (difficulty, focus area) initially had static options.
+
+- **Pitfall**: Mismatch between User Options and Database Realities
+The AI would call the tool with, say, focusArea:"flexibility", but my DB tags were more specific (e.g., "challenging_flexibility", "IT_band_stretch"). Result: numPosesFound: 0.
+```javascript
+INFO: Gemini called function: getAvailableYogaPoses with args: {"focusArea":"flexibility","difficulty":"beginner"}
+INFO: Poses retrieved from DB for tool, numPosesFound: 0
+```
+- **Solution (Multi-pronged)**:
+1. **Dynamic Frontend Options**: The /api/sessions/options backend endpoint now dynamically serves filter options (difficulties, poseTypes, focusAreas) fetched directly from distinct values in the pose database using poseService.getPoseFilterOptions().
+2. **Aligning Zod & Form Schemas**: The frontend Zod schema (generateSessionFormSchema) was updated. Instead of hardcoded defaults like focusArea: z.string().default('flexibility'), these fields became required strings without Zod defaults. The actual initial form values are now set in @tanstack/react-form's defaultValues based on the first available option from the fetched dynamic list.
+3. **Refined AI Prompt**: The prompt now explicitly guides the AI to use the user-selected (now DB-aligned) values for the tool's parameters.
+
+### 4. The Case of the Disappearing String (Return Value Shenanigans)
+
+For a frustrating period, even when logs within GeminiService.ts showed a perfect final JSON string, my route handler in sessions.routes.ts would throw an error like AIServiceError: Failed to communicate with AI service. The underlying issue was often a TypeError: aiResponseText.substring is not a function because aiResponseText was an object, not a string.
+
+- **Pitfall**: Returning the Entire API Response Object, Not Just the Text
+The Gemini SDK's generateContent() returns a complex GenerateContentResult object. My GeminiService.generateYogaSession function was sometimes returning this whole object instead of just the extracted text string.
+- **Solution**: Rigorous Text Extraction:
+I implemented a helper function extractTextFromGeminiResponse(result: GenerateContentResult): string | null that reliably navigates result.response.candidates[0].content.parts to find and return the actual text string. Every successful return path in generateYogaSession now uses this helper.
+```javascript
+// Corrected way in GeminiService
+const actualText = extractTextFromGeminiResponse(finalResponse); // finalResponse is GenerateContentResult
+if (actualText) {
+  logger.info("GeminiService: Returning extracted TEXT...");
+  return actualText; // Now aiResponseText in the route is a string
+} else {
+  throw new AIResponseError("Failed to extract text...");
+}
+```
+
+### 5. Ensuring Consistent API Responses for the Pose Browser
+
+My pose browser page expected a paginated structure ({ items: [], totalPages: X, ... }). My backend poseService.findPoses initially could return either this paginated object or just a direct array of poses.
+
+- **Pitfall**: Type Mismatch in Frontend Loader due to Union Type
+Eden Treaty correctly inferred this union type. My frontend loader, trying to assign this union to a variable expecting only the paginated structure, threw errors.
+- **Solution**: Standardize Backend Response:
+I refactored poseService.findPoses to always return the PaginatedFormattedPoseResponse structure. The Elysia response schema for /poses/all was then simplified. This made the Eden Treaty inferred type on the frontend clean and directly usable.
+
+## The Triumph: A Working, Data-Driven System
+
+
+After these refinements, the logs finally painted the picture of success:
+
+```javascript
+INFO: Gemini called a function: getAvailableYogaPoses with arguments: {"difficulty":"beginner"}
+INFO: Poses retrieved from DB for tool, numPosesFound: 44
+INFO: Received response from Gemini: { //... A beautiful, complete JSON session object using DB poses! ...// }
+```
+
+The AI was no longer just "making things up." It was using nameEn identifiers from my database, pulling real displayName, sanskritName, and imageUrl values, and then thoughtfully adding its layer of sequencing logic (roleInSequence, durationSeconds, notes). The output was structured, consistent, and grounded in my curated pose data.
+
+The final JSON structure for a pose within the sequence now looks like this:
+
+```json
+{
+  "nameEn": "MountainPose", // From DB - the unique key!
+  "displayName": "Mountain", // From DB
+  "sanskritName": "tāḍāsana", // From DB
+  "imageUrl": "https://...", // From DB
+  "durationSeconds": 30, // Added by AI
+  "roleInSequence": "warmup", // Added by AI
+  "notes": "Begin standing tall..." // Added by AI
+}
+```
+
+## What I Learned (Beyond the Code)
+
+This refactor was a deep dive into the practicalities of building with LLMs:
+
+1. **Grounding is Essential**: LLMs excel with factual, structured data provided via tools.
+2. **Schemas are Your Best Friend**: Clear schemas for function parameters, tool responses, and final AI outputs are non-negotiable.
+3. **Prompt Engineering is Key**: The prompt telling the AI how to use tools and process results is as critical as the tools themselves. This is an ongoing, iterative process.
+4. **Embrace Multi-Turn Interactions**: Function calling often isn't a one-shot deal. Conversational turns allow for complex data retrieval and reasoning.
+5. **End-to-End Type Safety Saves Sanity**: Tools like ElysiaJS with Eden Treaty, which propagate type information from backend to frontend, are invaluable for reducing integration bugs.
+
+## The Path Forward: Refining the Flow
+
+With the core infrastructure now robust, the "art" of refining the AI's session creation truly begins:
+
+- **Advanced Prompt Refinement**: Guiding the AI for better flow, appropriate difficulty progression within a session, more insightful notes, and strategic multiple tool calls (e.g., separate calls for warm-up, peak, cool-down sequences using different poseType or focusArea filters).
+- **Data Enrichment**: Expanding the pose database and improving aiSequencingHints.
+- **User Feedback**: Eventually, incorporating user ratings to further tune the AI's preferences.
+
+This refactor transformed the application from a fun demo into a tool with a solid data foundation, ready for more nuanced and intelligent yoga session generation. It’s a clear illustration that the future of many AI applications lies in this powerful symbiosis between large language models and well-structured, domain-specific data. The AI is still the creative director, but now it’s working with a meticulously curated script and a cast of reliable actors.
+
+Leveling Up: Advanced Tooling, Parallel Calls, and Taming the Verbose AI
+With the foundational shift to a database-backed AI complete, the core loop was working: the AI could call my getAvailableYogaPoses tool and use real poses. However, the journey to a truly intelligent and reliable session generator was far from over. The next phase involved teaching the AI more sophisticated tool usage, wrestling with its occasional quirks, and making the user's filtering options more powerful.
+The Ambitious Leap: Encouraging Multiple Tool Calls
+My initial prompt guided the AI to make one primary call to getAvailableYogaPoses, fetching a broad set of poses based on difficulty. While functional, I realized that for truly well-rounded sessions, the AI needed a more diverse palette. A session isn't just one type of pose; it needs warm-ups, cool-downs, and poses that complement the main focus.
+So, I updated the prompt, explicitly instructing the AI to make multiple, targeted calls to the getAvailableYogaPoses tool:
+One call for poses matching the user's primary difficulty and focusArea.
+A separate call for "beginner" difficulty and poseType: "warm_up".
+Another call for "beginner" difficulty and poseType: "restorative" or "reclined" for cool-downs.
+The AI, being a diligent student, immediately understood! My logs showed it attempting this:
+INFO: Gemini made 3 function call(s) in one turn.
+INFO: Processing function call: getAvailableYogaPoses with args: {"difficulty":"intermediate","limit":50}
+INFO: Processing function call: getAvailableYogaPoses with args: {"poseType":"warm_up","limit":10,"difficulty":"beginner"}
+INFO: Processing function call: getAvailableYogaPoses with args: {"difficulty":"beginner","poseType":"restorative","limit":10}
+Use code with caution.
+This was exciting! Gemini models support parallel function calling, meaning the AI can request data from multiple "sources" (or the same tool with different parameters) in a single turn if it deems it efficient.
+The Pitfall: Mishandling Parallel Responses
+My backend GeminiService, however, was only prepared for a single function call per AI turn. When the AI sent back three functionCall parts in its response, and my service only processed the first one and sent back a single functionResponse, Gemini rightfully complained:
+ClientError: got status: 400 Bad Request. {"error":{..."message":"Please ensure that the number of function response parts is equal to the number of function call parts of the function call turn."...}}
+Use code with caution.
+The API is strict: if the model makes N function calls, your application must provide N corresponding function responses in the next turn of the conversation history.
+The Solution: Iterating and Aggregating Tool Responses
+This required a refactor of my GeminiService.ts:
+Identify All Calls: Instead of just finding the first functionCall, I now iterate through candidate1.content.parts to find all parts that are functionCall objects.
+Execute Tool for Each Call: Inside a for...of loop, I execute poseService.findPoses for each distinct set of arguments.
+Collect Response Parts: Each tool execution result is formatted into a Part object, specifically { functionResponse: { name: "getAvailableYogaPoses", response: { result: payloadFromMyDb } } }. These are collected into an array (allFunctionResponsePartsForHistory).
+Single Responding Turn: After processing all calls, I add a single new turn to the conversation history with role: 'user' (matching the Gemini JS SDK's "Step 4" example for providing tool results) and its parts array set to allFunctionResponsePartsForHistory.
+// Simplified logic in GeminiService.ts for handling parallel calls
+const modelTurnWithCalls = candidate1.content;
+const modelFunctionCallParts = modelTurnWithCalls.parts.filter(part => !!part.functionCall);
+
+if (modelFunctionCallParts.length > 0) {
+  currentContents.push(modelTurnWithCalls); // Add model's full turn
+
+  const allFunctionResponsePartsForHistory: Part[] = [];
+  for (const partWithFunctionCall of modelFunctionCallParts) {
+    const functionCall = partWithFunctionCall.functionCall;
+    // ... execute tool based on functionCall.args ...
+    const dbPosesResult = await poseService.findPoses(filters);
+    const toolPayload = formatToolResponse(dbPosesResult, functionCall.args); // Format for AI
+
+    allFunctionResponsePartsForHistory.push({
+      functionResponse: {
+        name: functionCall.name,
+        response: { result: toolPayload } // Nesting under 'result' for 'user' role
+      }
+    });
+  }
+  currentContents.push({
+    role: 'user', // Or 'function' - key is consistency with API expectation for parallel responses
+    parts: allFunctionResponsePartsForHistory
+  });
+  // Now send currentContents to AI for the second API call
+}
+Use code with caution.
+TypeScript
+While this approach correctly handled the API's structural requirements, I noticed the AI's final output quality (the generated sequence) became a bit unpredictable. It seemed that managing the context from three separate, potentially large, tool responses and then weaving them into a single coherent session was a more complex reasoning task for this particular model (gemini-1.5-flash-latest) than I initially anticipated, especially with the current prompt. The AI would sometimes generate overly long, repetitive, or slightly nonsensical session description fields, which occasionally led to truncated JSON if it hit output token limits.
+The "Stuck Description" and Truncated JSON
+One recurring Gremlin was the AI getting "stuck" generating the session's description field. It would write a good first sentence and then launch into a long, repetitive disclaimer about safety, consulting physicians, and how "all poses were found using the tool with X difficulty." This verbosity caused two problems:
+The description itself was unhelpful and full of boilerplate.
+More critically, the AI would sometimes hit its maximum output token limit while still writing this repetitive description, resulting in a truncated JSON response. My backend would then fail at the JSON.parse() stage.
+Here's an example of the AI getting carried away (part of the description field):
+"...Safety is always first. Always proceed with caution and reduce intensity when needed. The sequencing is a suggestion to consult with your physician or a yoga instructor before attempting. The poses may not be suitable for everybody and may cause injury if performed incorrectly. Never force any pose..." // (This repeated many times!)
+Use code with caution.
+This was a clear signal that my prompt instructions for the description field weren't strong or specific enough.
+Solution: Hyper-Specific Prompting for Critical Fields
+I had to become extremely prescriptive for the description:
+// Part of the AI Prompt regarding session metadata
+'description': Generate ONLY a 1 to 2 sentence, engaging, and user-friendly summary of THIS specific yoga session's main focus and intended flow.
+    Examples of good descriptions:
+    - "A gentle 30-minute flow to improve hip flexibility and calm the mind, ending with Savasana."
+    - "This dynamic intermediate session focuses on building core strength and includes several balancing poses."
+    ABSOLUTELY DO NOT include any general safety warnings, disclaimers about consulting physicians... in this 'description' field.
+    If, and ONLY IF, the 'getAvailableYogaPoses' tool returned NO poses that fit the primary request, then the ENTIRE description should ONLY be: "Could not find suitable poses for the selected criteria. Please try different filter options."
+Use code with caution.
+Giving clear positive examples and extremely explicit negative constraints ("ABSOLUTELY DO NOT...") helped significantly in reining in the AI's verbosity for this specific field. I also added a similar explicit instruction for handling Savasana if it wasn't found by the tool, telling the AI to add a standard Savasana block to the sequence rather than mentioning its absence in the description.
+Simplifying for Stability: Reverting to Single Tool Call (For Now)
+Given the increased complexity and occasional output issues with the parallel function call approach, I decided to take a strategic step back for the current V1. My wife's primary request was for anatomically focused sessions, and the parallel calls, while powerful, weren't essential for that immediate goal if a single, well-filtered tool call could provide enough poses.
+I reverted the GeminiService.ts logic to expect and handle only one primary function call from the AI per turn. The prompt was also simplified to guide the AI to make one main, generous tool call using the most relevant user-selected filters. This made the interaction simpler to debug and the AI's behavior more predictable for generating the core sequence. The multi-call logic is safely stashed as generateYogaSessionMultiToolCall for future exploration. This experience was invaluable; while newer SDKs or models might handle parallel calls more seamlessly with less intricate prompting, building it out manually provided a deep understanding of the conversational mechanics and history management required.
+Introducing True Anatomical Focus
+My wife's key request was to target specific anatomical areas. My initial focusAreas database field was a mix of themes (e.g., "restorative") and some anatomical aspects (e.g., "shoulder_opener"). This wasn't clean enough for precise anatomical filtering.
+The Pitfall: A user selecting "Shoulders" might not get poses that primarily target or stretch the shoulders if those poses weren't also tagged with a "shoulder-related" term in the general focusAreas array. The tool wasn't looking at my dedicated anatomyTargeted or anatomyStretched database fields.
+The Solution: A Dedicated anatomicalFocus Filter
+This was a more involved but crucial change:
+Tool Schema Update: Added anatomicalFocus: { type: Type.STRING, nullable: true } to the GetYogaPosesToolParamsSchema.
+Backend Service (poseService.ts):
+Modified buildWhereClause to search within both anatomyTargeted AND anatomyStretched JSON array columns if filters.anatomicalFocus was provided by the AI (e.g., LIKE %"shoulders"%).
+Created a new getDistinctAnatomicalAreas() function to extract simple, unique anatomical terms (e.g., "shoulders", "hamstrings", "core") from my detailed anatomyTargeted and anatomyStretched data. This involved parsing strings like "shoulders (deltoids, rotator cuff)" to get the primary "shoulders" term.
+API Endpoint (/api/sessions/options): This endpoint now calls getDistinctAnatomicalAreas() and returns an anatomicalFocusOptions list to the frontend.
+Frontend Form:
+Added a new "Anatomical Focus (Optional)" dropdown populated by options.anatomicalFocusOptions.
+Updated the Zod schema (generateSessionFormSchema) and TanStack Form defaultValues to include anatomicalFocus.
+AI Prompt Update: The prompt now takes userAnatomicalFocus as a parameter and instructs the AI: "If userAnatomicalFocus is provided (e.g., '${userAnatomicalFocus}'), use this value for the anatomicalFocus parameter of the getAvailableYogaPoses tool."
+Now, if a user selects "Shoulders," the AI calls the tool with anatomicalFocus: "shoulders", and my backend queries the correct database fields, returning poses genuinely relevant to the shoulders. The AI then uses this targeted list to build the session.
+This iterative process of defining user needs, mapping them to data structures, teaching the AI how to use tools to access that data, and then refining the AI's output based on its behavior has been the core of this refactor. It's less about just "prompting an LLM" and more about designing an entire system where the LLM is a powerful, but guided, component. We've come a long way, and the yoga sessions are now looking fantastic!
+This section tries to capture the essence of those debugging loops. Remember to adjust the dates and any specific code snippets if they don't perfectly match your final version from this phase. Good luck with the blog post!

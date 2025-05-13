@@ -1,5 +1,16 @@
 export const posts = [
   {
+    slug: "aigument",
+    metadata: {
+      title: "AIgument: The Art of AI Disagreement",
+      date: "2025-05-13",
+      featured_image: "/images/blog/aigument-preview.png",
+      excerpt:
+        "Tired of predictable AI? AIgument transforms LLMs into theatrical debaters with distinct personalities and adjustable intensity. Watch a Shakespearean actor lock horns with a conspiracy theorist, then share the chaos.",
+      tags: ["AI", "Next.js", "Vercel AI SDK", "Gemini", "Debate"],
+    },
+  },
+  {
     slug: "learning-go",
     metadata: {
       title:

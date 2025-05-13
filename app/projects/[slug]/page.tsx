@@ -9,7 +9,7 @@ import ProjectLinks from "@/app/components/ui/Projects/ProjectLinks";
 import ProjectFeatures from "@/app/components/ui/Projects/ProjectFeatures";
 import ProjectArchitecture from "@/app/components/ui/Projects/ProjectArchitecture";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.joshtuddenham.tech"; // Ensure this is set in your .env
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.joshtuddenham.tech";
 
 
 const LazyVideoComponent = dynamic(
