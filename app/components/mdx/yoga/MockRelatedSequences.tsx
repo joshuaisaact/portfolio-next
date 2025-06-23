@@ -1,8 +1,7 @@
 import React from "react";
 import { QueueListIcon } from "@heroicons/react/24/outline";
-import { LuBicepsFlexed, LuMoonStar } from "react-icons/lu";
-import { GrYoga } from "react-icons/gr";
-import { FaBalanceScale } from "react-icons/fa";
+import { LuMoonStar } from "react-icons/lu";
+
 import { WiDaySunny, WiSunrise, WiSunset } from "react-icons/wi";
 import LotusIcon from "./LotusIcon";
 
@@ -37,10 +36,6 @@ const getIntensityClassName = (intensity: string) => {
     case 'vigorous': return 'intensity-vigorous';
     default: return 'intensity-gentle';
   }
-};
-
-const getYogaStyleGradientClass = (style: string) => {
-  return `yoga-style-${style.toLowerCase().replace(/\s+/g, '-')}`;
 };
 
 // Mock SequenceCard component
@@ -185,7 +180,7 @@ const MockRelatedSequences: React.FC<MockRelatedSequencesProps> = ({
                   Related Sequences
                 </h3>
                 <p className="text-sm text-gray-600">
-                  From Maya's collection with detailed guides
+                  From Maya&apos;s collection with detailed guides
                 </p>
               </div>
             </div>

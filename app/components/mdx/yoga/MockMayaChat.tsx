@@ -2,9 +2,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   PaperAirplaneIcon,
-  XMarkIcon,
-  MinusIcon,
-  PlusIcon,
 } from "@heroicons/react/24/outline";
 import MockSessionSuggestion from "./MockSession";
 import MockRelatedSequences from "./MockRelatedSequences";
@@ -389,8 +386,7 @@ const MockMayaChat: React.FC<MockMayaChatProps> = ({ scenario }) => {
           </div>
         )}
 
-        {messages.map((message, index) => {
-          const isLatestMayaMessage = message.type === "maya" && index === messages.length - 1;
+        {messages.map((message) => {
 
           return (
             <div
