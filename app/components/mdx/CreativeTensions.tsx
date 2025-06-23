@@ -39,49 +39,49 @@ const CreativeTensions: React.FC = () => {
     <div className="my-8">
       <div className="grid gap-6">
         {tensions.map((tension, index) => (
-          <div key={index} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          <div key={index} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
             {/* Header */}
-            <div className="text-center py-6 border-b border-gray-100">
-              <h3 className="text-xl font-semibold text-gray-900 mt-0 mb-2">
+            <div className="text-center py-6 border-b border-gray-100 dark:border-gray-700">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mt-0 mb-2">
                 {tension.concept}
               </h3>
-              <p className="text-sm text-gray-600 m-0">
+              <p className="text-sm text-gray-600 dark:text-gray-300 m-0">
                 {tension.subtitle}
               </p>
             </div>
 
             {/* Tension Visualization */}
             <div className="p-6">
-              <div className="flex items-center space-x-6">
+              <div className="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-6">
                 {/* Positive Side */}
                 <div className="flex-1">
-                  <div className="bg-green-50 rounded-lg p-4 border-l-4 border-green-500">
+                  <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border-l-4 border-green-500">
                     <div className="flex items-start space-x-3">
                       <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                         <PlusIcon className="w-4 h-4 text-white" />
                       </div>
-                      <p className="text-gray-800 font-medium leading-relaxed m-0">
+                      <p className="text-gray-800 dark:text-gray-200 font-medium leading-relaxed m-0">
                         {tension.positive}
                       </p>
                     </div>
                   </div>
                 </div>
 
-                {/* Arrow */}
-                <div className="flex-shrink-0">
-                  <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                    <ArrowsRightLeftIcon className="w-6 h-6 text-gray-500" />
+                {/* Arrow - horizontal on desktop, vertical on mobile */}
+                <div className="flex-shrink-0 flex justify-center md:block">
+                  <div className="w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center transform md:transform-none rotate-90 md:rotate-0">
+                    <ArrowsRightLeftIcon className="w-6 h-6 text-gray-500 dark:text-gray-400" />
                   </div>
                 </div>
 
                 {/* Negative Side */}
                 <div className="flex-1">
-                  <div className="bg-red-50 rounded-lg p-4 border-l-4 border-red-500">
+                  <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-4 border-l-4 border-red-500">
                     <div className="flex items-start space-x-3">
                       <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                         <MinusIcon className="w-4 h-4 text-white" />
                       </div>
-                      <p className="text-gray-800 font-medium leading-relaxed m-0">
+                      <p className="text-gray-800 dark:text-gray-200 font-medium leading-relaxed m-0">
                         {tension.negative}
                       </p>
                     </div>

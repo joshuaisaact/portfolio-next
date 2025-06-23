@@ -70,32 +70,36 @@ export function BlogHeader({
         )}
       </div>
 
-      {featured_image && (
+      {(featured_image || featured_video) && (
         <div
-          className="aspect-video relative overflow-hidden rounded-lg mb-8"
+          className={`relative overflow-hidden rounded-lg mb-8 ${featured_video
+            ? "aspect-square bg-black flex items-center justify-center"
+            : "aspect-video"
+            }`}
           aria-hidden="true"
         >
-          <Image
-            src={featured_image}
-            alt={title}
-            fill
-            className="max-w-full h-auto object-contain"
-            priority
-            sizes="(max-width: 640px) calc(100vw - 2rem),
-            (max-width: 768px) calc(100vw - 4rem),
-            672px"
-          />
-          {featured_video && (
+          {featured_video ? (
             <video
               src={featured_video}
               autoPlay
               loop
               muted
               playsInline
-              className="absolute top-0 left-0 w-full h-full object-cover"
-              aria-label={`Video thumbnail for ${title}`}
+              className="max-w-full max-h-full object-contain"
+              aria-label={`Video for ${title}`}
             />
-          )}
+          ) : featured_image ? (
+            <Image
+              src={featured_image}
+              alt={title}
+              fill
+              className="object-contain"
+              priority
+              sizes="(max-width: 640px) calc(100vw - 2rem),
+              (max-width: 768px) calc(100vw - 4rem),
+              672px"
+            />
+          ) : null}
         </div>
       )}
     </div>

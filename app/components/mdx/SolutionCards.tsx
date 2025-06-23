@@ -128,18 +128,18 @@ const SolutionCard: React.FC<{ solution: Solution; index: number }> = ({ solutio
         opacity: opacity,
       }}
     >
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group">
         {/* Header */}
-        <div className="p-6 border-b border-gray-100">
+        <div className="p-6 border-b border-gray-100 dark:border-gray-700">
           <div className="flex items-start space-x-4">
             <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${solution.gradient} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300`}>
               <Icon className="w-6 h-6 text-white" />
             </div>
             <div className="flex-1">
-              <h3 className="text-xl font-semibold text-gray-900 mb-2 mt-0">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 mt-0">
                 {solution.title}
               </h3>
-              <p className="text-gray-600 text-sm leading-relaxed m-0">
+              <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed m-0">
                 {solution.description}
               </p>
             </div>
@@ -150,22 +150,22 @@ const SolutionCard: React.FC<{ solution: Solution; index: number }> = ({ solutio
         <div className="p-6 space-y-6">
           {/* Approach */}
           <div>
-            <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center mt-0">
+            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center mt-0">
               <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
               The Approach
             </h4>
-            <p className="text-gray-700 leading-relaxed m-0">
+            <p className="text-gray-700 dark:text-gray-300 leading-relaxed m-0">
               {solution.approach}
             </p>
           </div>
 
           {/* Problem */}
           <div>
-            <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center mt-0">
+            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center mt-0">
               <ExclamationTriangleIcon className="w-4 h-4 text-amber-500 mr-2" />
               The Problem
             </h4>
-            <p className="text-gray-600 leading-relaxed m-0">
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed m-0">
               {solution.problem}
             </p>
           </div>
