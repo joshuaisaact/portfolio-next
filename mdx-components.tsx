@@ -84,14 +84,14 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     h1: (props) => (
       <h1
         id="article-title"
-        className="relative z-10 bg-gradient-to-b from-gray-900 to-gray-700 bg-clip-text text-4xl font-bold tracking-tight text-transparent dark:from-gray-100 dark:to-gray-300"
+        className="text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-100"
       >
         {props.children}
       </h1>
     ),
     h2: (props) => (
       <h2
-        className="relative z-10 bg-gradient-to-b from-gray-800 to-gray-600 bg-clip-text text-3xl font-semibold tracking-tight text-transparent dark:text-gray-200 dark:from-gray-200 dark:to-gray-400"
+        className="text-3xl font-semibold tracking-tight text-gray-800 dark:text-gray-200"
         id={`heading-${props.children?.toString().toLowerCase().replace(/\s+/g, "-")}`}
       >
         {props.children}

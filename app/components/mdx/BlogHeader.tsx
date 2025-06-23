@@ -6,6 +6,7 @@ interface BlogHeaderProps {
   title: string;
   date: string;
   featured_image?: string;
+  featured_video?: string;
   tags?: string[];
 }
 
@@ -13,6 +14,7 @@ export function BlogHeader({
   title,
   date,
   featured_image,
+  featured_video,
   tags,
 }: BlogHeaderProps) {
   const formattedDate = new Date(date).toLocaleDateString("en-GB", {
@@ -83,6 +85,17 @@ export function BlogHeader({
             (max-width: 768px) calc(100vw - 4rem),
             672px"
           />
+          {featured_video && (
+            <video
+              src={featured_video}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute top-0 left-0 w-full h-full object-cover"
+              aria-label={`Video thumbnail for ${title}`}
+            />
+          )}
         </div>
       )}
     </div>

@@ -1,0 +1,156 @@
+import { BlogHeader } from "@/app/components/mdx/BlogHeader";
+import { generateMetadataFromPost } from "../../../lib/generate-post-metadata";
+import MockMayaChat from "@/app/components/mdx/yoga/MockMayaChat";
+import SolutionCards from "@/app/components/mdx/SolutionCards";
+import CreativeTensions from "@/app/components/mdx/CreativeTensions";
+import AILazinessDomains from "@/app/components/mdx/AILazinessDomains";
+
+
+export const postMetadata = {
+  title: "The AI Creativity Paradox: How I Built Maya and Hit the Efficiency Wall",
+  date: "2025-06-22", // or whenever you publish
+  featured_image: "/images/blog/maya-preview.png", // you'll need to create this
+  featured_video: "/videos/maya-demo.mp4", // Your new video!
+  excerpt: "Building an AI yoga instructor revealed a fundamental tension in AI development: how do you keep systems creative as they become more efficient?",
+  tags: ["AI", "LLM", "Creativity", "Architecture", "Yoga", "Product Development"],
+};
+export const metadata = generateMetadataFromPost(postMetadata);
+
+<BlogHeader {...postMetadata} />
+
+# The AI Creativity Paradox: How I Built Maya and Hit the Efficiency Wall
+
+*Or: Why teaching an AI yoga instructor to be creative reveals fundamental problems with intelligent content generation*
+
+## The Origin Story: Building Maya
+
+It started innocently enough. My wife went on a month-long trip to India to train as a yoga teacher. When she came back, she mentioned wanting a good app for building and planning yoga lessons—something better than the clunky existing tools she'd found.
+
+Naturally, I did what any reasonable developer would do: I built her a personalized AI yoga instructor.
+
+I created Maya—a warm, empathetic AI yoga companion who could understand what users needed and generate personalized sessions. Maya was brilliant. She could create custom sessions when someone said they were stressed, or design energizing sequences for morning practice.
+
+## Meet Maya in Action
+
+Here's what chatting with Maya actually looks like. Click "Play Demo" to see her in action:
+
+<MockMayaChat scenario="working-well" />
+
+Maya worked beautifully. Too beautifully, in fact. But then my wife tried it.
+
+## The Reality Check
+
+"That's not how yoga works," she said, with the patience of someone who's watched their partner overthink a simple problem.
+
+"You don't just randomly combine poses. There are sequences, flows, transitions. Yoga has structure."
+
+Back to the drawing board.
+
+## The Rebuild: Understanding Structure
+
+Two weeks later, I had completely rewritten the data model. Instead of just generating random combinations, I now had:
+
+- **Poses**: Individual yoga positions
+- **Sequences**: Structured flows of poses (like "Sun Salutation A" or "Evening Wind-Down Flow")
+- **Classes**: Combinations of multiple sequences
+- **Sessions**: Legacy AI-generated content (being phased out)
+
+Maya got smarter too. Instead of just creating sessions from scratch, she could now search through proper sequences, understand traditional flows, and suggest existing practices.
+
+
+## The Wall: When Success Creates New Problems
+
+As Maya got better at her job, I started planning the next evolution. Currently, she generates individual sessions (custom sequences of poses). But the proper architecture called for her to create **Classes**—combinations of multiple sequences that could form complete, structured yoga practices.
+
+This seemed straightforward until I realized the implications:
+
+**If Maya can create sequences, should she also search for and reuse existing ones?**
+
+The obvious answer is "yes"—why recreate what already exists? But this immediately raises a more troubling question:
+
+**What happens when AI gets good at reusing content?**
+
+But here's where it gets interesting. Watch what happens when Maya gets really good at her job:
+
+<MockMayaChat scenario="too-good" />
+
+Notice how in the second demo, Maya keeps finding existing sequences but never creates anything new? This is the creativity paradox in action.
+
+## The Creativity vs. Efficiency Dilemma
+
+Here's the problem: AI systems, like most optimization systems, tend toward efficiency. Given the choice between creating something new and reusing something that works, they'll choose reuse every time. It's faster, safer, and often produces better immediate results.
+
+But creativity requires inefficiency. It requires trying new things, making mistakes, and occasionally producing something worse in service of eventually producing something better.
+
+As Maya gets smarter about finding existing sequences, she faces a fundamental tension:
+
+- **Efficiency**: "I found a perfect hip-opening sequence for evening practice. I'll use that."
+- **Creativity**: "This user mentioned they're feeling anxious about work. Let me create a custom sequence that addresses that specific emotional state."
+- **Personalization**: "They said they have 22 minutes. Let me adjust this existing sequence to fit exactly."
+
+All three are valuable, but they pull in different directions.
+
+## The Lazy AI Problem
+
+The more I thought about this, the more I realized it's a broader issue in AI development. Give an AI system the ability to reuse content, and you risk creating what I call "Lazy AI"—systems that become increasingly conservative, always choosing the safe, pre-existing option over creative risk-taking.
+
+I've seen this in other domains:
+- **Code generation**: AI that always suggests the same boilerplate instead of exploring new patterns
+- **Content creation**: Systems that remix existing content rather than generating truly novel ideas
+- **Design tools**: AI that converges on safe, familiar patterns rather than pushing boundaries
+
+The fundamental question becomes: **How do you build AI systems that remain creative as they become more knowledgeable?**
+
+## Possible Solutions (None Perfect)
+
+I've considered several approaches to this problem:
+
+<SolutionCards />
+
+## The Meta Problem: Preventing AI Laziness
+
+The more I've worked on this, the more I've realized we're dealing with a fundamental architectural question in AI systems: How do you prevent intelligence from becoming conservative?
+
+This isn't just about Maya and yoga sequences. It's about:
+
+<AILazinessDomains />
+
+## The Broader Implications
+
+What makes this particularly interesting is that it mirrors human creative processes. Professional artists, writers, and designers face the same tension:
+
+<CreativeTensions />
+
+The difference is that humans have internal drives for novelty, self-expression, and artistic growth. AI systems, by default, optimize for measurable success metrics, which usually favor efficiency over creativity. This is exactly what I discovered with Maya: as she became better at finding existing solutions, she naturally gravitated away from creating new ones. The challenge isn't technical. It's philosophical. How do we build AI systems that value the unmeasurable aspects of creativity alongside the metrics we can track?
+
+## What Maya Taught Me
+
+Building Maya revealed that the most interesting problems in AI aren't always technical. They're philosophical. The questions that keep me up at night aren't "How do I make this work?" but rather:
+
+- Should AI systems have an intrinsic drive toward novelty?
+- How do we measure creativity vs. quality in generated content?
+- What's the right balance between personalization and efficiency?
+- How do we design systems that evolve rather than just optimize?
+
+Maya is currently in limbo while I figure this out. She's brilliant at what she does, but I'm hesitant to make her more capable until I understand how to keep her creative.
+
+## The Open Questions
+
+I don't have definitive answers to this problem yet, but I've been exploring several possibilities.
+
+One approach might be building hybrid systems—multiple AIs with specialized roles, some optimized for efficiency and others dedicated to creative exploration. Another direction could involve developing better creativity metrics, finding ways to measure and reward innovative output alongside traditional success measures.
+
+Or perhaps the solution requires embracing a fundamental truth: that some inefficiency is simply the price of innovation.
+
+But maybe I'm overcomplicating this. Perhaps the best AI systems should feel more human, complete with all the beautiful inefficiency that makes human creativity so compelling. After all, the most interesting human work often comes from our willingness to take detours, make mistakes, and occasionally choose the harder path simply because it feels right.
+
+What I do know is this: as AI systems become more sophisticated, these questions become more critical. The goal isn't just to build systems that work efficiently—it's to build systems that continue to surprise us, challenge us, and maybe even teach us something new about creativity itself.
+
+*If you've faced similar challenges building AI systems, or have thoughts on balancing creativity vs. efficiency, I'd love to hear about it. This feels like a problem the entire AI development community should be thinking about.*
+
+---
+
+**Technical Details**: Maya is built with TypeScript, uses Google's Gemini models for conversation and content generation, and employs function calling to search through yoga sequences and poses. The architecture uses Elysia.js for the backend API and includes sophisticated prompt engineering to maintain Maya's personality while ensuring helpful responses. The creativity vs. efficiency dilemma emerged during the transition from generating individual sessions to creating multi-sequence classes.
+
+**Live Project**: You can view the live version of the project that inspired this post at [joshdesk.live](https://joshdesk.live).
+

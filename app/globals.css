@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -59,6 +61,35 @@ html {
   .custom-nav-link {
     @apply underline decoration-[var(--theme-1)] decoration-2 underline-offset-[2px]
            dark:text-gray-200;
+  }
+
+  .maya-chat {
+    font-family: var(--font-sans); /* Use the same font definition as your main app */
+  }
+
+  /* Maya chat scrollbar styling */
+  .maya-chat .overflow-y-auto {
+    scrollbar-width: thin;
+    scrollbar-color: #a855f7 #f3f4f6;
+  }
+
+  .maya-chat .overflow-y-auto::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .maya-chat .overflow-y-auto::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    border-radius: 4px;
+  }
+
+  .maya-chat .overflow-y-auto::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    border-radius: 4px;
+    border: 1px solid #f3f4f6;
+  }
+
+  .maya-chat .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #9333ea, #db2777);
   }
 }
 
@@ -234,4 +265,15 @@ code[data-line-numbers] {
     > [data-line]::before {
     width: 3rem;
   }
+}
+
+/* Maya name styling - gradient text matching her color scheme */
+.maya-name {
+  background: linear-gradient(135deg, #a855f7, #ec4899);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600;
+  display: inline;
+  font-family: 'Poppins', sans-serif; /* Ensure Maya name uses Poppins too */
 }

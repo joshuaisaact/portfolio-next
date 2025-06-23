@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import "../styles/globals.css";
+import "./globals.css";
 import { SITE_CONFIG } from "@/lib/constants/siteConfig";
 import { jakarta } from "@/lib/fonts";
 

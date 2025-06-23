@@ -1,5 +1,15 @@
 export const posts = [
   {
+    slug: "maya-creativity-paradox",
+    metadata: {
+      title: "The AI Creativity Paradox: How I Built Maya and Hit the Efficiency Wall",
+      date: "2025-06-22",
+      featured_image: "/images/blog/maya-preview.png",
+      excerpt: "Building an AI yoga instructor revealed a fundamental tension in AI development: how do you keep systems creative as they become more efficient?",
+      tags: ["AI", "LLM", "Creativity", "Architecture", "Yoga", "Product Development"],
+    },
+  },
+  {
     slug: "aigument",
     metadata: {
       title: "AIgument: The Art of AI Disagreement",

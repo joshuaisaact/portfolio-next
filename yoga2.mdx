@@ -1,0 +1,107 @@
+
+Leveling Up: Advanced Tooling, Parallel Calls, and Taming the Verbose AI
+With the foundational shift to a database - backed AI complete, the core loop was working: the AI could call my getAvailableYogaPoses tool and use real poses.However, the journey to a truly intelligent and reliable session generator was far from over.The next phase involved teaching the AI more sophisticated tool usage, wrestling with its occasional quirks, and making the user's filtering options more powerful.
+The Ambitious Leap: Encouraging Multiple Tool Calls
+My initial prompt guided the AI to make one primary call to getAvailableYogaPoses, fetching a broad set of poses based on difficulty.While functional, I realized that for truly well - rounded sessions, the AI needed a more diverse palette.A session isn't just one type of pose; it needs warm-ups, cool-downs, and poses that complement the main focus.
+So, I updated the prompt, explicitly instructing the AI to make multiple, targeted calls to the getAvailableYogaPoses tool:
+One call for poses matching the user's primary difficulty and focusArea.
+A separate call for "beginner" difficulty and poseType: "warm_up".
+Another call for "beginner" difficulty and poseType: "restorative" or "reclined" for cool - downs.
+The AI, being a diligent student, immediately understood! My logs showed it attempting this:
+INFO: Gemini made 3 function call(s) in one turn.
+  INFO: Processing function call: getAvailableYogaPoses with args: { "difficulty": "intermediate", "limit": 50 }
+INFO: Processing function call: getAvailableYogaPoses with args: { "poseType": "warm_up", "limit": 10, "difficulty": "beginner" }
+INFO: Processing function call: getAvailableYogaPoses with args: { "difficulty": "beginner", "poseType": "restorative", "limit": 10 }
+
+This was exciting! Gemini models support parallel function calling, meaning the AI can request data from multiple "sources"(or the same tool with different parameters) in a single turn if it deems it efficient.
+
+The Pitfall: Mishandling Parallel Responses
+
+My backend GeminiService, however, was only prepared for a single function call per AI turn.When the AI sent back three functionCall parts in its response, and my service only processed the first one and sent back a single functionResponse, Gemini rightfully complained:
+ClientError: got status: 400 Bad Request. { "error": {..."message": "Please ensure that the number of function response parts is equal to the number of function call parts of the function call turn."... } }
+
+The API is strict: if the model makes N function calls, your application must provide N corresponding function responses in the next turn of the conversation history.
+
+The Solution: Iterating and Aggregating Tool Responses
+This required a refactor of my GeminiService.ts:
+Identify All Calls: Instead of just finding the first functionCall, I now iterate through candidate1.content.parts to find all parts that are functionCall objects.
+Execute Tool for Each Call: Inside a for...of loop, I execute poseService.findPoses for each distinct set of arguments.
+Collect Response Parts: Each tool execution result is formatted into a Part object, specifically { functionResponse: { name: "getAvailableYogaPoses", response: { result: payloadFromMyDb } } }. These are collected into an array(allFunctionResponsePartsForHistory).
+Single Responding Turn: After processing all calls, I add a single new turn to the conversation history with role: 'user'(matching the Gemini JS SDK's "Step 4" example for providing tool results) and its parts array set to allFunctionResponsePartsForHistory.
+// Simplified logic in GeminiService.ts for handling parallel calls
+const modelTurnWithCalls = candidate1.content;
+const modelFunctionCallParts = modelTurnWithCalls.parts.filter(part => !!part.functionCall);
+
+if (modelFunctionCallParts.length > 0) {
+  currentContents.push(modelTurnWithCalls); // Add model's full turn
+
+  const allFunctionResponsePartsForHistory: Part[] = [];
+  for (const partWithFunctionCall of modelFunctionCallParts) {
+    const functionCall = partWithFunctionCall.functionCall;
+    // ... execute tool based on functionCall.args ...
+    const dbPosesResult = await poseService.findPoses(filters);
+    const toolPayload = formatToolResponse(dbPosesResult, functionCall.args); // Format for AI
+
+    allFunctionResponsePartsForHistory.push({
+      functionResponse: {
+        name: functionCall.name,
+        response: { result: toolPayload } // Nesting under 'result' for 'user' role
+      }
+    });
+  }
+  currentContents.push({
+    role: 'user', // Or 'function' - key is consistency with API expectation for parallel responses
+    parts: allFunctionResponsePartsForHistory
+  });
+  // Now send currentContents to AI for the second API call
+}
+TypeScript
+While this approach correctly handled the API's structural requirements, I noticed the AI's final output quality(the generated sequence) became a bit unpredictable.It seemed that managing the context from three separate, potentially large, tool responses and then weaving them into a single coherent session was a more complex reasoning task for this particular model(gemini - 1.5 - flash - latest) than I initially anticipated, especially with the current prompt.The AI would sometimes generate overly long, repetitive, or slightly nonsensical session description fields, which occasionally led to truncated JSON if it hit output token limits.
+  The "Stuck Description" and Truncated JSON
+One recurring Gremlin was the AI getting "stuck" generating the session's description field. It would write a good first sentence and then launch into a long, repetitive disclaimer about safety, consulting physicians, and how "all poses were found using the tool with X difficulty." This verbosity caused two problems:
+The description itself was unhelpful and full of boilerplate.
+More critically, the AI would sometimes hit its maximum output token limit while still writing this repetitive description, resulting in a truncated JSON response.My backend would then fail at the JSON.parse() stage.
+  Here's an example of the AI getting carried away (part of the description field):
+"...Safety is always first. Always proceed with caution and reduce intensity when needed. The sequencing is a suggestion to consult with your physician or a yoga instructor before attempting. The poses may not be suitable for everybody and may cause injury if performed incorrectly. Never force any pose..." // (This repeated many times!)
+
+This was a clear signal that my prompt instructions for the description field weren't strong or specific enough.
+
+Solution: Hyper - Specific Prompting for Critical Fields
+I had to become extremely prescriptive for the description:
+  // Part of the AI Prompt regarding session metadata
+  'description': Generate ONLY a 1 to 2 sentence, engaging, and user - friendly summary of THIS specific yoga session's main focus and intended flow.
+    Examples of good descriptions:
+- "A gentle 30-minute flow to improve hip flexibility and calm the mind, ending with Savasana."
+  - "This dynamic intermediate session focuses on building core strength and includes several balancing poses."
+    ABSOLUTELY DO NOT include any general safety warnings, disclaimers about consulting physicians... in this 'description' field.
+  If, and ONLY IF, the 'getAvailableYogaPoses' tool returned NO poses that fit the primary request, then the ENTIRE description should ONLY be: "Could not find suitable poses for the selected criteria. Please try different filter options."
+
+Giving clear positive examples and extremely explicit negative constraints("ABSOLUTELY DO NOT...") helped significantly in reining in the AI's verbosity for this specific field. I also added a similar explicit instruction for handling Savasana if it wasn't found by the tool, telling the AI to add a standard Savasana block to the sequence rather than mentioning its absence in the description.
+
+Simplifying for Stability: Reverting to Single Tool Call(For Now)
+Given the increased complexity and occasional output issues with the parallel function call approach, I decided to take a strategic step back for the current V1.My wife's primary request was for anatomically focused sessions, and the parallel calls, while powerful, weren't essential for that immediate goal if a single, well - filtered tool call could provide enough poses.
+
+I reverted the GeminiService.ts logic to expect and handle only one primary function call from the AI per turn.The prompt was also simplified to guide the AI to make one main, generous tool call using the most relevant user-selected filters.This made the interaction simpler to debug and the AI's behavior more predictable for generating the core sequence. The multi-call logic is safely stashed as generateYogaSessionMultiToolCall for future exploration. This experience was invaluable; while newer SDKs or models might handle parallel calls more seamlessly with less intricate prompting, building it out manually provided a deep understanding of the conversational mechanics and history management required.
+
+Introducing True Anatomical Focus
+
+My wife's key request was to target specific anatomical areas. My initial focusAreas database field was a mix of themes (e.g., "restorative") and some anatomical aspects (e.g., "shoulder_opener"). This wasn't clean enough for precise anatomical filtering.
+
+The Pitfall: A user selecting "Shoulders" might not get poses that primarily target or stretch the shoulders if those poses weren't also tagged with a "shoulder-related" term in the general focusAreas array. The tool wasn't looking at my dedicated anatomyTargeted or anatomyStretched database fields.
+
+The Solution: A Dedicated anatomicalFocus Filter
+
+This was a more involved but crucial change:
+
+Tool Schema Update: Added anatomicalFocus: { type: Type.STRING, nullable: true } to the GetYogaPosesToolParamsSchema.
+Backend Service(poseService.ts):
+Modified buildWhereClause to search within both anatomyTargeted AND anatomyStretched JSON array columns if filters.anatomicalFocus was provided by the AI(e.g., LIKE % "shoulders" %).
+Created a new getDistinctAnatomicalAreas() function to extract simple, unique anatomical terms(e.g., "shoulders", "hamstrings", "core") from my detailed anatomyTargeted and anatomyStretched data.This involved parsing strings like "shoulders (deltoids, rotator cuff)" to get the primary "shoulders" term.
+API Endpoint(/api/sessions / options): This endpoint now calls getDistinctAnatomicalAreas() and returns an anatomicalFocusOptions list to the frontend.
+Frontend Form:
+Added a new "Anatomical Focus (Optional)" dropdown populated by options.anatomicalFocusOptions.
+Updated the Zod schema(generateSessionFormSchema) and TanStack Form defaultValues to include anatomicalFocus.
+AI Prompt Update: The prompt now takes userAnatomicalFocus as a parameter and instructs the AI: "If userAnatomicalFocus is provided (e.g., '${userAnatomicalFocus}'), use this value for the anatomicalFocus parameter of the getAvailableYogaPoses tool."
+Now, if a user selects "Shoulders," the AI calls the tool with anatomicalFocus: "shoulders", and my backend queries the correct database fields, returning poses genuinely relevant to the shoulders.The AI then uses this targeted list to build the session.
+This iterative process of defining user needs, mapping them to data structures, teaching the AI how to use tools to access that data, and then refining the AI's output based on its behavior has been the core of this refactor. It's less about just "prompting an LLM" and more about designing an entire system where the LLM is a powerful, but guided, component.We've come a long way, and the yoga sessions are now looking fantastic!
+This section tries to capture the essence of those debugging loops.Remember to adjust the dates and any specific code snippets if they don't perfectly match your final version from this phase. Good luck with the blog post!
