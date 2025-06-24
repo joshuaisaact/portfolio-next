@@ -50,8 +50,8 @@ function BlogLayout({
               tags={metadata.tags}
             />
           )}
-          <div className="mt-8 rounded-lg bg-white/80 p-8 shadow-lg backdrop-blur-sm ring-1 ring-gray-900/5 dark:bg-gray-900/80 dark:ring-white/5">
-            <div className="p-4 sm:p-6 md:p-8">{children}</div>
+          <div className="mt-8 rounded-lg bg-white/80 p-2 sm:p-4 md:p-8 shadow-lg backdrop-blur-sm ring-1 ring-gray-900/5 dark:bg-gray-900/80 dark:ring-white/5">
+            <div className="p-2 sm:p-4 md:p-8">{children}</div>
           </div>
         </article>
       </main>

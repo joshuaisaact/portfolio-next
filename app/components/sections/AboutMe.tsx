@@ -3,7 +3,7 @@ import { ColorCycler } from "../ColourCycler";
 
 export function AboutMe() {
   return (
-    <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 justify-center lg:justify-items-end py-8 sm:py-12 md:py-16 lg:py-24 sm:mx-8">
+    <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 justify-center lg:justify-items-end py-8 sm:py-12 md:py-16 lg:py-24 mx-0 sm:mx-4 lg:mx-8">
       <div className="order-2 lg:order-1 p-2 sm:p-4 justify-self-center lg:justify-self-end space-y-6">
         <div className="space-y-4">
           <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl dark:text-gray-200 leading-normal">

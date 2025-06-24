@@ -14,7 +14,7 @@ export function Section({ id, title, children }: SectionProps) {
     <section
       id={id}
       aria-labelledby={headingId}
-      className="relative py-8 sm:py-16 md:py-20 border-t border-gray-200 dark:border-gray-800 px-4 sm:px-8 md:px-12" // Adjusted padding
+      className="relative py-8 sm:py-16 md:py-20 border-t border-gray-200 dark:border-gray-800 px-0 sm:px-4 md:px-8" // Reduced mobile padding
     >
       <div className="space-y-6 sm:space-y-8">
         <SectionHeader title={title} id={headingId} />

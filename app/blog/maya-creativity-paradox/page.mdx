@@ -4,6 +4,7 @@ import MockMayaChat from "@/app/components/mdx/yoga/MockMayaChat";
 import SolutionCards from "@/app/components/mdx/SolutionCards";
 import CreativeTensions from "@/app/components/mdx/CreativeTensions";
 import AILazinessDomains from "@/app/components/mdx/AILazinessDomains";
+import YogaDataStructure from "@/app/components/mdx/YogaDataStructure";
 
 
 export const postMetadata = {
@@ -46,17 +47,14 @@ Back to the drawing board.
 
 ## The Rebuild: Understanding Structure
 
-Two weeks later, I had completely rewritten the data model. Instead of just generating random combinations, I now had:
+Two weeks later, I had completely rewritten the data model:
 
-- **Poses**: Individual yoga positions
-- **Sequences**: Structured flows of poses (like "Sun Salutation A" or "Evening Wind-Down Flow")
-- **Classes**: Combinations of multiple sequences
-- **Sessions**: Legacy AI-generated content (being phased out)
+<YogaDataStructure />
 
 Maya got smarter too. Instead of just creating sessions from scratch, she could now search through proper sequences, understand traditional flows, and suggest existing practices.
 
 
-## The Wall: When Success Creates New Problems
+## When Success Creates New Problems
 
 As Maya got better at her job, I started planning the next evolution. Currently, she generates individual sessions (custom sequences of poses). But the proper architecture called for her to create **Classes**—combinations of multiple sequences that could form complete, structured yoga practices.
 
@@ -90,12 +88,12 @@ All three are valuable, but they pull in different directions.
 
 ## The Lazy AI Problem
 
-The more I thought about this, the more I realized it's a broader issue in AI development. Give an AI system the ability to reuse content, and you risk creating what I call "Lazy AI"—systems that become increasingly conservative, always choosing the safe, pre-existing option over creative risk-taking.
+The more I thought about this, the more I realized it's a broader issue in AI development. Give an AI system the ability to reuse content, and you risk creating what's known as "Lazy AI": systems that become increasingly conservative, always choosing the safe, pre-existing option over creative risk-taking.
 
 I've seen this in other domains:
 - **Code generation**: AI that always suggests the same boilerplate instead of exploring new patterns
 - **Content creation**: Systems that remix existing content rather than generating truly novel ideas
-- **Design tools**: AI that converges on safe, familiar patterns rather than pushing boundaries
+- **Design tools**: AI that converges on safe, familiar patterns rather than pushing boundaries (I'm sure we all recognise this one already, things have an 'AI look')
 
 The fundamental question becomes: **How do you build AI systems that remain creative as they become more knowledgeable?**
 

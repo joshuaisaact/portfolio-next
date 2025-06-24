@@ -24,7 +24,7 @@ export function Projects({ projects, introText, cardType }: ProjectsProps) {
         </div>
       )}
       <div
-        className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 md:px-2 sm:px-0"
+        className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8"
         role="list"
         aria-label="Project list"
       >
