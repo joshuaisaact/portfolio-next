@@ -2,7 +2,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   PaperAirplaneIcon,
+  ChatBubbleLeftRightIcon,
+  ClockIcon,
+  ChartBarIcon,
+  FireIcon,
+  CheckIcon,
 } from "@heroicons/react/24/outline";
+import { FaBalanceScale } from "react-icons/fa";
+import { LuBicepsFlexed } from "react-icons/lu";
+import { GrYoga } from "react-icons/gr";
 import MockSessionSuggestion from "./MockSession";
 import MockRelatedSequences from "./MockRelatedSequences";
 import LotusIcon from "./LotusIcon";
@@ -14,6 +22,7 @@ interface MockMessage {
   timestamp: Date;
   suggestions?: string[];
   shouldGenerateSession?: boolean;
+  shouldShowGenerationUI?: boolean;
   sessionParams?: {
     durationMinutes: number;
     difficulty: string;
@@ -34,6 +43,253 @@ interface MockMessage {
 
 interface MockMayaChatProps {
   scenario: "working-well" | "too-good";
+}
+
+// Mock Generation UI Component
+function MockGenerationUI() {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [conversationalMessages, setConversationalMessages] = useState<Array<{
+    id: string;
+    text: string;
+    type: "maya" | "system" | "success";
+    timestamp: number;
+  }>>([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [currentIconIndex, setCurrentIconIndex] = useState(0);
+  const [isComplete, setIsComplete] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const yogaIcons = [
+    { icon: LotusIcon, colorScheme: "primary" },
+    { icon: GrYoga, colorScheme: "subtle" },
+    { icon: LuBicepsFlexed, colorScheme: "rich" },
+    { icon: FaBalanceScale, colorScheme: "zen" },
+  ];
+
+  const generationSteps = [
+    "25 minutes of beginner level - got it!",
+    "Focusing on stress relief today 🧘‍♀️",
+    "Found 47 poses in the database matching your criteria",
+    "AI is analyzing pose combinations...",
+    "Building flow sequences with proper transitions",
+    "Adding personalized modifications for stress relief",
+    "Finalizing your practice with deep relaxation",
+    "Perfect! Your session is ready ✨"
+  ];
+
+  const scrollToBottom = () => {
+    // Only scroll within the generation UI, not the whole page
+    if (messagesEndRef.current) {
+      const chatContainer = messagesEndRef.current.closest('.max-h-48');
+      if (chatContainer) {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+    }
+  };
+
+  useEffect(() => {
+    // Only scroll if there are messages to avoid initial scroll
+    if (conversationalMessages.length > 0) {
+      scrollToBottom();
+    }
+  }, [conversationalMessages, isTyping]);
+
+  // Icon rotation effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIconIndex((idx) => (idx + 1) % yogaIcons.length);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [yogaIcons.length]);
+
+  // Message display system
+  useEffect(() => {
+    let isMounted = true;
+
+    const displayMessages = async () => {
+      for (let i = 0; i < generationSteps.length; i++) {
+        if (!isMounted) return;
+
+        await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 500));
+        if (!isMounted) return;
+
+        setIsTyping(true);
+        await new Promise(resolve => setTimeout(resolve, 600 + Math.random() * 300));
+        if (!isMounted) return;
+
+        const newMessage = {
+          id: Date.now().toString() + i,
+          text: generationSteps[i],
+          type: (i === generationSteps.length - 1 ? "success" : "maya") as "maya" | "system" | "success",
+          timestamp: Date.now(),
+        };
+
+        setConversationalMessages(prev => [...prev, newMessage]);
+        setIsTyping(false);
+        setCurrentStep(i + 1);
+
+        if (i === generationSteps.length - 1) {
+          if (!isMounted) return;
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          if (!isMounted) return;
+          setIsComplete(true);
+        }
+      }
+    };
+
+    displayMessages();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [generationSteps]);
+
+  const CurrentIcon = yogaIcons[currentIconIndex].icon;
+
+  return (
+    <div className="mt-4 bg-gray-50 rounded-xl border border-gray-200 overflow-hidden mock-generation-ui">
+      <style jsx>{`
+        .mock-generation-ui p {
+          margin-top: 0 !important;
+          margin-bottom: 0 !important;
+        }
+        .mock-generation-ui h1,
+        .mock-generation-ui h2,
+        .mock-generation-ui h3,
+        .mock-generation-ui h4,
+        .mock-generation-ui h5,
+        .mock-generation-ui h6 {
+          margin-top: 0 !important;
+          margin-bottom: 0 !important;
+        }
+      `}</style>
+      {/* Maya Header */}
+      <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-4">
+        <div className="flex items-center space-x-3 text-white">
+          <div className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
+            <ChatBubbleLeftRightIcon className="w-4 h-4" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-sm">Maya&apos;s Personal Touch</h3>
+            <p className="text-xs text-purple-100">
+              Crafting your perfect practice
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Session Parameters Preview */}
+      <div className="p-4 border-b border-gray-200">
+        <div className="grid grid-cols-3 gap-4">
+          <div className="text-center">
+            <div className="flex items-center space-x-1 mb-1 justify-center">
+              <ClockIcon className="w-3 h-3 text-purple-600" />
+              <span className="text-xs text-gray-600">Duration</span>
+            </div>
+            <div className="text-sm text-purple-700 font-medium">25 minutes</div>
+          </div>
+          <div className="text-center">
+            <div className="flex items-center space-x-1 mb-1 justify-center">
+              <ChartBarIcon className="w-3 h-3 text-purple-600" />
+              <span className="text-xs text-gray-600">Level</span>
+            </div>
+            <div className="text-sm text-purple-700 font-medium">Beginner</div>
+          </div>
+          <div className="text-center">
+            <div className="flex items-center space-x-1 mb-1 justify-center">
+              <FireIcon className="w-3 h-3 text-purple-600" />
+              <span className="text-xs text-gray-600">Focus</span>
+            </div>
+            <div className="text-sm text-purple-700 font-medium">Stress Relief</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Creation Section */}
+      <div className="p-4">
+        {/* Header with animated icon */}
+        <div className="text-center mb-4">
+          <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-1000">
+            <CurrentIcon className="w-6 h-6 text-white" />
+          </div>
+          <h3 className="text-lg font-semibold text-purple-700 mb-1">
+            Maya is creating your session...
+          </h3>
+          <p className="text-gray-600 text-xs">
+            Your AI yoga companion is designing something beautiful
+          </p>
+        </div>
+
+        {/* Conversation Area */}
+        <div className="space-y-3 mb-4 max-h-48 overflow-y-auto">
+          {conversationalMessages.map((message) => (
+            <div key={message.id} className="flex justify-start">
+              <div className="max-w-xs text-left">
+                <div className={`inline-block px-3 py-2 rounded-xl text-xs border ${message.type === "success"
+                  ? "bg-green-50 border-green-100 text-green-800 font-medium"
+                  : "bg-white border-gray-200 text-gray-900 shadow-sm"
+                  }`}>
+                  <p className="text-xs font-medium mb-1 text-purple-600">Maya</p>
+                  <p className="leading-relaxed">{message.text}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* Typing indicator */}
+          {isTyping && (
+            <div className="flex justify-start">
+              <div className="max-w-xs text-left">
+                <div className="bg-white border border-gray-200 rounded-xl px-3 py-2 shadow-sm">
+                  <p className="text-xs font-medium mb-1 text-purple-600">Maya</p>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xs text-gray-500">is thinking...</span>
+                    <div className="flex space-x-1">
+                      <div className="w-1 h-1 bg-purple-400 rounded-full animate-bounce"></div>
+                      <div className="w-1 h-1 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
+                      <div className="w-1 h-1 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Progress Indicator */}
+        <div className="bg-white rounded-lg p-3 border border-gray-100 mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-medium text-gray-700">Generation Progress</span>
+            <span className="text-xs text-gray-500">{Math.min(currentStep, 8)}/8 steps</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-1 overflow-hidden">
+            <div
+              className="h-1 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-1000 ease-out"
+              style={{ width: `${Math.min((currentStep / 8) * 100, 100)}%` }}
+            ></div>
+          </div>
+        </div>
+
+        {/* Success State */}
+        {isComplete && (
+          <div className="text-center bg-green-50 rounded-lg p-3 border border-green-200">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center mx-auto mb-2 bg-gradient-to-r from-purple-500 to-pink-500">
+              <CheckIcon className="w-4 h-4 text-white" />
+            </div>
+            <h4 className="text-sm font-semibold text-purple-700 mb-1">Your Session is Ready!</h4>
+            <p className="text-gray-600 text-xs mb-2">
+              Maya has crafted something beautiful for you.
+            </p>
+            <div className="flex items-center justify-center space-x-2 text-gray-500">
+              <div className="animate-spin w-2 h-2 border border-gray-300 rounded-full border-t-purple-600"></div>
+              <span className="text-xs">Taking you to your session...</span>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 const scenarios = {
@@ -75,6 +331,21 @@ const scenarios = {
       },
       suggestions: ["Create this session", "Tell me about the poses", "Make it shorter"],
       delay: 4000,
+    },
+    {
+      id: "5",
+      type: "user" as const,
+      content: "Create this session",
+      timestamp: new Date(),
+      delay: 5500,
+    },
+    {
+      id: "6",
+      type: "maya" as const,
+      content: "Perfect! Let me create your practice...",
+      timestamp: new Date(),
+      shouldShowGenerationUI: true,
+      delay: 6500,
     },
   ],
   "too-good": [
@@ -339,6 +610,21 @@ const MockMayaChat: React.FC<MockMayaChatProps> = ({ scenario }) => {
 
   return (
     <div className="w-full max-w-2xl mx-auto my-8 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden maya-chat">
+      <style jsx>{`
+        .maya-chat p {
+          margin-top: 0 !important;
+          margin-bottom: 0 !important;
+        }
+        .maya-chat h1,
+        .maya-chat h2,
+        .maya-chat h3,
+        .maya-chat h4,
+        .maya-chat h5,
+        .maya-chat h6 {
+          margin-top: 0 !important;
+          margin-bottom: 0 !important;
+        }
+      `}</style>
       {/* Header */}
       <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
         <div className="flex items-center">
@@ -354,11 +640,24 @@ const MockMayaChat: React.FC<MockMayaChatProps> = ({ scenario }) => {
             </p>
           </div>
         </div>
+
+        {/* Reset Demo Button */}
+        {(isPlaying || messages.length > 0) && (
+          <button
+            onClick={resetDemo}
+            className="px-3 py-1.5 text-xs rounded-md bg-red-100 text-red-700 hover:bg-red-200 transition-colors flex items-center space-x-1"
+          >
+            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
+            </svg>
+            <span>Reset</span>
+          </button>
+        )}
       </div>
 
       {/* Messages */}
       <div className="h-96 overflow-y-auto p-4 space-y-4 bg-gray-50">
-        {messages.length === 0 && !isPlaying && (
+        {!isPlaying && messages.length === 0 && (
           <div className="flex items-center justify-center h-full">
             <button
               onClick={playScenario}
@@ -372,19 +671,7 @@ const MockMayaChat: React.FC<MockMayaChatProps> = ({ scenario }) => {
           </div>
         )}
 
-        {isPlaying && messages.length === 0 && (
-          <div className="flex items-center justify-center h-full">
-            <button
-              onClick={resetDemo}
-              className="px-6 py-3 text-base rounded-xl bg-red-100 text-red-700 hover:bg-red-200 transition-colors flex items-center space-x-2"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
-              </svg>
-              <span>Reset Demo</span>
-            </button>
-          </div>
-        )}
+
 
         {messages.map((message) => {
 
@@ -428,6 +715,11 @@ const MockMayaChat: React.FC<MockMayaChatProps> = ({ scenario }) => {
                       console.log('Demo: Would create session with params:', params);
                     }}
                   />
+                )}
+
+                {/* Generation UI */}
+                {message.shouldShowGenerationUI && (
+                  <MockGenerationUI />
                 )}
               </div>
             </div>

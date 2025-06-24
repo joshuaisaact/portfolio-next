@@ -168,7 +168,22 @@ const MockRelatedSequences: React.FC<MockRelatedSequencesProps> = ({
   return (
     <div className={`flex justify-start ${className}`}>
       <div className="max-w-[90%] md:max-w-2xl w-full">
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden mock-related-sequences">
+          <style jsx>{`
+            .mock-related-sequences p {
+              margin-top: 0 !important;
+              margin-bottom: 0 !important;
+            }
+            .mock-related-sequences h1,
+            .mock-related-sequences h2,
+            .mock-related-sequences h3,
+            .mock-related-sequences h4,
+            .mock-related-sequences h5,
+            .mock-related-sequences h6 {
+              margin-top: 0 !important;
+              margin-bottom: 0 !important;
+            }
+          `}</style>
           {/* Header */}
           <div className="p-4 border-b border-gray-100">
             <div className="flex items-center">

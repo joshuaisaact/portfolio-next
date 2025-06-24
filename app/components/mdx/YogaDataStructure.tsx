@@ -3,7 +3,6 @@
 import {
   QueueListIcon,
   AcademicCapIcon,
-  FolderIcon,
   ExclamationTriangleIcon,
   CheckCircleIcon,
   SparklesIcon

@@ -19,7 +19,7 @@ export const metadata = generateMetadataFromPost(postMetadata);
 
 <BlogHeader {...postMetadata} />
 
-*Or: Why teaching an AI yoga instructor to be creative reveals fundamental problems with intelligent content generation*
+*Why teaching an AI yoga instructor to be creative reveals fundamental problems with intelligent content generation*
 
 ## The Origin Story: Building Maya
 
@@ -35,13 +35,17 @@ Here's what chatting with Maya actually looks like. Click "Play Demo" to see her
 
 <MockMayaChat scenario="working-well" />
 
+*Want to try Maya yourself? Check out the live project at [joshdesk.live](https://joshdesk.live)*
+
 Maya worked beautifully. Too beautifully, in fact. But then my wife tried it.
 
 ## The Reality Check
 
 "That's not how yoga works," she said, with the patience of someone who's watched their partner overthink a simple problem.
 
-"You don't just randomly combine poses. There are sequences, flows, transitions. Yoga has structure."
+"You're treating yoga like it's just a collection of poses to arrange. But yoga sequences tell a story - they have purpose, progression, meaning. Sun Salutations aren't random poses; they're a complete practice refined over centuries."
+
+She was right. I'd built a sophisticated pose-ordering system, but I'd missed the forest for the trees. Yoga isn't Lego blocks, it's more like music, where notes form coherent phrases and complete compositions.
 
 Back to the drawing board.
 
@@ -146,7 +150,20 @@ What I do know is this: as AI systems become more sophisticated, these questions
 
 ---
 
-**Technical Details**: Maya is built with TypeScript, uses Google's Gemini models for conversation and content generation, and employs function calling to search through yoga sequences and poses. The architecture uses Elysia.js for the backend API and includes sophisticated prompt engineering to maintain Maya's personality while ensuring helpful responses. The creativity vs. efficiency dilemma emerged during the transition from generating individual sessions to creating multi-sequence classes.
+**Technical Details**: Maya is built with a modern TypeScript stack:
+- **Runtime**: [Bun](https://bun.sh/) for ultra-fast JavaScript execution
+- **Backend**: [Elysia.js](https://elysiajs.com/) with Swagger for self-documenting APIs
+- **AI**: Google's Generative AI SDK (@google/genai) with function calling
+- **Frontend**: [React Router v7](https://reactrouter.com/) (framework mode) with full SSR
+- **Database**: [Turso](https://turso.tech/) (libSQL) with [Drizzle ORM](https://orm.drizzle.team/)
+- **Type Safety**: EDEN for end-to-end type safety without codegen
+- **Forms**: TanStack Form with Zod validation
+- **UI**: Radix UI components with Tailwind CSS v4
+- **Auth**: [Clerk](https://clerk.com/) for user management
+- **Hosting**: Self-hosted on a [Digital Ocean](https://www.digitalocean.com/) Linux droplet
+
+
+The creativity vs. efficiency dilemma emerged during the transition from generating individual sessions to creating multi-sequence classes.
 
 **Live Project**: You can view the live version of the project that inspired this post at [joshdesk.live](https://joshdesk.live).
 
