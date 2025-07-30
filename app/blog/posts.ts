@@ -3,7 +3,7 @@ export const posts = [
     slug: "maya-creativity-paradox",
     metadata: {
       title: "The AI Creativity Paradox: Why Smarter Isn't Always More Creative",
-      date: "2025-06-22",
+      date: "2025-07-30",
       featured_image: "/images/blog/maya-preview.png",
       excerpt: "My journey building an AI yoga instructor revealed a core tension in modern AI: the battle between creative exploration and algorithmic efficiency. This is the story of that paradox.",
       tags: ["AI", "LLM", "Creativity", "Architecture", "Yoga", "Product Development", "AI Philosophy"],

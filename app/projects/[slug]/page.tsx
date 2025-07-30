@@ -39,7 +39,7 @@ export async function generateMetadata({
     return {
       title: "Project Not Found | Joshua Tuddenham Portfolio",
       description: "The project you are looking for could not be found.",
-      robots: { index: false, follow: false },
+
     };
   }
 
