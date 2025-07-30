@@ -6,7 +6,8 @@ interface PostMetadata {
   tags: string[];
 }
 
-export function generateMetadataFromPost(post: PostMetadata) {
+export function generateMetadataFromPost(post: PostMetadata, slug?: string) {
+  const SITE_URL = "https://www.joshtuddenham.tech";
   return {
     title: post.title,
     description: post.excerpt,
@@ -15,6 +16,7 @@ export function generateMetadataFromPost(post: PostMetadata) {
       description: post.excerpt,
       type: "article",
       publishedTime: post.date,
+      url: slug ? `${SITE_URL}/blog/${slug}` : undefined,
       authors: ["Josh Tuddenham"],
       images: [
         {
