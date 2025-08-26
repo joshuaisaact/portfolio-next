@@ -43,7 +43,7 @@ As I searched for solutions, I discovered there are several ways developers are 
 
 4. **Agent Frameworks** - Pre-built team coordination. Langchain, LangGraph. Agents that delegate to other agents. Powerful but sometimes overkill.
 
-The approach I landed on - orchestrated specialists - emerged from necessity. I needed something more maintainable than a monolith but didn't need the complexity of full agent frameworks. It turns out this middle ground is exactly right for many real-world applications.
+The approach I landed on (orchestrated specialists) emerged from necessity. I needed something more maintainable than a monolith but didn't need the complexity of full agent frameworks. Plus, given how rapidly AI models evolve, heavy abstraction layers often become technical debt. When the underlying models improve every few months, frameworks built around their limitations quickly become obsolete. It turns out this middle ground - understanding exactly what each agent does without layers of abstraction - is exactly right for many real-world applications.
 
 ## The Architecture: Specialized Agents in Harmony
 
