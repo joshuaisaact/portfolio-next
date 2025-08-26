@@ -1,5 +1,15 @@
 export const posts = [
   {
+    slug: "orchestration",
+    metadata: {
+      title: "Maya: A Multi-Agent Architecture for Conversational AI",
+      date: "2025-08-26",
+      featured_image: "/images/blog/maya-orchestration.jpg", // different image
+      excerpt: "How I evolved my AI yoga instructor from a 2000-token monolithic prompt to an orchestrated system of specialized agents - and why separation of concerns might be the most underrated pattern in AI development.",
+      tags: ["AI", "Multi-Agent", "Architecture", "LLM", "TypeScript", "Orchestration", "Gemini"],
+    },
+  },
+  {
     slug: "maya-creativity-paradox",
     metadata: {
       title: "The AI Creativity Paradox: Why Smarter Isn't Always More Creative",
