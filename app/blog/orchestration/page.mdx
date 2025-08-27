@@ -112,7 +112,31 @@ const INTENT_ANALYSIS_SCHEMA = {
 };
 ```
 
-By using structured output schemas (thank you Gemini!), the intent agent reliably categorizes requests and extracts parameters. No more parsing free-text responses or dealing with hallucinated JSON.
+and the prompt is structured like this:
+```typescript
+// The actual prompt that guides intent classification
+const INTENT_PROMPT = `Analyze this yoga-related message and determine the user's intent.
+
+User message: "${message}"
+
+Determine ONE of these intents:
+1. create_sequence - User wants to CREATE/MAKE/BUILD a NEW sequence
+2. search_poses - User asking about specific poses
+3. search_sequences - User looking for existing sequences
+4. search_classes - User looking for yoga classes
+5. general_chat - General conversation or questions
+
+Important distinctions:
+- "make me a new sequence" = create_sequence
+- "show me sequences" = search_sequences
+- "what sequences do you have" = search_sequences
+- "create a flow for hamstrings" = create_sequence
+- "find hip opening poses" = search_poses
+
+Return JSON matching the schema...`;
+```
+
+By using structured output schemas, the intent agent reliably categorizes requests and extracts parameters. Interestingly, even with constrained JSON output, including concrete examples in the prompt significantly improved classification accuracy - the model benefits from seeing the distinction between "make me a sequence" (create) versus "show me sequences" (search).
 
 ## Separation of Concerns: Each Agent Does One Thing Well
 
